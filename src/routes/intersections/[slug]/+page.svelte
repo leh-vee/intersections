@@ -3,7 +3,7 @@
   let { data }: PageProps = $props();
 </script>
 
-<h1 id='title'>M + S</h1>
+<h1 id='title'>{ data.poemTitle }</h1>
 <div id="poem">
   {#each data.poem as line}
     <span class='line'>{line}</span>
