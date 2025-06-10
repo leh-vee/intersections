@@ -10,7 +10,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
     .then((text) => text.split('\n'));
 
 	return { poemTitle, poem };
-};
+}
 
 function capitalize(str: String) {
   return str.charAt(0).toUpperCase() + str.slice(1);
