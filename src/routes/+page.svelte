@@ -2,12 +2,24 @@
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
+
+  function metaAt(index: number) {
+    return data.metaTailMap[index];
+  } 
+
+  function routeForPoemAt(index: number) {
+    return `/intersections/${data.metaTailMap[index].slug}`;
+  }
 </script>
 
 <div class='matrix'>
   <span id='ellipsis'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
-  {#each data.longTailOfPi as digit}
-    <span class='digit'>{digit}</span>
+  {#each data.shortTailOfPi as digit, i}
+    {#if metaAt(i) === undefined}
+      <span class='digit'>{digit}</span>
+    {:else}
+      <span class='digit'><a href={routeForPoemAt(i)}>{digit}</a></span>
+    {/if}
   {/each}
 </div>
 
