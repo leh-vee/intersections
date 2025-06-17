@@ -1,17 +1,25 @@
 import type { PageLoad } from './$types';
+import yaml from 'js-yaml';
 
 export const load: PageLoad = async ({ fetch, params }) => {
   const slug = params.slug;
-  const titleWords = slug.split('-');
-  const poemTitle = titleWords.map(w => capitalize(w)).join(' ');
 
 	const poem = await fetch(`/poems/${slug}.txt`)
     .then((res) => res.text())
     .then((text) => text.split('\n'));
 
-	return { poemTitle, poem };
+  const metaYml = await fetch('/poem-data.yml')
+    .then((res) => res.text());
+  const meta = yaml.load(metaYml) as PoemMetaData;
+  const title = meta[slug].title;
+
+	return { poem, title };
 }
 
-function capitalize(str: String) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+interface PoemMetaData {
+  [key: string]: {
+    title: string,
+    sefirahId: number,
+    intersectionId: number
+  }
 }

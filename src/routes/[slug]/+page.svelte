@@ -23,7 +23,7 @@
 
 </script>
 
-<h1 id='title'>{ data.poemTitle }</h1>
+<h1 id='title'>{ data.title }</h1>
 <div id="poem" style:font-size={ `${fontSize}px`} >
   {#each data.poem as line, i}
     {#if i === longestLineIndex}
