@@ -8,7 +8,7 @@
   } 
 
   function routeForPoemAt(index: number) {
-    return `/intersections/${data.metaTailMap[index].slug}`;
+    return `/${data.metaTailMap[index].slug}`;
   }
 </script>
 
