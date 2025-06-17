@@ -33,7 +33,6 @@ interface PoemMetaData {
   [key: string]: {
     title: string,
     sefirahId: number,
-    intersectionId: number,
-    intersectionName: string
+    intersectionId: number
   }
 }
