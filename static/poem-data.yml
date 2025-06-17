@@ -10,3 +10,57 @@ just-great:
   title: Just Great,
   sefirahId: 8
   intersectionId: 13459771
+daffodil:
+  title: Daffodil
+  sefirahId: 7
+  intersectionId: 30021105
+dead-ringers:
+  title: Dead Ringers
+  sefirahId: 6
+  intersectionId: 13446795
+dirt-bike:
+  title: Dirt Bike
+  sefirahId: 8
+  intersectionId: 30091563
+going-places:
+  title: Going Places
+  sefirahId: 9
+  intersectionId: 13461215
+mover:
+  title: Mover
+  sefirahId: 3
+  intersectionId: 13461215
+numbers:
+  title: Numbers
+  sefirahId: 4
+  intersectionId: 13452800
+on-seeing-an-old-photograph-of-my-mother:
+  title: On Seeing An Old Photograph Of My Mother
+  sefirahId: 0
+  intersectionId: 13452323
+only-if:
+  title: Only If
+  sefirahId: 1
+  intersectionId: 13450264
+out:
+  title: Out
+  sefirahId: 2
+  intersectionId: 13442698
+place-yoru-bets:
+  title: Place Your Bets
+  sefirahId: 4
+  intersectionId: 13442092
+reject:
+  title: Reject
+  sefirahId: 8
+  intersectionId: 13442414
+townspeople:
+  title: Townspeople
+  sefirahId: 1
+  intersectionId: 13451778
+yours-essentially:
+  title: Yours Essentially
+  sefirahId: 2
+  intersectionId: 20165928
+
+
