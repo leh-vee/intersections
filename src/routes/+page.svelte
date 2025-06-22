@@ -17,21 +17,19 @@
 </script>
 
 <div class='matrix'>
-  <span id='ellipsis'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
+  <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
   {#each data.shortTailOfPi as digit, i}
+    <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(25, 30)}%;">
     {#if metaAt(i) === undefined}
-      <span class='digit'>
-        <span class='y-drift' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(15, 30)}%;">
-          {digit}
-        </span>
+      <span class='y-drift'>
+        {digit}
       </span>
     {:else}
-      <span class='digit'>
-        <a class='x-drift' href={routeForPoemAt(i)}>
-          {digit}
-        </a>
-      </span>
+      <a href={routeForPoemAt(i)} class='x-drift'>
+        {digit}
+      </a>
     {/if}
+    </span>
   {/each}
 </div>
 
@@ -43,25 +41,45 @@
     margin: 1%;
   }
 
+  span.cell {
+    padding: 5%;
+    color: #BEEEFF;
+    display: flex;
+  }
+  
   span#ellipsis {
     font-family: 'Trebuchet MS';
+    transform: translateY(25%);
   }
-
-  span {
-    font-family: sans-serif;
+  
+  span.digit {
     font-size: 30px;
-    padding: 5%;
-    color: dimgrey;
-    display: flex;
+    font-family: sans-serif;
+    justify-content: center;
+    align-items: center;
   }
 
   span a {
     color: #BEEEFF;
+    font-size: 150%;
     text-decoration: none;
+  }
+
+  .x-drift {
+    animation: xDrift var(--duration) linear infinite alternate;
   }
 
   .y-drift {
     animation: yDrift var(--duration) linear infinite alternate;
+  }
+
+  @keyframes xDrift {
+    from {
+      transform: translateX(var(--distance));
+    }
+    to {
+      transform: translateX(calc(var(--distance) * -1));
+    }
   }
 
   @keyframes yDrift {
