@@ -19,7 +19,7 @@
 <div class='matrix'>
   <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
   {#each data.shortTailOfPi as digit, i}
-    <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(25, 30)}%;">
+    <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
     {#if metaAt(i) === undefined}
       <span class='y-drift'>
         {digit}
