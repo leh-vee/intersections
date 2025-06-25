@@ -50,19 +50,26 @@
   span#ellipsis {
     font-family: 'Trebuchet MS';
     transform: translateY(25%);
+    font-size: 125%;
   }
   
   span.digit {
     font-size: 30px;
-    font-family: sans-serif;
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
     justify-content: center;
     align-items: center;
   }
 
   span a {
     color: #BEEEFF;
-    font-size: 150%;
     text-decoration: none;
+    font-weight: 400;
+  }
+
+  .digit a {
+    font-size: 150%;
   }
 
   .x-drift {
