@@ -15,14 +15,12 @@
 
 <style>
   #page {
-    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
-    font-family: Arial, Helvetica, sans-serif;
     margin: 10px;
     color: white;
   }
 
   #title {
-    font-size: 10em;
+    font-size: 0.7em;
     margin: 10px 0;
     width: fit-content;
     white-space: nowrap;
@@ -30,7 +28,7 @@
   }
 
   #poem {
-    font-size: 8em;
+    font-size: 0.1em;
     line-height: 1.3;
     width: 100%;
   }
