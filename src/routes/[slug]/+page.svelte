@@ -15,13 +15,13 @@
 
 <style>
   #page {
-    margin: 10px;
+    margin: 1px;
     color: white;
   }
 
   #title {
     font-size: 0.7em;
-    margin: 10px 0;
+    margin: 5px 0;
     width: fit-content;
     white-space: nowrap;
     text-align: center;
