@@ -4,34 +4,34 @@
   let { data }: PageProps = $props();
 </script>
 
-<h1 id='title'>{ data.title }</h1>
-<div id="poem">
-  {#each data.poem as line, i}
-    <span class='line'>{line}</span>
-  {/each}
+<div id='page'>
+  <p id='title'>{ data.title }</p>
+  <div id="poem">
+    {#each data.poem as line, i}
+      <span class='line'>{line}</span>
+    {/each}
+  </div>
 </div>
 
 <style>
-  #title {
+  #page {
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 10px;
     color: white;
+  }
+
+  #title {
+    font-size: 10em;
+    margin: 10px 0;
+    width: fit-content;
+    white-space: nowrap;
     text-align: center;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 400;
-    font-size: 2em;
-    margin: 15px 0 0;
-    border-radius: 5px;
   }
 
   #poem {
-    color: white;
-    font-family: "Newsreader", serif;
-    font-optical-sizing: auto;
-    font-weight: 200;
-    font-size: 40px;
-    line-height: 1.4;
-    margin: 0 5px 10px;
-    padding: 10px 20px;
-    overflow: hidden;
+    font-size: 8em;
+    line-height: 1.3;
     width: 100%;
   }
   
