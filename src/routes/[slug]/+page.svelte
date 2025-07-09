@@ -62,7 +62,7 @@
   
   #button button {
     background-color: red;
-    border-radius: 20%;
+    border-radius: 50%;
     border: 1px solid goldenrod;
     width: 50px; 
     height: 50px; 
