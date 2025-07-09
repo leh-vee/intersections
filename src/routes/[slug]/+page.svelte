@@ -13,7 +13,7 @@
 
 <div id='vessel'>
   <div id='title'>
-    <h4>{ data.title }</h4>
+    <h3>{ data.title }</h3>
   </div>
   <div id='poem'>
     <div id='text'>
@@ -48,8 +48,7 @@
     align-items: end;
   }
   
-  #title h4 {
-    border-bottom: 1px solid cornflowerblue;
+  #title h3 {
     margin: 0;
   }
   
@@ -57,18 +56,16 @@
     flex-grow: 1;
     width: 100%;
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: center;
   }
   
   #button button {
     background-color: red;
-    border-radius: 50%;
-    width: 75px; 
-    height: 75px; 
-    border: 1px solid cornflowerblue; 
-    color: beige;
-    font-size: 16px; /* Adjust as needed */
+    border-radius: 20%;
+    border: 1px solid goldenrod;
+    width: 50px; 
+    height: 50px; 
   }
   
   #vessel #poem {
