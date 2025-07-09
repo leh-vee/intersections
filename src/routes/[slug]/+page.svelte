@@ -11,33 +11,20 @@
   let { data }: PageProps = $props();
 </script>
 
-<div id='surface'>
-  <div id='card'>
-    <div id='poem'>
-      <h1 id='title'>{ data.title }</h1>
-      <div id='text'>
-        {#each data.poem as line}
-          <span class='line'>{line}</span>
-        {/each}
-      </div>
-    </div>
+<div id='poem'>
+  <h1 id='title'>{ data.title }</h1>
+  <div id='text'>
+    {#each data.poem as line}
+      <span class='line'>{line}</span>
+    {/each}
   </div>
 </div>
 
 <style>
-  #surface {
+  #poem {
     height: 100%;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  #card {
-    width: 90%;
-    height: 95%;
-    border-radius: 5px;
-    padding: 5px;
+    width: 80%;
+    margin: 0 auto;
     background-color: #051021;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
@@ -47,12 +34,8 @@
     justify-content: center;
   }
 
-  #poem {
-    width: 80%;
-  }
-
   #poem #title {
-    margin: 0 0 5%;
+    margin: 0 0 10%;
   }
   
   #poem #text {
