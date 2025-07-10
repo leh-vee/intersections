@@ -13,7 +13,7 @@
 
 <div id='vessel'>
   <div id='title'>
-    <h3>{ data.title }</h3>
+    <h5>{ data.title }</h5>
   </div>
   <div id='poem'>
     <div id='text'>
@@ -23,16 +23,16 @@
     </div>
   </div>
   <div id='button'>
-    <button></button>
+    <button>3</button>
   </div>
 </div>
 
 <style>
   #vessel {
+    background-color: white;
     height: 100%;
     width: 100%;
     margin: 0;
-    background-color: #051021;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     display: flex;
@@ -42,34 +42,45 @@
   }
   
   #vessel #title {
-    flex-grow: 1;
     width: 80%;
-    display: flex;
-    align-items: end;
+    flex-grow: 1;
+    position: relative;
+    padding: 0;
   }
   
-  #title h3 {
+  #title h5 {
+    color: black;
     margin: 0;
+    position: absolute;
+    bottom: 5px;
   }
   
   #vessel #button {
-    flex-grow: 1;
     width: 100%;
+    flex-grow: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
+    position: relative;
   }
   
   #button button {
-    background-color: red;
     border-radius: 50%;
-    border: 1px solid goldenrod;
-    width: 50px; 
-    height: 50px; 
+    font-size: 25px;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: calc(50% - 25px);
+  }
+
+  #button button:active {
+    background-color: gold;
   }
   
   #vessel #poem {
-    height: 66%;
+    background-color: #051021;
+    padding: 25px 0;
+    max-height: 50%;
     overflow-y: scroll;
     width: 100%;
     display: flex;
