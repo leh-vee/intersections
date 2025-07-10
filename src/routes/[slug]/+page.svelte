@@ -79,12 +79,11 @@
   
   #vessel #poem {
     background-color: #051021;
-    padding: 25px 0;
-    max-height: 50%;
+    padding: 0;
+    max-height: 80%;
     overflow-y: scroll;
     width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
   }
   
@@ -95,6 +94,14 @@
   
   .line {
     white-space: nowrap;
-    display: inline-block;
+    display: block;
+  }
+
+  .line:first-child {
+    padding-top: 25px;
+  }
+
+  .line:last-child {
+    padding-bottom: 25px;
   }
 </style>
