@@ -66,12 +66,13 @@
   #button button {
     background-color: #051021;
     color: white;
-    font-size: 25px;
+    font-size: 40px;
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
+    height: 75px;
+    
+    width: 75px;
     position: absolute;
-    top: calc(50% - 25px);
+    bottom: 20px;
   }
 
   #button button:active {
