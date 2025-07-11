@@ -13,7 +13,7 @@
 
 <div id='vessel'>
   <div id='title'>
-    <h5>{ data.title }</h5>
+    <h2>{ data.title }</h2>
   </div>
   <div id='poem'>
     <div id='text'>
@@ -42,13 +42,13 @@
   }
   
   #vessel #title {
-    width: 80%;
+    width: 90%;
     flex-grow: 1;
     position: relative;
     padding: 0;
   }
   
-  #title h5 {
+  #title h2 {
     color: black;
     margin: 0;
     position: absolute;
@@ -64,7 +64,8 @@
   }
   
   #button button {
-    border-radius: 50%;
+    background-color: #051021;
+    color: white;
     font-size: 25px;
     border-radius: 50%;
     height: 50px;
