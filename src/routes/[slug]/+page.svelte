@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import type { PageProps } from './$types';
   import fitty from 'fitty';
+	import MapTiles from '$lib/MapTiles.svelte';
 
   onMount(() => {
     fitty('#text .line');
@@ -12,8 +13,9 @@
 </script>
 
 <div id='vessel'>
+  <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } />
   <div id='title'>
-    <h2>{ data.title }</h2>
+    <h1>{ data.title }</h1>
   </div>
   <div id='poem'>
     <div id='text'>
@@ -42,14 +44,14 @@
   }
   
   #vessel #title {
-    width: 90%;
+    width: 80%;
     flex-grow: 1;
     position: relative;
     padding: 0;
   }
   
-  #title h2 {
-    color: black;
+  #title h1 {
+    color: #165788;
     margin: 0;
     position: absolute;
     bottom: 5px;
@@ -65,11 +67,10 @@
   
   #button button {
     background-color: #051021;
-    color: white;
+    color: #BEEEFF;
     font-size: 40px;
     border-radius: 50%;
     height: 75px;
-    
     width: 75px;
     position: absolute;
     bottom: 20px;
@@ -80,13 +81,14 @@
   }
   
   #vessel #poem {
-    background-color: #051021;
+    color: #052a3e;
     padding: 0;
     max-height: 80%;
     overflow-y: scroll;
     width: 100%;
     display: flex;
     justify-content: center;
+    z-index: 1;
   }
   
   #vessel #text {
