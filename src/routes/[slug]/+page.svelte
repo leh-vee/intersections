@@ -70,7 +70,7 @@
     font-family: "Rubik", sans-serif;
     background-color: #051021;
     color: #BEEEFF;
-    border: 1px dashed gold;
+    border: 1px solid gold;
     font-size: 45px;
     border-radius: 50%;
     height: 80px;
