@@ -52,7 +52,7 @@
   
   #title h1 {
     color: white;
-    font-weight: 400;
+    font-weight: 700;
     margin: 0;
     position: absolute;
     bottom: 5px;
@@ -80,8 +80,7 @@
   }
   
   #button button:active {
-    background-color: transparent;
-    border-width: 0;
+    border-color: gold;
   }
   
   #vessel #poem {
@@ -96,8 +95,8 @@
   
   #vessel #text {
     width: 80%;
-    font-weight: 200;
-    color: gold;
+    font-weight: 400;
+    color: ghostwhite;
   }
   
   .line {

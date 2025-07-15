@@ -26,7 +26,7 @@
           source: vectorTileSource,
           style: {
             'stroke-color': 'gold',
-            'stroke-width': 0.5
+            'stroke-width': 1
           },
         }),
       ],
