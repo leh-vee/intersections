@@ -61,9 +61,10 @@
   
   #title h1 {
     margin: 0;
-    font-weight: 400;
+    font-weight: 700;
     position: absolute;
-    color: #BEEEFF;
+    color: black;
+    -webkit-text-stroke: 1px white;
     bottom: 5px;
   }
   
