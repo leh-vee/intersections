@@ -80,8 +80,8 @@
     border: 2px solid dimgrey;
     font-size: 45px;
     border-radius: 50%;
-    height: 80px;
-    width: 80px;
+    height: 100px;
+    width: 100px;
     position: absolute;
     bottom: 20px;
   }
