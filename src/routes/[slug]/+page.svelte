@@ -97,7 +97,7 @@
   #vessel #text {
     width: 80%;
     font-weight: 200;
-    color: white;
+    color: gold;
   }
   
   .line {
