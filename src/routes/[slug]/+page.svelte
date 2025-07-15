@@ -13,11 +13,10 @@
   let isLit = $state(false);
 
   function lightBurst() {
-    console.log('light burst');
     isLit = true;
     setTimeout(() => {
       isLit = false;
-    }, Math.PI * 1000);
+    }, 50);
   }
 </script>
 
@@ -34,7 +33,7 @@
     </div>
   </div>
   <div id='button'>
-    <button>3</button>
+    <button onclick={ lightBurst }>3</button>
   </div>
 </div>
 

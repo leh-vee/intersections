@@ -10,10 +10,6 @@
   let { centreCoordsGcs, zoom = 13, gild = false } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
 
-  $effect(() => {
-		console.log('stroke colour', strokeColour);
-	});
-
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.dd0rj3wo';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
@@ -62,8 +58,9 @@
   
 </script>
 
-<div id='map' use:initializeMap={centreCoordsGcs}></div>
-
+{#key strokeColour}
+  <div id='map' use:initializeMap={centreCoordsGcs}></div>
+{/key}
 
 <style>
   #map {
