@@ -67,19 +67,20 @@
   }
   
   #button button {
-    background-color: white;
-    color: #1D2D5C; /* blue jays navy */
-    border: 2px solid black;
-    font-size: 25px;
+    font-family: "Rubik", sans-serif;
+    background-color: #051021;
+    color: #BEEEFF;
+    border: 2px dashed white;
+    font-size: 30px;
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     position: absolute;
     bottom: 20px;
   }
-
+  
   #button button:active {
-    background-color: gold;
+    border-color: gold;
   }
   
   #vessel #poem {
