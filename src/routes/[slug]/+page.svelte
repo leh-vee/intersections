@@ -1,6 +1,5 @@
-<script lang="ts">
+<script>
   import { onMount } from 'svelte';
-  import type { PageProps } from './$types';
   import fitty from 'fitty';
 	import MapTiles from '$lib/MapTiles.svelte';
 
@@ -9,11 +8,21 @@
     // fitty('#title h5');
   });
 
-  let { data }: PageProps = $props();
+  let { data } = $props();
+
+  let isLit = $state(false);
+
+  function lightBurst() {
+    console.log('light burst');
+    isLit = true;
+    setTimeout(() => {
+      isLit = false;
+    }, Math.PI * 1000);
+  }
 </script>
 
 <div id='vessel'>
-  <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } />
+  <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
   <div id='title'>
     <h1>{ data.title }</h1>
   </div>
@@ -52,7 +61,9 @@
   
   #title h1 {
     margin: 0;
+    font-weight: 400;
     position: absolute;
+    color: #BEEEFF;
     bottom: 5px;
   }
   
@@ -68,7 +79,7 @@
     font-family: "Rubik", sans-serif;
     background-color: #051021;
     color: #BEEEFF;
-    border: 2px solid gold;
+    border: 2px solid dimgrey;
     font-size: 45px;
     border-radius: 50%;
     height: 80px;
@@ -93,8 +104,8 @@
   
   #vessel #text {
     width: 80%;
-    font-weight: 400;
-    color: ghostwhite;
+    font-weight: 100;
+    color: gold;
   }
   
   .line {

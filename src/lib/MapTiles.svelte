@@ -1,12 +1,18 @@
-<script lang="ts">
+<script lang="js">
+  // @ts-nocheck
+
   import { Map, View } from 'ol';
   import { fromLonLat } from 'ol/proj.js';
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
 
-  export let centreCoordsGcs: [number, number];
-  export let zoom: number = 13;
+  let { centreCoordsGcs, zoom = 13, gild = false } = $props();
+  let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+
+  $effect(() => {
+		console.log('stroke colour', strokeColour);
+	});
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.dd0rj3wo';
@@ -16,8 +22,8 @@
     format: new MVT(), url: tileUrl 
   });
 
-  let map: Map | null = null;
-  function initializeMap(node: HTMLElement, coords: [number, number]) {
+  let map = null;
+  function initializeMap(node, coords) {
     map = new Map({
       target: node.id,
       controls: [],
@@ -25,7 +31,7 @@
         new VectorTileLayer({
           source: vectorTileSource,
           style: {
-            'stroke-color': 'gold',
+            'stroke-color': strokeColour,
             'stroke-width': 1
           },
         }),
@@ -57,6 +63,7 @@
 </script>
 
 <div id='map' use:initializeMap={centreCoordsGcs}></div>
+
 
 <style>
   #map {
