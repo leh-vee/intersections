@@ -36,7 +36,7 @@
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
-    color: white;
+    color: ghostwhite;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -51,8 +51,6 @@
   }
   
   #title h1 {
-    color: white;
-    font-weight: 700;
     margin: 0;
     position: absolute;
     bottom: 5px;
@@ -94,6 +92,7 @@
   }
   
   #vessel #text {
+    -webkit-text-stroke: 0.5px gold;
     width: 80%;
     font-weight: 400;
     color: ghostwhite;
