@@ -71,7 +71,7 @@
     background-color: #051021;
     color: #BEEEFF;
     border: 1px dashed gold;
-    font-size: 30px;
+    font-size: 45px;
     border-radius: 50%;
     height: 80px;
     width: 80px;
