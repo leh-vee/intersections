@@ -25,7 +25,7 @@
         new VectorTileLayer({
           source: vectorTileSource,
           style: {
-            'stroke-color': '#e3b57a',
+            'stroke-color': 'gold',
             'stroke-width': 1
           },
         }),
