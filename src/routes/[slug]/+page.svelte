@@ -92,7 +92,6 @@
   }
   
   #vessel #text {
-    -webkit-text-stroke: 0.5px gold;
     width: 80%;
     font-weight: 400;
     color: ghostwhite;
