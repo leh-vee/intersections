@@ -52,7 +52,7 @@
   
   #title h1 {
     color: white;
-    font-weight: 200;
+    font-weight: 400;
     margin: 0;
     position: absolute;
     bottom: 5px;
@@ -70,7 +70,7 @@
     font-family: "Rubik", sans-serif;
     background-color: #051021;
     color: #BEEEFF;
-    border: 2px dotted gold;
+    border: 1px dashed gold;
     font-size: 30px;
     border-radius: 50%;
     height: 60px;
@@ -96,7 +96,7 @@
   
   #vessel #text {
     width: 80%;
-    font-weight: 200;
+    font-weight: 100;
     color: white;
   }
   
