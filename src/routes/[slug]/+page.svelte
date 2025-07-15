@@ -73,8 +73,8 @@
     border: 1px dashed gold;
     font-size: 30px;
     border-radius: 50%;
-    height: 60px;
-    width: 60px;
+    height: 80px;
+    width: 80px;
     position: absolute;
     bottom: 20px;
   }
