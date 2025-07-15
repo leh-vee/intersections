@@ -10,6 +10,15 @@
   let { centreCoordsGcs, zoom = 13, gild = false } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
 
+  $effect(() => {
+    if (vectorLayer) {
+      vectorLayer.setStyle({
+        'stroke-color': strokeColour,
+        'stroke-width': 1
+      });
+    }
+  });
+
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.dd0rj3wo';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
@@ -19,19 +28,21 @@
   });
 
   let map = null;
+  let vectorLayer = null;
+
   function initializeMap(node, coords) {
+    vectorLayer = new VectorTileLayer({
+      source: vectorTileSource,
+      style: {
+        'stroke-color': strokeColour,
+        'stroke-width': 1
+      },
+    });
+    
     map = new Map({
       target: node.id,
       controls: [],
-      layers: [
-        new VectorTileLayer({
-          source: vectorTileSource,
-          style: {
-            'stroke-color': strokeColour,
-            'stroke-width': 1
-          },
-        }),
-      ],
+      layers: [vectorLayer],
       view: new View({
         center: fromLonLat(coords),
         zoom,
@@ -58,9 +69,8 @@
   
 </script>
 
-{#key strokeColour}
-  <div id='map' use:initializeMap={centreCoordsGcs}></div>
-{/key}
+<div id='map' use:initializeMap={centreCoordsGcs}></div>
+
 
 <style>
   #map {
