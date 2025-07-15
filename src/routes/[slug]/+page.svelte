@@ -96,7 +96,7 @@
   
   #vessel #text {
     width: 80%;
-    font-weight: 100;
+    font-weight: 200;
     color: white;
   }
   
