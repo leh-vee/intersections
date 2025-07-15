@@ -35,7 +35,7 @@
     height: 100%;
     width: 100%;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Helvetica Neue', sans-serif;
     color: white;
     display: flex;
     flex-direction: column;
@@ -51,7 +51,8 @@
   }
   
   #title h1 {
-    color: #165788;
+    color: white;
+    font-weight: 400;
     margin: 0;
     position: absolute;
     bottom: 5px;
@@ -66,12 +67,13 @@
   }
   
   #button button {
-    background-color: #051021;
-    color: #BEEEFF;
-    font-size: 40px;
+    background-color: white;
+    color: #1D2D5C; /* blue jays navy */
+    border: 2px solid black;
+    font-size: 25px;
     border-radius: 50%;
-    height: 75px;
-    width: 75px;
+    height: 50px;
+    width: 50px;
     position: absolute;
     bottom: 20px;
   }
@@ -81,7 +83,6 @@
   }
   
   #vessel #poem {
-    color: #052a3e;
     padding: 0;
     max-height: 80%;
     overflow-y: scroll;
@@ -93,7 +94,8 @@
   
   #vessel #text {
     width: 80%;
-    font-weight: 400;
+    font-weight: 100;
+    color: white;
   }
   
   .line {
