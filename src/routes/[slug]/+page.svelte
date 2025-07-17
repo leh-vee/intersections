@@ -67,7 +67,7 @@
   }
 
   .line:first-child {
-    padding-top: 30px;
+    padding-top: 100px;
   }
 
   .line:last-child {
@@ -76,12 +76,12 @@
 
   #page #title {
     position: absolute;
-    height: 50px;
+    height: 100px;
     z-index: 2;
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     background-color: black;
   }
   
@@ -89,6 +89,7 @@
     color: white;
     margin: 0;
     width: 80%;
+    margin-bottom: 5px;
   }
 
   #page #button {
