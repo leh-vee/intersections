@@ -5,7 +5,6 @@
 
   onMount(() => {
     fitty('#text .line');
-    // fitty('#title h5');
   });
 
   let { data } = $props();
@@ -20,8 +19,8 @@
   }
 </script>
 
-<div id='vessel'>
-  <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
+<MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
+<div id='page'>
   <div id='title'>
     <h1>{ data.title }</h1>
   </div>
@@ -38,7 +37,7 @@
 </div>
 
 <style>
-  #vessel {
+  #page {
     background-color: white;
     height: 100%;
     width: 100%;
@@ -51,7 +50,7 @@
     justify-content: center;
   }
   
-  #vessel #title {
+  #page #title {
     width: 80%;
     flex-grow: 1;
     position: relative;
@@ -65,7 +64,7 @@
     bottom: 5px;
   }
   
-  #vessel #button {
+  #page #button {
     width: 100%;
     flex-grow: 1;
     display: flex;
@@ -90,7 +89,7 @@
     border-color: gold;
   }
   
-  #vessel #poem {
+  #page #poem {
     padding: 0;
     max-height: 80%;
     overflow-y: scroll;
@@ -100,7 +99,7 @@
     z-index: 1;
   }
   
-  #vessel #text {
+  #page #text {
     width: 80%;
     font-weight: 200;
     color: gold;
