@@ -38,38 +38,47 @@
 
 <style>
   #page {
-    background-color: white;
     height: 100%;
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
-    color: ghostwhite;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
+
+  #page > div {
+    z-index: 1;
+    flex-grow: 1;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   
   #page #title {
-    width: 80%;
-    flex-grow: 1;
-    position: relative;
-    padding: 0;
+    justify-content: flex-end;
+    align-items: flex-start;
   }
   
+  #page #poem {
+    justify-content: flex-start;
+    padding: 0;
+    height: 60%;
+    overflow-y: scroll;
+    width: 100%;
+  }
+
+  #page #button {
+    justify-content: center;
+  }
+
   #title h1 {
     margin: 0;
-    position: absolute;
-    color: white;
-    bottom: 5px;
-  }
-  
-  #page #button {
-    width: 100%;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
+    color: ghostwhite;
     position: relative;
+    bottom: 5px;
   }
   
   #button button {
@@ -77,26 +86,15 @@
     background-color: #051021;
     color: #BEEEFF;
     border: 2px solid dimgrey;
-    font-size: 45px;
+    font-size: 3lh;
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
-    position: absolute;
-    bottom: 20px;
+    padding: 5%;
+    width: fit-content;
+    aspect-ratio: 1 / 1;
   }
   
   #button button:active {
     border-color: gold;
-  }
-  
-  #page #poem {
-    padding: 0;
-    max-height: 80%;
-    overflow-y: scroll;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    z-index: 1;
   }
   
   #page #text {
