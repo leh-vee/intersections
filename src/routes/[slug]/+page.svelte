@@ -42,63 +42,21 @@
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #page > div {
-    z-index: 1;
-    flex-grow: 1;
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  #page #title {
-    justify-content: flex-end;
-    align-items: flex-start;
   }
   
   #page #poem {
-    justify-content: flex-start;
-    padding: 0;
-    height: 60%;
     overflow-y: scroll;
     width: 100%;
-  }
-
-  #page #button {
+    height: 100%;
+    display: flex;
+    align-items: center;
     justify-content: center;
-  }
-
-  #title h1 {
-    margin: 0;
-    color: ghostwhite;
-    position: relative;
-    bottom: 5px;
-  }
-  
-  #button button {
-    font-family: "Rubik", sans-serif;
-    background-color: #051021;
-    color: #BEEEFF;
-    border: 2px solid dimgrey;
-    font-size: 3lh;
-    border-radius: 50%;
-    padding: 5%;
-    width: fit-content;
-    aspect-ratio: 1 / 1;
-  }
-  
-  #button button:active {
-    border-color: gold;
   }
   
   #page #text {
+    z-index: 1;
     width: 80%;
+    height: 100%;
     font-weight: 200;
     color: gold;
   }
@@ -109,10 +67,54 @@
   }
 
   .line:first-child {
-    padding-top: 25px;
+    padding-top: 30px;
   }
 
   .line:last-child {
-    padding-bottom: 25px;
+    padding-bottom: 100px;
   }
+
+  #page #title {
+    position: absolute;
+    height: 50px;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+  }
+  
+  #title h1 {
+    color: white;
+    margin: 0;
+    width: 80%;
+  }
+
+  #page #button {
+    position: absolute;
+    z-index: 2;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #button button {
+    font-family: "Rubik", sans-serif;
+    background-color: #051021;
+    color: #BEEEFF;
+    border: 2px solid dimgrey;
+    font-size: 3lh;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    aspect-ratio: 1 / 1;
+  }
+  
+  #button button:active {
+    border-color: gold;
+  }
+
 </style>
