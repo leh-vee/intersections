@@ -71,7 +71,7 @@
   }
   
   #title h1 {
-    border-bottom: 2px solid dimgray;
+    border-bottom: 1px solid black;
     color: ghostwhite;
     position: absolute;
     bottom: 0px;
