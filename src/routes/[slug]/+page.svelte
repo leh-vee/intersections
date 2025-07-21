@@ -43,33 +43,40 @@
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
-    color: ghostwhite;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+  }
+  
+  #page > div {
+    padding: 0;
+    width: 100%;
+    z-index: 1;
   }
   
   #page #title {
-    width: 80%;
+    min-height: 10%;
     flex-grow: 1;
     position: relative;
-    padding: 0;
   }
   
-  #title h1 {
-    margin: 0;
-    position: absolute;
-    color: white;
-    bottom: 5px;
+  #page #poem {
+    overflow-y: scroll;
   }
   
   #page #button {
-    width: 100%;
     flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    position: relative;
+  }
+  
+  #title h1 {
+    border-bottom: 2px solid dimgray;
+    color: ghostwhite;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    margin: 0 10%;
   }
   
   #button button {
@@ -83,24 +90,16 @@
     width: 100px;
     position: absolute;
     bottom: 20px;
+    right: calc(50% - 50px);
   }
   
   #button button:active {
     border-color: gold;
   }
   
-  #page #poem {
-    padding: 0;
-    max-height: 80%;
-    overflow-y: scroll;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    z-index: 1;
-  }
-  
   #page #text {
     width: 80%;
+    margin: 0 auto;
     font-weight: 200;
     color: gold;
   }
@@ -110,11 +109,7 @@
     display: block;
   }
 
-  .line:first-child {
-    padding-top: 25px;
-  }
-
-  .line:last-child {
-    padding-bottom: 25px;
-  }
+  /* .line:last-child {
+    padding-bottom: 120px;
+  } */
 </style>
