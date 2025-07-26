@@ -46,7 +46,7 @@
 </script>
 
 <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
-<div id='page'>
+<div id='page' style="visibility: {areLinesFitted ? 'visible' : 'hidden'};">
   <div id='title'>
     <h1>{ data.title }</h1>
   </div>
