@@ -3,13 +3,39 @@
   import fitty from 'fitty';
 	import MapTiles from '$lib/MapTiles.svelte';
 
-  onMount(() => {
-    fitty('#text .line');
-  });
-
   let { data } = $props();
 
   let isLit = $state(false);
+
+  let lineEls = $state([]);
+  let nLines = $derived(lineEls.length);
+  let nLineFitEventCalls = $state(0);
+  let areLinesFitted = $derived(nLineFitEventCalls === nLines && nLines > 0);
+
+  $effect(() => {
+    if (areLinesFitted) setPoemMargin();
+	});
+
+  onMount(() => {
+    lineEls.forEach(el => {
+      el.addEventListener('fit', function (e) {
+        nLineFitEventCalls++;
+      });
+    });
+    fitty('#poem #text .line');
+  });
+  
+  let buttonEl, buttonContainerEl, blankEl;
+  let blankHeight = $state(0);
+
+  function setPoemMargin() {
+    const btnRect = buttonEl.getBoundingClientRect();
+    const btnContainerRect = buttonContainerEl.getBoundingClientRect();
+    const distanceToButtonTop = window.innerHeight - btnRect.top;
+    const containerHeight = btnContainerRect.height;
+    const heightDifference = distanceToButtonTop - containerHeight;
+    blankHeight = heightDifference > 0 ? heightDifference : 0;
+  }
 
   function lightBurst() {
     isLit = true;
@@ -26,13 +52,14 @@
   </div>
   <div id='poem'>
     <div id='text'>
-      {#each data.poem as line}
-        <span class='line'>{line}</span>
+      {#each data.poem as line, i}
+        <span class='line' bind:this={ lineEls[i] }>{line}</span>
       {/each}
     </div>
+    <div bind:this={ blankEl } id='blank' style="height: {blankHeight}px;"></div>
   </div>
-  <div id='button'>
-    <button onclick={ lightBurst }>3</button>
+  <div bind:this={ buttonContainerEl } id='button'>
+    <button bind:this={ buttonEl } onclick={ lightBurst }>3</button>
   </div>
 </div>
 
@@ -65,7 +92,11 @@
   #page #poem {
     overflow-y: scroll;
   }
-  
+
+  #poem #blank {
+    width: 100%;
+  }
+
   #page #button {
     flex-grow: 1;
   }
@@ -108,8 +139,4 @@
     white-space: nowrap;
     display: block;
   }
-
-  /* .line:last-child {
-    padding-bottom: 120px;
-  } */
 </style>
