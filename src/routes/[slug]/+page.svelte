@@ -98,7 +98,7 @@
   }
 
   #page #more {
-    flex-grow: 1;
+    flex-grow: 1.33;
   }
   
   #title h2 {
