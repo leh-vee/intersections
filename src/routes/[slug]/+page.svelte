@@ -34,8 +34,8 @@
     let isOverflowing = false;
     if (poemEl && areLinesFitted) {
       const poemElRect = poemEl.getBoundingClientRect();
-      const poemElHeight = poemElRect.height;
-      if (poemElHeight >= 100) isOverflowing = true;
+      const deltaFromBottom = window.innerHeight - poemElRect.bottom;
+      if (deltaFromBottom <= 100) isOverflowing = true;
     }
     return isOverflowing;  
   });
@@ -51,7 +51,7 @@
 <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
 <div id='page' style="visibility: {areLinesFitted ? 'visible' : 'hidden'};">
   <div id='title'>
-    <h1>{ data.title }</h1>
+    <h2>{ data.title }</h2>
   </div>
   <div id='poem' bind:this={ poemEl }>
     <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
@@ -74,7 +74,6 @@
     font-family: 'Helvetica Neue', sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     overflow: hidden;
   }
@@ -102,7 +101,7 @@
     flex-grow: 1;
   }
   
-  #title h1 {
+  #title h2 {
     border-bottom: 2px solid black;
     color: ghostwhite;
     width: 100%;
