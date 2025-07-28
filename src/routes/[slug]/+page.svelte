@@ -115,7 +115,7 @@
     background-color: #051021;
     color: #BEEEFF;
     border: 2px solid dimgrey;
-    font-size: 4dvh;
+    font-size: 45px;
     border-radius: 50%;
     height: 100px;
     width: 100px;
