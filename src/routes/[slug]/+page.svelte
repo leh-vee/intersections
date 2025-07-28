@@ -94,6 +94,8 @@
   
   #page #poem {
     overflow-y: scroll;
+    position: relative;
+    bottom: 2px;
   }
 
   #page #more {
@@ -101,7 +103,7 @@
   }
   
   #title h1 {
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
     color: ghostwhite;
     position: absolute;
     bottom: 0px;
