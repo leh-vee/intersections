@@ -35,8 +35,7 @@
     if (poemEl && areLinesFitted) {
       const poemElRect = poemEl.getBoundingClientRect();
       const poemElHeight = poemElRect.height;
-      const poemElPercentHeight = poemElHeight / window.innerHeight;
-      if (poemElPercentHeight >= 0.8) isOverflowing = true;
+      if (poemElHeight >= 100) isOverflowing = true;
     }
     return isOverflowing;  
   });
@@ -69,7 +68,7 @@
 <style>
   #page {
     background-color: white;
-    height: 100dvh;
+    height: 100%;
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
@@ -87,7 +86,7 @@
   }
   
   #page #title {
-    min-height: 10dvh;
+    min-height: 100px;
     flex-grow: 1;
     position: relative;
   }
@@ -118,8 +117,8 @@
     border: 2px solid dimgrey;
     font-size: 4dvh;
     border-radius: 50%;
-    height: 8dvh;
-    width: 8dvh;
+    height: 100px;
+    width: 100px;
     position: absolute;
     bottom: 2dvh;
     right: calc(50% - 50px);
