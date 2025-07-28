@@ -12,30 +12,34 @@
   let nLineFitEventCalls = $state(0);
   let areLinesFitted = $derived(nLineFitEventCalls === nLines && nLines > 0);
 
-  $effect(() => {
-    if (areLinesFitted) setPoemMargin();
-	});
-
   onMount(() => {
-    lineEls.forEach(el => {
-      el.addEventListener('fit', function (e) {
-        nLineFitEventCalls++;
-      });
-    });
+    lineEls.forEach(el => el.addEventListener('fit', () => nLineFitEventCalls++ ));
     fitty('#poem #text .line');
   });
-  
-  let buttonEl, buttonContainerEl, blankEl;
-  let blankHeight = $state(0);
 
-  function setPoemMargin() {
-    const btnRect = buttonEl.getBoundingClientRect();
-    const btnContainerRect = buttonContainerEl.getBoundingClientRect();
-    const distanceToButtonTop = window.innerHeight - btnRect.top;
-    const containerHeight = btnContainerRect.height;
-    const heightDifference = distanceToButtonTop - containerHeight;
-    blankHeight = heightDifference > 0 ? heightDifference : 0;
-  }
+  let btnEl = $state(false);
+  
+  let btnElTop = $derived.by(() => {
+    let top = 0;
+    if (btnEl) {
+      const btnElRect = btnEl.getBoundingClientRect();
+      top = window.innerHeight - btnElRect.top;
+    }
+    return top;
+  });
+  
+  let poemEl = $state(false); 
+  
+  let isPoemOverflowing = $derived.by(() => {
+    let isOverflowing = false;
+    if (poemEl && areLinesFitted) {
+      const poemElRect = poemEl.getBoundingClientRect();
+      const poemElHeight = poemElRect.height;
+      const poemElPercentHeight = poemElHeight / window.innerHeight;
+      if (poemElPercentHeight >= 0.8) isOverflowing = true;
+    }
+    return isOverflowing;  
+  });
 
   function lightBurst() {
     isLit = true;
@@ -50,23 +54,22 @@
   <div id='title'>
     <h1>{ data.title }</h1>
   </div>
-  <div id='poem'>
-    <div id='text'>
+  <div id='poem' bind:this={ poemEl }>
+    <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
       {#each data.poem as line, i}
         <span class='line' bind:this={ lineEls[i] }>{line}</span>
       {/each}
     </div>
-    <div bind:this={ blankEl } id='blank' style="height: {blankHeight}px;"></div>
   </div>
-  <div bind:this={ buttonContainerEl } id='button'>
-    <button bind:this={ buttonEl } onclick={ lightBurst }>3</button>
+  <div id='more'>
+    <button bind:this={ btnEl } onclick={ lightBurst }>3</button>
   </div>
 </div>
 
 <style>
   #page {
     background-color: white;
-    height: 100%;
+    height: 100vh;
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
@@ -84,7 +87,7 @@
   }
   
   #page #title {
-    min-height: 10%;
+    min-height: 10vh;
     flex-grow: 1;
     position: relative;
   }
@@ -93,11 +96,7 @@
     overflow-y: scroll;
   }
 
-  #poem #blank {
-    width: 100%;
-  }
-
-  #page #button {
+  #page #more {
     flex-grow: 1;
   }
   
@@ -110,25 +109,25 @@
     margin: 0 10%;
   }
   
-  #button button {
+  #more button {
     font-family: "Rubik", sans-serif;
     background-color: #051021;
     color: #BEEEFF;
     border: 2px solid dimgrey;
-    font-size: 45px;
+    font-size: 4vh;
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
+    height: 8vh;
+    width: 8vh;
     position: absolute;
-    bottom: 20px;
+    bottom: 2vh;
     right: calc(50% - 50px);
   }
   
-  #button button:active {
+  #more button:active {
     border-color: gold;
   }
   
-  #page #text {
+  #poem #text {
     width: 80%;
     margin: 0 auto;
     font-weight: 200;
