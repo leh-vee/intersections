@@ -86,9 +86,10 @@
   }
   
   #page #title {
-    min-height: 100px;
     flex-grow: 1;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   
   #page #poem {
@@ -104,8 +105,6 @@
   #title h1 {
     border-bottom: 1px solid black;
     color: ghostwhite;
-    position: absolute;
-    bottom: 0px;
     width: 100%;
     margin: 0 10%;
   }
