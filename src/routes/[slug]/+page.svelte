@@ -69,7 +69,7 @@
 <style>
   #page {
     background-color: white;
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
@@ -87,7 +87,7 @@
   }
   
   #page #title {
-    min-height: 10vh;
+    min-height: 10dvh;
     flex-grow: 1;
     position: relative;
   }
@@ -116,12 +116,12 @@
     background-color: #051021;
     color: #BEEEFF;
     border: 2px solid dimgrey;
-    font-size: 4vh;
+    font-size: 4dvh;
     border-radius: 50%;
-    height: 8vh;
-    width: 8vh;
+    height: 8dvh;
+    width: 8dvh;
     position: absolute;
-    bottom: 2vh;
+    bottom: 2dvh;
     right: calc(50% - 50px);
   }
   
