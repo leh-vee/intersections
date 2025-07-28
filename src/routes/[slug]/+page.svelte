@@ -85,7 +85,7 @@
   }
   
   #page #title {
-    flex-grow: 1;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -98,7 +98,7 @@
   }
 
   #page #more {
-    flex-grow: 1.33;
+    flex: 1;
   }
   
   #title h2 {
