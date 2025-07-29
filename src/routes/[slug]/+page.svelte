@@ -4,18 +4,26 @@
 	import MapTiles from '$lib/MapTiles.svelte';
 
   let { data } = $props();
-
-  let isLit = $state(false);
-
+  
   let lineEls = $state([]);
   let nLines = $derived(lineEls.length);
   let nLineFitEventCalls = $state(0);
   let areLinesFitted = $derived(nLineFitEventCalls === nLines && nLines > 0);
+  let isPoemVisible = $state(false);
+
+  let fittyLineEls;
 
   onMount(() => {
-    lineEls.forEach(el => el.addEventListener('fit', () => nLineFitEventCalls++ ));
-    fitty('#poem #text .line');
+    lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
+    fittyLineEls = fitty('#poem #text .line');
   });
+
+  $effect(() => {
+    if (areLinesFitted) {
+      fittyLineEls.forEach(el => el.freeze());
+      isPoemVisible = true;
+    }
+	});
 
   let btnEl = $state(false);
   
@@ -40,16 +48,47 @@
     return isOverflowing;  
   });
 
+  let isLit = $state(false);
+
   function lightBurst() {
     isLit = true;
+    if (nextLineToType < nLines) typeLine();
     setTimeout(() => {
       isLit = false;
     }, 50);
+    return true;
   }
+
+  let nextLineToType = 0;
+
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function typeLine() {
+    const lineEl = lineEls[nextLineToType];
+    const elTextContent = lineEl.textContent;
+    const text =  elTextContent;
+    let nextCharIndex = 1;
+    let addCharIntervalId;
+    const typeChar = () => {
+      lineEl.textContent = text.slice(0, nextCharIndex);
+      if (nextCharIndex < elTextContent.length) {
+        if (nextCharIndex === 1) lineEl.style.visibility = 'visible';
+        nextCharIndex += 1;
+        setTimeout(typeChar, randomInt(100, 1000));
+      } else {
+        nextLineToType += 1;
+      }
+    }
+    typeChar();
+  }
+
+
 </script>
 
 <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
-<div id='page' style="visibility: {areLinesFitted ? 'visible' : 'hidden'};">
+<div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ data.title }</h3>
   </div>
@@ -138,5 +177,6 @@
   .line {
     white-space: nowrap;
     display: block;
+    visibility: hidden;
   }
 </style>
