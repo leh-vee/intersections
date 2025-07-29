@@ -51,7 +51,7 @@
 <MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
 <div id='page' style="visibility: {areLinesFitted ? 'visible' : 'hidden'};">
   <div id='title'>
-    <h1>{ data.title }</h1>
+    <h4>{ data.title }</h4>
   </div>
   <div id='poem' bind:this={ poemEl }>
     <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
@@ -101,12 +101,13 @@
     flex: 1;
   }
   
-  #title h1 {
+  #title h4 {
+    font-weight: 400;
     border-bottom: 2px solid black;
     color: ghostwhite;
     width: 100%;
     margin: 0 10%;
-    padding: 10px 0;
+    padding: 5px 0;
   }
   
   #more button {
