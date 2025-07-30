@@ -23,7 +23,8 @@ export const load: PageLoad = async ({ fetch, params }) => {
     takenTailIndices.push(tailIndex);
   })
 
-  const shortTailOfPi = longTailOfPi.slice(0, metaTailMap.length + 40);
+  const shortTailLength = Math.max(metaTailMap.length, 100);
+  const shortTailOfPi = longTailOfPi.slice(0, shortTailLength);
 
   return { metaTailMap, shortTailOfPi };
 }
