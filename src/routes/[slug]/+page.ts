@@ -13,6 +13,15 @@ export const load: PageLoad = async ({ fetch, params }) => {
   const meta = yaml.load(metaYml) as PoemMetaData;
   const title = meta[slug].title;
 
+  // const documentId = '1N4wJLTSaV9JGjubpxJz6zgtFa6IEb0q476_7EqlE47U';
+  // const url = `https://docs.google.com/document/d/${documentId}/export?format=txt`;
+
+  // const poem = await fetch(url)
+  //   .then((res) => res.text())
+  //   .then((text) => text.split('\n').filter(line => line.trim() !== ''));
+
+	// return { poem, title };
+
 	return { poem, title };
 }
 
