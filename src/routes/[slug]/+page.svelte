@@ -182,8 +182,8 @@
   }
   
   .line {
-    white-space: nowrap;
-    display: block;
+    white-space: nowrap !important;
+    display: block !important;
     visibility: hidden;
   }
 </style>
