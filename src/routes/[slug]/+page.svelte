@@ -15,7 +15,7 @@
 
   onMount(() => {
     lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
-    fittyLineEls = fitty('#poem #text .line');
+    fittyLineEls = fitty('#poem #text .line', { minSize: 8 });
   });
 
   $effect(() => {
@@ -182,8 +182,8 @@
   }
   
   .line {
-    white-space: nowrap !important;
-    display: block !important;
+    white-space: nowrap;
+    display: block;
     visibility: hidden;
   }
 </style>
