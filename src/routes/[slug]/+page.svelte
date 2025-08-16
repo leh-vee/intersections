@@ -107,7 +107,7 @@
     </div>
   </div>
   <div id='more'>
-    <button bind:this={ btnEl } onclick={ lightBurst }>3</button>
+    <button bind:this={ btnEl } onclick={ lightBurst }>{ data. sefirahId }</button>
   </div>
 </div>
 
