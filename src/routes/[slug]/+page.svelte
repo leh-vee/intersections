@@ -94,7 +94,7 @@
 
 </script>
 
-<MapTiles centreCoordsGcs={ [-79.306775909005395, 43.705856672084899] } gild={ isLit } />
+<MapTiles centreCoordsGcs={ data.coords } gild={ isLit } />
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ data.title }</h3>
