@@ -49,8 +49,10 @@
   });
 
   let isLit = $state(false);
+  let isTyping = false;
 
   function lightBurst() {
+    if (isTyping) return null;
     isLit = true;
     if (nextLineToType < nLines) typeLine();
     setTimeout(() => {
@@ -66,19 +68,24 @@
   }
 
   function typeLine() {
+    isTyping = true;
     const lineEl = lineEls[nextLineToType];
     const elTextContent = lineEl.textContent;
     const text =  elTextContent;
     let nextCharIndex = 1;
     let addCharIntervalId;
     const typeChar = () => {
+      const char = text.slice(nextCharIndex - 1, nextCharIndex);
       lineEl.textContent = text.slice(0, nextCharIndex);
       if (nextCharIndex < elTextContent.length) {
         if (nextCharIndex === 1) lineEl.style.visibility = 'visible';
         nextCharIndex += 1;
-        setTimeout(typeChar, randomInt(100, 1000));
+        let typingDelay = randomInt(100, 200);
+        if (/[.,;:!?[\]{}\–—]/.test(char)) typingDelay = randomInt(1000, Math.PI * 1000);
+        setTimeout(typeChar, typingDelay);
       } else {
         nextLineToType += 1;
+        isTyping = false;
       }
     }
     typeChar();
