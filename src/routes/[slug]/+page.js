@@ -1,7 +1,7 @@
-import type { PageLoad } from './$types';
+// @ts-nocheck
 import yaml from 'js-yaml';
 
-export const load: PageLoad = async ({ fetch, params }) => {
+export async function load({ fetch, params }) {
   const slug = params.slug;
 
 	const poem = await fetch(`/poems/${slug}.txt`)
@@ -10,7 +10,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
   const metaYml = await fetch('/poem-data.yml')
     .then((res) => res.text());
-  const meta = yaml.load(metaYml) as PoemMetaData;
+  const meta = yaml.load(metaYml);
   const title = meta[slug].title;
   const coords = [meta[slug].longitude, meta[slug].latitude];
   const sefirahId = meta[slug].sefirahId;
@@ -25,12 +25,4 @@ export const load: PageLoad = async ({ fetch, params }) => {
 	// return { poem, title };
 
 	return { poem, title, coords, sefirahId };
-}
-
-interface PoemMetaData {
-  [key: string]: {
-    title: string,
-    sefirahId: number,
-    intersectionId: number
-  }
 }

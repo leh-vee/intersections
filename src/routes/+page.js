@@ -1,9 +1,8 @@
-import type { PageLoad } from './$types';
+// @ts-nocheck
 import { parse } from 'csv-parse/browser/esm/sync';
 import slugify from 'slugify';    
-import yaml from 'js-yaml';
 
-export const load: PageLoad = async ({ fetch, params }) => {
+export async function load({ fetch }) {
   const longTailOfPi = await fetch('/pi-long-tail.txt') 
     .then((res) => res.text())
     .then((text) => text.split(''));
@@ -25,7 +24,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
   });
   
   const metaTailMap = new Array();
-  const takenTailIndices: number[] = [];
+  const takenTailIndices = [];
 
   Object.keys(keyedPoemIndex).forEach(slug => {
     const sefirahId = keyedPoemIndex[slug].sefirahId;
@@ -40,12 +39,4 @@ export const load: PageLoad = async ({ fetch, params }) => {
   const shortTailOfPi = longTailOfPi.slice(0, shortTailLength);
 
   return { keyedPoemIndex, metaTailMap, shortTailOfPi };
-}
-
-interface PoemMetaData {
-  [key: string]: {
-    title: string,
-    sefirahId: number,
-    intersectionId: number
-  }
 }
