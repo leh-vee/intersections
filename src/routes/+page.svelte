@@ -3,12 +3,14 @@
 
   let { data }: PageProps = $props();
 
+  let poemIndexData = $state(data.keyedPoemIndex);
+
   function metaAt(index: number) {
     return data.metaTailMap[index];
   } 
 
   function routeForPoemAt(index: number) {
-    return `/${data.metaTailMap[index].slug}`;
+    return `/${data.metaTailMap[index]}`;
   }
 
   function randomIntBetween(low: number, high: number): number {
