@@ -7,7 +7,7 @@
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
 
-  let { centreCoordsGcs, zoom = 14, gild = false } = $props();
+  let { centreCoordsGcs, zoom = 15, gild = false } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
 
   $effect(() => {
