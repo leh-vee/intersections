@@ -3,8 +3,6 @@
 
   let { data }: PageProps = $props();
 
-  let poemIndexData = $state(data.keyedPoemIndex);
-
   function metaAt(index: number) {
     return data.metaTailMap[index];
   } 

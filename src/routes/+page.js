@@ -1,33 +1,18 @@
 // @ts-nocheck
-import { parse } from 'csv-parse/browser/esm/sync';
-import slugify from 'slugify';    
+import { poemIndex } from '$lib/store.js';
 
 export async function load({ fetch }) {
   const longTailOfPi = await fetch('/pi-long-tail.txt') 
     .then((res) => res.text())
     .then((text) => text.split(''));
 
-  const poemIndexSheetId = '1-BjOyI_0_cX46dbSZMrjVo0mF2sXDeFgmT8gScvOVLM';
-  const url = `https://docs.google.com/spreadsheets/d/${poemIndexSheetId}/export?format=csv`;
-  const poemIndexCsv = await fetch(url).then((res) => res.text());
-  const poemIndex = parse(poemIndexCsv, {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true
-  });
-
-  const keyedPoemIndex = {};
-
-  poemIndex.forEach(row => {
-    const slug = slugify(row.title, { lower: true, remove: /[*+~.,()'"!:@]/g });
-    return keyedPoemIndex[slug] = row;
-  });
+  const keyedIndex = await poemIndex.get();
   
   const metaTailMap = new Array();
   const takenTailIndices = [];
 
-  Object.keys(keyedPoemIndex).forEach(slug => {
-    const sefirahId = keyedPoemIndex[slug].sefirahId;
+  Object.keys(keyedIndex).forEach(slug => {
+    const sefirahId = keyedIndex[slug].sefirahId;
     const tailIndex = longTailOfPi.findIndex((d, i) => {
       return sefirahId === d && !takenTailIndices.includes(i);
     });
@@ -38,5 +23,5 @@ export async function load({ fetch }) {
   const shortTailLength = Math.max(metaTailMap.length, 100);
   const shortTailOfPi = longTailOfPi.slice(0, shortTailLength);
 
-  return { keyedPoemIndex, metaTailMap, shortTailOfPi };
+  return { metaTailMap, shortTailOfPi };
 }
