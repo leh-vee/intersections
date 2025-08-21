@@ -4,4 +4,4 @@
   const cityCentreCoords = [-79.3805366450235, 43.7302401508249]; 
 </script>
 
-<MapTiles centreCoordsGcs={ cityCentreCoords } zoom= { 12 } />
+<MapTiles centreCoordsGcs={ cityCentreCoords } zoom= { 11 } />
