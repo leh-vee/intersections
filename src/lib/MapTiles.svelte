@@ -46,8 +46,8 @@
       view: new View({
         center: fromLonLat(coords),
         zoom,
-        minZoom: zoom,
-        maxZoom: zoom
+        minZoom: 0,
+        maxZoom: 14
       })
     });
     return {
