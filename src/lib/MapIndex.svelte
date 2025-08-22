@@ -36,12 +36,12 @@
   // Create marker style
   const markerStyle = new Style({
     image: new Circle({
-      radius: 3,
+      radius: 5,
       fill: new Fill({
         color: 'black',
       }),
       stroke: new Stroke({
-        color: 'white',
+        color: 'gold',
         width: 1,
       })
     }),
