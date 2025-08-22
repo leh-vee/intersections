@@ -36,19 +36,15 @@
     // Create marker style function that takes zoom level
   function createMarkerStyle(zoom) {
     // Calculate radius based on zoom level (adjust the formula as needed)
-    const baseRadius = 3;
-    const zoomFactor = Math.max(0.5, zoom - 5); // Adjust these values to taste
+    const baseRadius = 1;
+    const zoomFactor = Math.max(0.5, zoom - 10); // Adjust these values to taste
     const radius = baseRadius + zoomFactor * 0.8;
     
     return new Style({
       image: new Circle({
         radius: radius,
         fill: new Fill({
-          color: 'black',
-        }),
-        stroke: new Stroke({
           color: 'gold',
-          width: 1,
         })
       }),
     });
