@@ -45,13 +45,13 @@
     
     return new Style({
       image: new Circle({
-        radius: 4,
+        radius: 3,
         fill: new Fill({
           color: 'gold',
         }),
         stroke: new Stroke({
-          color: 'black',
-          width: 2,
+          color: 'dimgrey',
+          width: 1,
         })
       }),
     });
