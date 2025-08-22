@@ -13,14 +13,14 @@
   $effect(() => {
     if (vectorLayer) {
       vectorLayer.setStyle({
-        'stroke-color': 'black',
-        'stroke-width': 0.5
+        'stroke-color': strokeColour,
+        'stroke-width': 1
       });
     }
   });
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
-  const mvtId = 'le0nl.streets-of-toronto';
+  const mvtId = 'le0nl.dd0rj3wo';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
    `{z}/{x}/{y}.vector.pbf?access_token=${mapBoxApiKey}`;
   const vectorTileSource = new VectorTileSource({
@@ -46,8 +46,8 @@
       view: new View({
         center: fromLonLat(coords),
         zoom,
-        minZoom: 11,
-        maxZoom: 14
+        minZoom: zoom,
+        maxZoom: zoom
       })
     });
     return {
@@ -78,7 +78,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: white;
+    background-color: #051021;
     z-index: 0;
   }
 </style>

@@ -1,0 +1,138 @@
+<script lang="js">
+  import { Map, View } from 'ol';
+  import { fromLonLat } from 'ol/proj.js';
+  import VectorTileLayer from 'ol/layer/VectorTile.js';
+  import VectorTileSource from 'ol/source/VectorTile.js';
+  import MVT from 'ol/format/MVT.js';
+  import VectorLayer from 'ol/layer/Vector.js';
+  import VectorSource from 'ol/source/Vector.js';
+  import { Point } from 'ol/geom.js';
+  import { Feature } from 'ol';
+  import { Style, Circle, Fill, Stroke } from 'ol/style.js';
+
+  let { centreCoordsGcs, zoom = 15, gild = false, poemCoords } = $props();
+  let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+
+  $effect(() => {
+    if (vectorLayer) {
+      vectorLayer.setStyle({
+        'stroke-color': 'dimgrey',
+        'stroke-width': 1
+      });
+    }
+  });
+
+  const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
+  const mvtId = 'le0nl.streets-of-toronto';
+  const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
+   `{z}/{x}/{y}.vector.pbf?access_token=${mapBoxApiKey}`;
+  const vectorTileSource = new VectorTileSource({
+    format: new MVT(), url: tileUrl 
+  });
+
+  let map = null;
+  let vectorLayer, markerLayer;
+
+  // Create marker style
+  const markerStyle = new Style({
+    image: new Circle({
+      radius: 3,
+      fill: new Fill({
+        color: 'black',
+      }),
+      stroke: new Stroke({
+        color: 'white',
+        width: 1,
+      })
+    }),
+  });
+
+  // Create markers vector source
+  const markerSource = new VectorSource();
+
+  // Function to add markers to the map
+  function updateMarkers(poemCoords) {
+    if (!markerSource) return;
+    
+    // Clear existing markers
+    markerSource.clear();
+    
+    // Add new markers
+    Object.keys(poemCoords).forEach(slug => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat(poemCoords[slug])),
+        slug: slug,
+      });
+      markerSource.addFeature(feature);
+    });
+  }
+
+  // Watch for changes in markers prop
+  $effect(() => {
+    updateMarkers(poemCoords);
+  });
+
+  function initializeMap(node, coords) {
+    vectorLayer = new VectorTileLayer({
+      source: vectorTileSource,
+      style: {
+        'stroke-color': strokeColour,
+        'stroke-width': 1
+      },
+    });
+
+    // Create marker layer
+    markerLayer = new VectorLayer({
+      source: markerSource,
+      style: markerStyle,
+    });
+    
+    map = new Map({
+      target: node.id,
+      controls: [],
+      layers: [vectorLayer, markerLayer],
+      view: new View({
+        center: fromLonLat(coords),
+        zoom,
+        minZoom: 11,
+        maxZoom: 14
+      })
+    });
+
+    map.on('click', (event) => {
+      const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      window.location.href = `${window.location.origin}/${feature.get('slug')}`;
+    });
+
+    return {
+      destroy() {
+        if (map) {
+          map.setTarget(undefined);
+          map = null;
+        }
+      }
+    }
+  }
+
+  let tilesLoading = 0;
+  let tilesLoaded = 0;
+  vectorTileSource.on('tileloadstart', () => {
+    tilesLoading += 1;
+  });
+  vectorTileSource.on(['tileloadend', 'tileloaderror'], () => { tilesLoaded += 1 });
+  
+</script>
+
+<div id='map' use:initializeMap={centreCoordsGcs}></div>
+
+
+<style>
+  #map {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 0;
+  }
+</style>

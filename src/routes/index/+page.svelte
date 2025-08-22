@@ -1,17 +1,15 @@
-<script lang="ts">
-  import type { PageProps } from '../$types';
+<script>
+  let { data } = $props();
 
-  let { data }: PageProps = $props();
-
-  function metaAt(index: number) {
+  function metaAt(index) {
     return data.metaTailMap[index];
   } 
 
-  function routeForPoemAt(index: number) {
+  function routeForPoemAt(index) {
     return `/${data.metaTailMap[index]}`;
   }
 
-  function randomIntBetween(low: number, high: number): number {
+  function randomIntBetween(low, high) {
     return Math.floor(Math.random() * (high - low + 1)) + low;
   }
 </script>
