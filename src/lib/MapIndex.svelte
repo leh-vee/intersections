@@ -33,19 +33,29 @@
   let map = null;
   let vectorLayer, markerLayer;
 
-  // Create marker style
-  const markerStyle = new Style({
-    image: new Circle({
-      radius: 5,
-      fill: new Fill({
-        color: 'black',
+    // Create marker style function that takes zoom level
+  function createMarkerStyle(zoom) {
+    // Calculate radius based on zoom level (adjust the formula as needed)
+    const baseRadius = 3;
+    const zoomFactor = Math.max(0.5, zoom - 10); // Adjust these values to taste
+    const radius = baseRadius + zoomFactor * 0.8;
+    
+    return new Style({
+      image: new Circle({
+        radius: radius,
+        fill: new Fill({
+          color: 'black',
+        }),
+        stroke: new Stroke({
+          color: 'gold',
+          width: 1,
+        })
       }),
-      stroke: new Stroke({
-        color: 'gold',
-        width: 1,
-      })
-    }),
-  });
+    });
+  }
+
+  // Initial marker style
+  let markerStyle = createMarkerStyle(zoom);
 
   // Create markers vector source
   const markerSource = new VectorSource();
@@ -97,6 +107,13 @@
         minZoom: 11,
         maxZoom: 14
       })
+    });
+
+    // Add zoom change listener to update marker styles
+    map.getView().on('change:resolution', () => {
+      const currentZoom = map.getView().getZoom();
+      markerStyle = createMarkerStyle(currentZoom);
+      markerLayer.setStyle(markerStyle);
     });
 
     map.on('click', (event) => {
