@@ -42,13 +42,13 @@
     
     return new Style({
       image: new Circle({
-        radius,
+        radius: 1,
         fill: new Fill({
-          color: 'gold',
+          color: '#BEEEFF',
         }),
         stroke: new Stroke({
           color: 'black',
-          width: 2,
+          width: 0,
         })
       }),
     });
@@ -100,11 +100,11 @@
     map = new Map({
       target: node.id,
       controls: [],
-      layers: [vectorLayer, markerLayer],
+      layers: [markerLayer],
       view: new View({
         center: fromLonLat(coords),
         zoom,
-        minZoom: 11,
+        minZoom: 0,
         maxZoom: 14
       })
     });

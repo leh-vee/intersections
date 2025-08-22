@@ -10,5 +10,5 @@
 <MapIndex 
   centreCoordsGcs={ cityCentreCoords } 
   poemCoords={ data.poemCoords } 
-  zoom={ 11 } 
+  zoom={ 12 } 
 />
