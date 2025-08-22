@@ -26,7 +26,7 @@
   });
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
-  const mvtId = 'le0nl.dd0rj3wo';
+  const mvtId = 'le0nl.streets-of-toronto';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
    `{z}/{x}/{y}.vector.pbf?access_token=${mapBoxApiKey}`;
   const vectorTileSource = new VectorTileSource({
