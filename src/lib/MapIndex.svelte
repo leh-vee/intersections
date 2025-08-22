@@ -10,7 +10,7 @@
   import { Feature } from 'ol';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
 
-  let { zoom = 14, gild = false, poemCoords } = $props();
+  let { zoom = 12, gild = false, poemCoords } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
 
   const cityCentreCoords = [-79.3805366450235, 43.7302401508249]; 
