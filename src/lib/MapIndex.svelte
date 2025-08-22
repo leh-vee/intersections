@@ -26,7 +26,7 @@
   });
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
-  const mvtId = 'le0nl.streets-of-toronto';
+  const mvtId = 'le0nl.dd0rj3wo';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
    `{z}/{x}/{y}.vector.pbf?access_token=${mapBoxApiKey}`;
   const vectorTileSource = new VectorTileSource({
@@ -108,7 +108,7 @@
         center: fromLonLat(coords),
         zoom,
         minZoom: 12,
-        maxZoom: 14
+        maxZoom: 15
       })
     });
 
