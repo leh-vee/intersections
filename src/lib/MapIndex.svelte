@@ -42,13 +42,13 @@
     
     return new Style({
       image: new Circle({
-        radius,
+        radius: 3,
         fill: new Fill({
           color: 'gold',
         }),
         stroke: new Stroke({
           color: 'black',
-          width: 0,
+          width: 1,
         })
       }),
     });
