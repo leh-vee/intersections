@@ -10,8 +10,11 @@
   import { Feature } from 'ol';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
 
-  let { centreCoordsGcs, zoom = 15, gild = false, poemCoords } = $props();
+  let { zoom = 14, gild = false, poemCoords } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+
+  const cityCentreCoords = [-79.3805366450235, 43.7302401508249]; 
+  let centreCoordsGcs = cityCentreCoords;
 
   $effect(() => {
     if (vectorLayer) {
@@ -42,13 +45,13 @@
     
     return new Style({
       image: new Circle({
-        radius: 3,
+        radius: 4,
         fill: new Fill({
           color: 'gold',
         }),
         stroke: new Stroke({
           color: 'black',
-          width: 1,
+          width: 2,
         })
       }),
     });
@@ -100,11 +103,11 @@
     map = new Map({
       target: node.id,
       controls: [],
-      layers: [markerLayer],
+      layers: [vectorLayer, markerLayer],
       view: new View({
         center: fromLonLat(coords),
         zoom,
-        minZoom: 0,
+        minZoom: 14,
         maxZoom: 14
       })
     });
@@ -141,7 +144,6 @@
 </script>
 
 <div id='map' use:initializeMap={centreCoordsGcs}></div>
-
 
 <style>
   #map {
