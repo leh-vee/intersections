@@ -1,9 +1,14 @@
 <script>
-  import { Map, View } from 'ol';
+  import { Map, View, Feature } from 'ol';
+  import { Point } from 'ol/geom.js';
   import { fromLonLat } from 'ol/proj.js';
+  import VectorLayer from 'ol/layer/Vector.js';
+  import VectorSource from 'ol/source/Vector.js';
   import VectorTileSource from 'ol/source/VectorTile.js';
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
+  import { Style, Circle, Fill, Stroke } from 'ol/style.js';
+  import { poemIndex } from '$lib/store.js';
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.streets-of-toronto';
@@ -25,15 +30,37 @@
       },
     });
 
+    const slugs = Object.keys($poemIndex);
+    const randomPoemCoords = $poemIndex[slugs[Math.floor(Math.random() * slugs.length)]].coordinates;
+
+    const markerFeatures = slugs.map(slug => {
+      const p = $poemIndex[slug];
+      return new Feature({ 
+        geometry: new Point(fromLonLat(p.coordinates)),
+        id: slug
+      });  
+    }); 
+    const markerLayer = new VectorLayer({
+      source: new VectorSource({ features: markerFeatures }), 
+      style: new Style({
+        image: new Circle({
+          radius: 1,
+          fill: new Fill({ color: 'gold' }),
+          // stroke: new Stroke({ color: 'dimgrey', width: 1 })
+        })
+      })
+    });
+
     map = new Map({
       target: node.id,
       controls: [],
-      layers: [tileLayer],
+      layers: [tileLayer, markerLayer],
       view: new View({
-        center: fromLonLat(cityCentreCoords),
+        center: fromLonLat(randomPoemCoords),
         zoom: 12,
         minZoom: 12,
-        maxZoom: 15
+        maxZoom: 15,
+        rotation: 0.3
       })
     });
 
