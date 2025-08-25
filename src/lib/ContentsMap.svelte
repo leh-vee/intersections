@@ -44,7 +44,7 @@
       source: new VectorSource({ features: markerFeatures }), 
       style: new Style({
         image: new Circle({
-          radius: 1,
+          radius: 2,
           fill: new Fill({ color: 'gold' }),
           // stroke: new Stroke({ color: 'dimgrey', width: 1 })
         })
