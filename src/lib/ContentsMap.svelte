@@ -46,7 +46,7 @@
         image: new Circle({
           radius: 3,
           fill: new Fill({ color: 'gold' }),
-          stroke: new Stroke({ color: 'dimgrey', width: 0.5 })
+          stroke: new Stroke({ color: 'dimgrey', width: 1 })
         })
       })
     });
