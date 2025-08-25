@@ -28,7 +28,9 @@ export function parseCsvIndex(csv) {
   const keyedIndex = {};
   index.forEach(row => {
     const slug = slugify(row.title, { lower: true, remove: /[*+~.,()'"!:@]/g });
-    keyedIndex[slug] = row;
+    const { longitude, latitude, ...summarizedRow } = row;
+    summarizedRow.coordinates = [longitude, latitude]
+    keyedIndex[slug] = summarizedRow;
   });
 
   return keyedIndex;

@@ -41,4 +41,4 @@ function createPoemIndexStore() {
   };
 }
 
-export const poemIndex = createPoemIndexStore();
+export const index = createPoemIndexStore();
