@@ -1,8 +1,7 @@
 <script>
-  import MapIndex
- from '$lib/MapIndex.svelte';
+  import ContentsMap from '$lib/ContentsMap.svelte';
 
   let { data } = $props();
 </script>
 
-<MapIndex poemCoords={ data.poemCoords } />
+<ContentsMap />
