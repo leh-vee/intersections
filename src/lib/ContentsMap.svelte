@@ -60,7 +60,8 @@
         zoom: 12,
         minZoom: 12,
         maxZoom: 15,
-        rotation: 0.3
+        rotation: 0.3,
+        constrainRotation: true
       })
     });
 
