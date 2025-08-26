@@ -7,6 +7,7 @@
   import VectorTileSource from 'ol/source/VectorTile.js';
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
+  import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
   import { poemIndex } from '$lib/store.js';
 
@@ -54,14 +55,14 @@
     map = new Map({
       target: node.id,
       controls: [],
+      interactions: defaultInteractions({ pinchRotate: false }),
       layers: [tileLayer, markerLayer],
       view: new View({
         center: fromLonLat(randomPoemCoords),
         zoom: 12,
         minZoom: 12,
         maxZoom: 16,
-        rotation: 0.3,
-        enableRotation: false
+        rotation: 0.3
       })
     });
 
