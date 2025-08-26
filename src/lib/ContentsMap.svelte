@@ -20,7 +20,7 @@
   });
 
   let map, tileLayer;
-  const cityExtentCoords = [-79.6993, 43.56, -79.08, 43.8855];
+  const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
   const viewExtent = [
     ...fromLonLat([cityExtentCoords[0], cityExtentCoords[1]]),
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
