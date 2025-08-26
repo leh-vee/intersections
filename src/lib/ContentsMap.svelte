@@ -59,8 +59,7 @@
         center: fromLonLat(randomPoemCoords),
         zoom: 12,
         minZoom: 12,
-        maxZoom: 15,
-        rotation: 0.3,
+        maxZoom: 13,
         constrainRotation: true
       })
     });
