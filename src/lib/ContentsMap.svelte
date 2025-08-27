@@ -1,4 +1,5 @@
 <script>
+  // @ts-nocheck
   import { Map, View, Feature } from 'ol';
   import { Point } from 'ol/geom.js';
   import { fromLonLat } from 'ol/proj.js';
@@ -66,7 +67,7 @@
       layers: [tileLayer, markerLayer],
       view: new View({
         center: fromLonLat(randomPoemCoords),
-        zoom: 12,
+        zoom: 13,
         minZoom: 12,
         maxZoom: 16,
         rotation: 0.3,
