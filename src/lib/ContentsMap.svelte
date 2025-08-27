@@ -12,6 +12,7 @@
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
   import { poemIndex } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
+  import { Circle as CircleGeom } from 'ol/geom.js';
 
   const dispatch = createEventDispatcher();
 
@@ -81,13 +82,9 @@
     });
 
      map.on('click', (event) => {
-      const feature = map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-        if (layer === markerLayer) {
-          return feature;
-        }
-      });
-      if (feature) {
-        dispatch('markerClick', feature.get('id'));
+      const features = getFeaturesWithinPixelRadius(map, event.pixel, 10, markerLayer);
+      if (features.length > 0) {
+        dispatch('markerClick', features[0].get('id'));
       }
     });
 
@@ -99,6 +96,23 @@
         }
       }
     }
+  }
+
+  function getFeaturesWithinPixelRadius(map, pixel, pixelRadius, markerLayer) {
+    const coordinate = map.getCoordinateFromPixel(pixel);
+    const resolution = map.getView().getResolution();
+    const mapRadius = pixelRadius * resolution;
+
+    // Create a circular geometry (buffer)
+    const circle = new CircleGeom(coordinate, mapRadius);
+
+    // Get all features in the marker layer
+    const features = markerLayer.getSource().getFeatures();
+
+    // Filter features whose geometry intersects the circle
+    return features.filter(f => {
+      return circle.intersectsExtent(f.getGeometry().getExtent());
+    });
   }
 </script>
 
