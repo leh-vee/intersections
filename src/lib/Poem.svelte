@@ -1,20 +1,22 @@
 <script>
-  import { onMount } from 'svelte';
   import fitty from 'fitty';
+  import MapTiles from '$lib/MapTiles.svelte';
 
-  let { title, sefirahId } = $props();
+  let { title, sefirahId, coords, poemLines } = $props();
   
   let lineEls = $state([]);
   let nLines = $derived(lineEls.length);
   let nLineFitEventCalls = $state(0);
   let areLinesFitted = $derived(nLineFitEventCalls === nLines && nLines > 0);
-  let isPoemVisible = $state(true);
+  let isPoemVisible = $state(false);
 
   let fittyLineEls;
 
-  onMount(() => {
-    lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
-    fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
+  $effect(() => {
+    if (poemLines.length > 0) {
+      lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
+      fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
+    }
   });
 
   $effect(() => {
@@ -93,16 +95,17 @@
 
 </script>
 
+<MapTiles centreCoordsGcs={ coords } gild={ isLit } />
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ title }</h3>
   </div>
   <div id='poem' bind:this={ poemEl }>
-    <!-- <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
-      {#each data.poem as line, i}
+    <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
+      {#each poemLines as line, i}
         <span class='line' bind:this={ lineEls[i] }>{line}</span>
       {/each}
-    </div> -->
+    </div>
   </div>
   <div id='more'>
     <button bind:this={ btnEl } onclick={ lightBurst }>{ sefirahId }</button>
