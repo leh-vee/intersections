@@ -13,6 +13,7 @@
   import { poemIndex } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
+	import { set } from 'ol/transform';
 
   const dispatch = createEventDispatcher();
 
@@ -58,7 +59,7 @@
         image: new Circle({
           radius: 2,
           fill: new Fill({ color: 'yellow' }),
-          // stroke: new Stroke({ color: 'dimgrey', width: 1 })
+          stroke: new Stroke({ color: 'dimgrey', width: 0 })
         })
       })
     });
@@ -81,7 +82,19 @@
       })
     });
 
-     map.on('click', (event) => {
+    map.getView().on('change:resolution', () => {
+      const currentZoom = map.getView().getZoom();
+      const { radius: newRadius, width: newWidth } = setMarkerRadius(currentZoom);
+
+      // Get current style radius/width
+      const currentStyle = markerLayer.getStyle();
+      const currentRadius = currentStyle?.getImage()?.getRadius() || newRadius;
+      const currentWidth = currentStyle?.getImage()?.getStroke()?.getWidth() || newWidth;
+
+      animateMarkerRadius(markerLayer, currentRadius, newRadius, currentWidth, newWidth);
+    });
+
+    map.on('click', (event) => {
       const features = getFeaturesWithinPixelRadius(map, event.pixel, 20, markerLayer);
       if (features.length > 0) {
         dispatch('markerClick', features[0].get('id'));
@@ -113,6 +126,57 @@
     return features.filter(f => {
       return circle.intersectsExtent(f.getGeometry().getExtent());
     });
+  }
+
+  function animateMarkerRadius(markerLayer, startRadius, endRadius, startWidth, endWidth, duration = 700) {
+    const startTime = performance.now();
+
+      function easeInOutQuad(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      let t = Math.min(elapsed / duration, 1);
+      t = easeInOutQuad(t); // Apply easing
+      const radius = startRadius + (endRadius - startRadius) * t;
+      const width = startWidth + (endWidth - startWidth) * t;
+
+      markerLayer.setStyle(new Style({
+        image: new Circle({
+          radius,
+          fill: new Fill({ color: 'yellow' }),
+          stroke: new Stroke({ color: 'dimgrey', width })
+        })
+      }));
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function setMarkerRadius(zoom) {
+    let radius, width;
+    if (zoom >= 12 && zoom < 13) {
+      radius = 1;
+      width = 0;
+    } else if (zoom >= 13 && zoom < 14) {
+      radius = 2;
+      width = 0;
+    } else if (zoom >= 14 && zoom < 15) {
+      radius = 3;
+      width = 1;
+    } else if (zoom >= 15 && zoom < 16) {
+      radius = 4;
+      width = 1;
+    } else if (zoom >= 16) {
+      radius = 5;
+      width = 2;
+    }
+    return { radius, width };
   }
 </script>
 
