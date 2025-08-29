@@ -56,9 +56,9 @@
       source: new VectorSource({ features: markerFeatures }), 
       style: new Style({
         image: new Circle({
-          radius: 4,
+          radius: 2,
           fill: new Fill({ color: 'yellow' }),
-          stroke: new Stroke({ color: 'dimgrey', width: 1 })
+          // stroke: new Stroke({ color: 'dimgrey', width: 1 })
         })
       })
     });
