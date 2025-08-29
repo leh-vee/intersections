@@ -58,7 +58,7 @@
       style: new Style({
         image: new Circle({
           radius: 2,
-          fill: new Fill({ color: 'yellow' }),
+          fill: new Fill({ color: 'gold' }),
           stroke: new Stroke({ color: 'dimgrey', width: 0 })
         })
       })
@@ -128,7 +128,7 @@
     });
   }
 
-  function animateMarkerRadius(markerLayer, startRadius, endRadius, startWidth, endWidth, duration = 700) {
+  function animateMarkerRadius(markerLayer, startRadius, endRadius, startWidth, endWidth, duration = 600) {
     const startTime = performance.now();
 
       function easeInOutQuad(t) {
@@ -145,7 +145,7 @@
       markerLayer.setStyle(new Style({
         image: new Circle({
           radius,
-          fill: new Fill({ color: 'yellow' }),
+          fill: new Fill({ color: 'gold' }),
           stroke: new Stroke({ color: 'dimgrey', width })
         })
       }));
@@ -161,19 +161,28 @@
   function setMarkerRadius(zoom) {
     let radius, width;
     if (zoom >= 12 && zoom < 13) {
-      radius = 1;
-      width = 0;
-    } else if (zoom >= 13 && zoom < 14) {
       radius = 2;
       width = 0;
-    } else if (zoom >= 14 && zoom < 15) {
+    } else if (zoom >= 13 && zoom < 13.5) {
+      radius = 2;
+      width = 0;
+    } else if (zoom >= 13.5 && zoom < 14) {
       radius = 3;
       width = 1;
-    } else if (zoom >= 15 && zoom < 16) {
+    } else if (zoom >= 14 && zoom < 14.5) {
       radius = 4;
       width = 1;
-    } else if (zoom >= 16) {
+    } else if (zoom >= 14.5 && zoom < 15) {
       radius = 5;
+      width = 1.5;
+    } else if (zoom >= 15 && zoom < 15.5) {
+      radius = 6;
+      width = 1.5;
+    } else if (zoom >= 15.5 && zoom < 16) {
+      radius = 6;
+      width = 2;
+    } else if (zoom >= 16) {
+      radius = 7;
       width = 2;
     }
     return { radius, width };
