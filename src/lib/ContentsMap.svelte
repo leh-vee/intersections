@@ -55,13 +55,7 @@
     }); 
     const markerLayer = new VectorLayer({
       source: new VectorSource({ features: markerFeatures }), 
-      style: new Style({
-        image: new Circle({
-          radius: 2,
-          fill: new Fill({ color: 'gold' }),
-          stroke: new Stroke({ color: 'dimgrey', width: 0 })
-        })
-      })
+      style: getMarkerStyle()
     });
 
     map = new Map({
@@ -128,7 +122,7 @@
     });
   }
 
-  function animateMarkerRadius(markerLayer, startRadius, endRadius, startWidth, endWidth, duration = 600) {
+  function animateMarkerRadius(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 600) {
     const startTime = performance.now();
 
       function easeInOutQuad(t) {
@@ -140,15 +134,9 @@
       let t = Math.min(elapsed / duration, 1);
       t = easeInOutQuad(t); // Apply easing
       const radius = startRadius + (endRadius - startRadius) * t;
-      const width = startWidth + (endWidth - startWidth) * t;
+      const strokeWidth = startStrokeWidth + (endStrokeWidth - startStrokeWidth) * t;
 
-      markerLayer.setStyle(new Style({
-        image: new Circle({
-          radius,
-          fill: new Fill({ color: 'gold' }),
-          stroke: new Stroke({ color: 'dimgrey', width })
-        })
-      }));
+      markerLayer.setStyle(getMarkerStyle(radius, strokeWidth));
 
       if (t < 1) {
         requestAnimationFrame(animate);
@@ -186,6 +174,16 @@
       width = 2;
     }
     return { radius, width };
+  }
+
+  function getMarkerStyle(radius = 2, strokeWidth = 0) {
+    return new Style({
+      image: new Circle({
+        radius,
+        fill: new Fill({ color: 'gold' }),
+        stroke: new Stroke({ color: 'dimgrey', width: strokeWidth })
+      })
+    })
   }
 </script>
 
