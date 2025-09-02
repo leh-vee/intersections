@@ -89,7 +89,7 @@
     });
 
     map.on('click', (event) => {
-      const features = getFeaturesWithinPixelRadius(map, event.pixel, 20, markerLayer);
+      const features = getFeaturesWithinPixelRadius(map, event.pixel, 5, markerLayer);
       if (features.length > 0) {
         dispatch('markerClick', features[0].get('id'));
       }
