@@ -38,9 +38,13 @@
     tileLayer = new VectorTileLayer({
       source: vectorTileSource,
       style: {
-        'stroke-color': 'dimgrey',
+        'stroke-color': 'black',
         'stroke-width': 1
       },
+    });
+
+    onAllTilesLoaded(() => {
+      fadeStreetLinesIn(tileLayer);
     });
 
     const slugs = Object.keys($poemIndex);
@@ -206,6 +210,67 @@
         stroke: new Stroke({ color: 'dimgrey', width: strokeWidth })
       })
     })
+  }
+
+  function onAllTilesLoaded(callback) {
+    let loading = 0;
+    vectorTileSource.on('tileloadstart', () => {
+      loading++;
+    });
+    vectorTileSource.on(['tileloadend', 'tileloaderror'], () => {
+      loading--;
+      if (loading === 0) {
+        callback();
+      }
+    });
+  }
+
+  function fadeStreetLinesIn(tileLayer, duration = (Math.PI * 1000)) {
+    const startColor = [0, 0, 0]; // black
+    const endColor = [105, 105, 105]; // dimgrey
+    const startTime = performance.now();
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function clamp(x, min, max) {
+      return Math.max(min, Math.min(max, x));
+    }
+
+    function rgbToHex([r, g, b]) {
+      return (
+        '#' +
+        [r, g, b]
+          .map((x) => {
+            const hex = Math.round(clamp(x, 0, 255)).toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+          })
+          .join('')
+      );
+    }
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      let t = Math.min(Math.max(elapsed / duration, 0), 1);
+
+      // Interpolate each channel and clamp
+      const color = [
+        lerp(startColor[0], endColor[0], t),
+        lerp(startColor[1], endColor[1], t),
+        lerp(startColor[2], endColor[2], t),
+      ];
+      tileLayer.setStyle({
+        'stroke-color': rgbToHex(color),
+        'stroke-width': 1,
+      });
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
   }
 </script>
 
