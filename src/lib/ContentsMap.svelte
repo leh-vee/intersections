@@ -43,8 +43,12 @@
       },
     });
 
+    let areTilesFadedIn = false;
     onAllTilesLoaded(() => {
-      fadeStreetLinesIn(tileLayer);
+      if (!areTilesFadedIn) {
+        fadeStreetLinesIn(tileLayer);
+        areTilesFadedIn = true;
+      } 
     });
 
     const slugs = Object.keys($poemIndex);
