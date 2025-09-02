@@ -89,10 +89,8 @@
     });
 
     map.on('click', (event) => {
-      const features = getFeaturesWithinPixelRadius(map, event.pixel, 5, markerLayer);
-      if (features.length > 0) {
-        dispatch('markerClick', features[0].get('id'));
-      }
+      const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 10, markerLayer);
+      if (marker !== null) dispatch('markerClick', marker.get('id'));
     });
 
     return {
@@ -105,7 +103,7 @@
     }
   }
 
-  function getFeaturesWithinPixelRadius(map, pixel, pixelRadius, markerLayer) {
+  function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
     const coordinate = map.getCoordinateFromPixel(pixel);
     const resolution = map.getView().getResolution();
     const mapRadius = pixelRadius * resolution;
@@ -117,9 +115,33 @@
     const features = markerLayer.getSource().getFeatures();
 
     // Filter features whose geometry intersects the circle
-    return features.filter(f => {
+    const intersectingFeatures = features.filter(f => {
       return circle.intersectsExtent(f.getGeometry().getExtent());
     });
+
+    let closestFeature = null;
+    
+    if (intersectingFeatures.length === 1) {  
+      closestFeature = intersectingFeatures[0];
+    } else if (intersectingFeatures.length > 1) {
+      let minDist = Infinity;
+  
+      for (const feature of intersectingFeatures) {
+        const geom = feature.getGeometry();
+        const coord = geom.getCoordinates();
+        const featurePixel = map.getPixelFromCoordinate(coord);
+        const dx = featurePixel[0] - pixel[0];
+        const dy = featurePixel[1] - pixel[1];
+        const dist = Math.sqrt(dx * dx + dy * dy);
+  
+        if (dist <= pixelRadius && dist < minDist) {
+          minDist = dist;
+          closestFeature = feature;
+        }
+      }
+    }
+
+    return closestFeature;
   }
 
   function animateMarkerRadius(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 600) {
