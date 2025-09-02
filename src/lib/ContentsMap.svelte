@@ -97,7 +97,7 @@
     });
 
     map.on('click', (event) => {
-      const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 10, markerLayer);
+      const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) dispatch('markerClick', marker.get('id'));
     });
 
