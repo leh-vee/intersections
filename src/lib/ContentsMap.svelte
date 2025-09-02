@@ -68,7 +68,7 @@
       layers: [tileLayer, markerLayer],
       view: new View({
         center: fromLonLat(randomPoemCoords),
-        zoom: 13,
+        zoom: 12,
         minZoom: 12,
         maxZoom: 16,
         rotation: 0.3,
