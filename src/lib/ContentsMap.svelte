@@ -148,7 +148,7 @@
     return closestFeature;
   }
 
-  function animateMarkerRadius(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 600) {
+  function animateMarkerRadius(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 1000) {
     const startTime = performance.now();
 
       function easeInOutQuad(t) {
