@@ -43,13 +43,7 @@
       },
     });
 
-    let areTilesFadedIn = false;
-    onAllTilesLoaded(() => {
-      if (!areTilesFadedIn) {
-        fadeStreetLinesIn(tileLayer);
-        areTilesFadedIn = true;
-      } 
-    });
+    onAllTilesLoaded(() => { areTilesLoaded = true });
 
     const slugs = Object.keys($poemIndex);
     const randomPoemCoords = $poemIndex[slugs[Math.floor(Math.random() * slugs.length)]].coordinates;
@@ -63,7 +57,7 @@
     }); 
     const markerLayer = new VectorLayer({
       source: new VectorSource({ features: markerFeatures }), 
-      style: getMarkerStyle()
+      style: getMarkerStyle(0, 0)
     });
 
     map = new Map({
@@ -84,6 +78,18 @@
       })
     });
 
+    let nMarkersFadedIn = 0;
+    markerFeatures.forEach((marker, i) => {
+      const randomDuration = 1000 + Math.random() * (Math.PI * 1000 - 1000); // 1s to π s
+      animateMarker(marker, 2, randomDuration, () => {
+          nMarkersFadedIn++;
+          if (nMarkersFadedIn === markerFeatures.length) {
+            areMarkersFadedIn = true;
+          }
+        }
+      );
+    });
+
     map.getView().on('change:resolution', () => {
       const currentZoom = map.getView().getZoom();
       const { radius: newRadius, width: newWidth } = setMarkerRadius(currentZoom);
@@ -93,7 +99,7 @@
       const currentRadius = currentStyle?.getImage()?.getRadius() || newRadius;
       const currentWidth = currentStyle?.getImage()?.getStroke()?.getWidth() || newWidth;
 
-      animateMarkerRadius(markerLayer, currentRadius, newRadius, currentWidth, newWidth);
+      animateMarkers(markerLayer, currentRadius, newRadius, currentWidth, newWidth);
     });
 
     map.on('click', (event) => {
@@ -154,7 +160,7 @@
     return closestFeature;
   }
 
-  function animateMarkerRadius(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 1000) {
+  function animateMarkers(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 1000) {
     const startTime = performance.now();
 
       function easeInOutQuad(t) {
@@ -172,6 +178,38 @@
 
       if (t < 1) {
         requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function animateMarker(marker, endRadius, duration = 1000, onDone) {
+    const startTime = performance.now();
+    const startRadius = 0;
+
+    function easeInOutQuad(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function animate(now) {
+      if (now < startTime) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      const elapsed = now - startTime;
+      let t = Math.min(elapsed / duration, 1);
+      t = easeInOutQuad(t);
+      const radius = startRadius + (endRadius - startRadius) * t;
+      const strokeWidth = 0;
+
+      // Set style for this feature only
+      marker.setStyle(getMarkerStyle(radius, strokeWidth));
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        onDone();
       }
     }
 
@@ -231,7 +269,16 @@
     });
   }
 
-  function fadeStreetLinesIn(tileLayer, duration = (Math.PI * 1000)) {
+  let areTilesLoaded = $state(false);
+  let areMarkersFadedIn = $state(false);
+
+  $effect(() => {
+    if (areTilesLoaded && areMarkersFadedIn) {
+      fadeStreetLinesIn();
+    }
+  });
+
+  function fadeStreetLinesIn(duration = (Math.PI * 1000)) {
     const startColor = [0, 0, 0]; // black
     const endColor = [105, 105, 105]; // dimgrey
     const startTime = performance.now();
