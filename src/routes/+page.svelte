@@ -23,7 +23,7 @@
 </script>
 
 {#if mIsForMap}
-  <ContentsMap on:markerClick={e => mapMarkerClick(e.detail)} />
+  <ContentsMap on:poemSelected={e => mapMarkerClick(e.detail)} />
 {:else}
   <Poem 
     title={ poemMetaData.title } 

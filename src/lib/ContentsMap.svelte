@@ -15,6 +15,7 @@
   import { Circle as CircleGeom } from 'ol/geom.js';
 	import { set } from 'ol/transform';
   import { animate } from '$lib/util.js';
+  import Supernova from '$lib/Supernova.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -25,8 +26,6 @@
   const vectorTileSource = new VectorTileSource({
     format: new MVT(), url: tileUrl 
   });
-
-  let markerId = $state('nobody'); 
 
   let map, tileLayer;
   const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
@@ -56,6 +55,7 @@
         id: slug
       });  
     }); 
+
     const markerLayer = new VectorLayer({
       source: new VectorSource({ features: markerFeatures }), 
       style: getMarkerStyle(0, 0)
@@ -108,7 +108,14 @@
     map.on('click', (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
-        triggerSupernova(map, marker, () => dispatch('markerClick', marker.get('id')));
+        const coord = marker.getGeometry().getCoordinates();
+        const pixel = map.getPixelFromCoordinate(coord);
+        const mapRect = map.getTargetElement().getBoundingClientRect();
+        const left =  pixel[0] + mapRect.left;
+        const top = pixel[1] + mapRect.top;
+
+        supernovaBoundingBox = { left, top };
+        selectedMarkerId = marker.get('id');
       }
     });
 
@@ -285,38 +292,21 @@
     });
   }
 
-  let supernovaElMeta = $state(null);
-  let isSupernova = $derived(supernovaElMeta !== null);
+  let supernovaBoundingBox = $state(null);
+  let selectedMarkerId = null;
+  let isSupernova = $derived(supernovaBoundingBox !== null);
 
-  function triggerSupernova(map, marker, callback) {
-    const coord = marker.getGeometry().getCoordinates();
-    const pixel = map.getPixelFromCoordinate(coord);
-
-    // Get map container position for correct overlay placement
-    const mapRect = map.getTargetElement().getBoundingClientRect();
-
-    supernovaElMeta = {
-      left: pixel[0] + mapRect.left,
-      top: pixel[1] + mapRect.top,
-      onEnd: () => {
-        supernovaElMeta = null;
-        callback();
-      }
-    };
+  function markerSelected() {
+    dispatch('poemSelected', selectedMarkerId)
+    supernovaBoundingBox = null;
+    selectedMarkerId = null;
   }
 
 </script>
 
 <div id='map' use:initializeMap></div>
 {#if isSupernova}
-  <div
-    class="supernova"
-    style="
-      left: {supernovaElMeta.left}px;
-      top: {supernovaElMeta.top}px;
-    "
-    onanimationend={supernovaElMeta.onEnd}
-  ></div>
+  <Supernova bb={ supernovaBoundingBox } on:goneNova={ markerSelected } />
 {/if}
 
 <style>
@@ -327,32 +317,5 @@
     height: 100%;
     background-color: black;
     z-index: 0;
-  }
-
-  .supernova {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: gold;
-    pointer-events: none;
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    animation: supernova-explode 0.6s cubic-bezier(0.4,0,0.2,1) forwards;
-    z-index: 1000;
-    will-change: transform, background, opacity;
-  }
-
-  @keyframes supernova-explode {
-    from {
-      transform: translate(-50%, -50%) scale(1);
-      background: gold;
-      opacity: 1;
-    }
-    to {
-      transform: translate(-50%, -50%) scale(60);
-      background: black;
-      opacity: 0.95;
-    }
   }
 </style>
