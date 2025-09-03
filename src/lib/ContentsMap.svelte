@@ -13,7 +13,6 @@
   import { poemIndex } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
-	import { set } from 'ol/transform';
   import { animate } from '$lib/util.js';
   import Supernova from '$lib/Supernova.svelte';
 
