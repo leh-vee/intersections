@@ -170,7 +170,6 @@
       }
 
     function animate(now) {
-      console.log('animate');
       const elapsed = now - startTime;
       let t = Math.min(elapsed / duration, 1);
       t = easeInOutQuad(t); // Apply easing
