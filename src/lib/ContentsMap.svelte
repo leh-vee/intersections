@@ -296,9 +296,7 @@
   let isSupernova = $derived(supernovaBoundingBox !== null);
 
   function markerSelected() {
-    dispatch('poemSelected', selectedMarkerId)
-    supernovaBoundingBox = null;
-    selectedMarkerId = null;
+    dispatch('poemSelected', selectedMarkerId);
   }
 
 </script>
