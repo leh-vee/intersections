@@ -84,6 +84,8 @@
       animateMarker(marker, 2, randomDuration, () => {
           nMarkersFadedIn++;
           if (nMarkersFadedIn === markerFeatures.length) {
+            markerLayer.setStyle(getMarkerStyle(2, 0));
+            markerFeatures.forEach(m => m.setStyle(null));
             areMarkersFadedIn = true;
           }
         }
@@ -168,6 +170,7 @@
       }
 
     function animate(now) {
+      console.log('animate');
       const elapsed = now - startTime;
       let t = Math.min(elapsed / duration, 1);
       t = easeInOutQuad(t); // Apply easing
