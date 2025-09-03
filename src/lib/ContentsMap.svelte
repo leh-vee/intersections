@@ -14,6 +14,7 @@
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
 	import { set } from 'ol/transform';
+  import { animate } from '$lib/util.js';
 
   const dispatch = createEventDispatcher();
 
@@ -163,59 +164,25 @@
   }
 
   function animateMarkers(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 1000) {
-    const startTime = performance.now();
-
-      function easeInOutQuad(t) {
-        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    animate({
+      duration,
+      onUpdate: (t) => {
+        const radius = startRadius + (endRadius - startRadius) * t;
+        const strokeWidth = startStrokeWidth + (endStrokeWidth - startStrokeWidth) * t;
+        markerLayer.setStyle(getMarkerStyle(radius, strokeWidth));
       }
-
-    function animate(now) {
-      const elapsed = now - startTime;
-      let t = Math.min(elapsed / duration, 1);
-      t = easeInOutQuad(t); // Apply easing
-      const radius = startRadius + (endRadius - startRadius) * t;
-      const strokeWidth = startStrokeWidth + (endStrokeWidth - startStrokeWidth) * t;
-
-      markerLayer.setStyle(getMarkerStyle(radius, strokeWidth));
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      }
-    }
-
-    requestAnimationFrame(animate);
+    });
   }
 
   function animateMarker(marker, endRadius, duration = 1000, onDone) {
-    const startTime = performance.now();
-    const startRadius = 0;
-
-    function easeInOutQuad(t) {
-      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-    }
-
-    function animate(now) {
-      if (now < startTime) {
-        requestAnimationFrame(animate);
-        return;
-      }
-      const elapsed = now - startTime;
-      let t = Math.min(elapsed / duration, 1);
-      t = easeInOutQuad(t);
-      const radius = startRadius + (endRadius - startRadius) * t;
-      const strokeWidth = 0;
-
-      // Set style for this feature only
-      marker.setStyle(getMarkerStyle(radius, strokeWidth));
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        onDone();
-      }
-    }
-
-    requestAnimationFrame(animate);
+    animate({
+      duration,
+      onUpdate: (t) => {
+        const radius = endRadius * t;
+        marker.setStyle(getMarkerStyle(radius, 0));
+      },
+      onDone
+    });
   }
 
   function setMarkerRadius(zoom) {
@@ -283,16 +250,13 @@
   function fadeStreetLinesIn(duration = (Math.PI * 1000)) {
     const startColor = [0, 0, 0]; // black
     const endColor = [105, 105, 105]; // dimgrey
-    const startTime = performance.now();
 
     function lerp(a, b, t) {
       return a + (b - a) * t;
     }
-
     function clamp(x, min, max) {
       return Math.max(min, Math.min(max, x));
     }
-
     function rgbToHex([r, g, b]) {
       return (
         '#' +
@@ -305,26 +269,20 @@
       );
     }
 
-    function animate(now) {
-      const elapsed = now - startTime;
-      let t = Math.min(Math.max(elapsed / duration, 0), 1);
-
-      // Interpolate each channel and clamp
-      const color = [
-        lerp(startColor[0], endColor[0], t),
-        lerp(startColor[1], endColor[1], t),
-        lerp(startColor[2], endColor[2], t),
-      ];
-      tileLayer.setStyle({
-        'stroke-color': rgbToHex(color),
-        'stroke-width': 1,
-      });
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
+    animate({
+      duration,
+      onUpdate: (t) => {
+        const color = [
+          lerp(startColor[0], endColor[0], t),
+          lerp(startColor[1], endColor[1], t),
+          lerp(startColor[2], endColor[2], t),
+        ];
+        tileLayer.setStyle({
+          'stroke-color': rgbToHex(color),
+          'stroke-width': 1,
+        });
       }
-    }
-    requestAnimationFrame(animate);
+    });
   }
 
   let supernovaElMeta = $state(null);
