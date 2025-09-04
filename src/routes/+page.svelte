@@ -15,7 +15,7 @@
     }
   });
 
-  function mapMarkerClick(id) {
+  function poemSelected(id) {
     poemSlug = id;
     mIsForMap = false;  
   }
@@ -23,7 +23,7 @@
 </script>
 
 {#if mIsForMap}
-  <ContentsMap on:poemSelected={e => mapMarkerClick(e.detail)} />
+  <ContentsMap on:markerSelected={e => poemSelected(e.detail)} />
 {:else}
   <Poem 
     title={ poemMetaData.title } 
