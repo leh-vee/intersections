@@ -1,4 +1,5 @@
 <script>
+  // @ts-nocheck
   import Map from '$lib/Map.svelte';
   import Poem from '$lib/Poem.svelte';
 
@@ -12,8 +13,7 @@
   }
 </script>
 
+<Map on:markerSelected={e => poemSelected(e.detail)} />
 {#if isPoemSelected}
   <Poem id={ poemId } />
-{:else}
-  <Map on:markerSelected={e => poemSelected(e.detail)} />
 {/if}
