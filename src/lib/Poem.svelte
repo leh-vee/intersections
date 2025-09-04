@@ -1,8 +1,25 @@
 <script>
+  import { poemIndex } from '$lib/store.js';
+  import { fetchPoemLines } from '$lib/api/drive';
   import fitty from 'fitty';
   import MapTiles from '$lib/MapTiles.svelte';
 
-  let { title, sefirahId, coords, poemLines } = $props();
+  let { id } = $props();
+
+  let poemMetaData = $derived($poemIndex[id]);
+  let title = $derived(poemMetaData.title);
+  let sefirahId = $derived(poemMetaData.sefirahId);
+  let coords = $derived(poemMetaData.coordinates);
+  let poemLines = $state([]);
+
+  $effect(() => {
+    if (poemLines.length === 0) {
+      (async () => {
+        const lines = await fetchPoemLines(poemMetaData.docId);
+        poemLines = lines;
+      })();
+    }
+  });
   
   let lineEls = $state([]);
   let nLines = $derived(lineEls.length);
@@ -14,6 +31,7 @@
 
   $effect(() => {
     if (poemLines.length > 0) {
+      console.log('fittying lines');
       lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
       fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
     }
@@ -127,7 +145,7 @@
   #page > div {
     padding: 0;
     width: 100%;
-    z-index: 1;
+    z-index: 4;
   }
   
   #page #title {
