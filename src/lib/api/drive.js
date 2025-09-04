@@ -18,22 +18,6 @@ export async function fetchCsvIndex() {
   return csvText;
 }
 
-export async function fetchPoemLines(docId) {
-  const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
-
-  console.log('fetching poem from Google Drive');
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const text = await response.text();
-  const lines = text.split('\n').filter(line => line.trim() !== '');
-
-  return lines;
-}
-
 export function parseCsvIndex(csv) {
   const index = parse(csv, {
     columns: true,
@@ -50,4 +34,20 @@ export function parseCsvIndex(csv) {
   });
 
   return keyedIndex;
+}
+
+export async function fetchPoemLines(docId) {
+  const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+
+  console.log('fetching poem from Google Drive');
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const text = await response.text();
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+
+  return lines;
 }
