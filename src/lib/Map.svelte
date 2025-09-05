@@ -297,6 +297,7 @@
 
   function markerSelected() {
     dispatch('markerSelected', selectedMarkerId);
+    supernovaBoundingBox = null;
   }
 
 </script>
