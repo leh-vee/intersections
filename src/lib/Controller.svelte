@@ -13,7 +13,16 @@
   }
 </script>
 
-<Map on:markerSelected={e => poemSelected(e.detail)} />
+<div class:hidden={isPoemSelected}>
+  <Map on:markerSelected={e => poemSelected(e.detail)} />
+</div>
 {#if isPoemSelected}
   <Poem id={ poemId } />
 {/if}
+
+<style>
+  .hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>

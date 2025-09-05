@@ -27,7 +27,7 @@
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
     animation: supernova-explode 0.6s cubic-bezier(0.4,0,0.2,1) forwards;
-    z-index: 1;
+    z-index: 5;
     will-change: transform, background, opacity;
   }
 

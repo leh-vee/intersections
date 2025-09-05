@@ -301,18 +301,17 @@
 
 </script>
 
-<div id='map' use:initializeMap></div>
+<div id='content-map' use:initializeMap></div>
 {#if isSupernova}
   <Supernova bb={ supernovaBoundingBox } on:goneNova={ markerSelected } />
 {/if}
 
 <style>
-  #map {
+  #content-map {
     position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: black;
-    z-index: 0;
   }
 </style>

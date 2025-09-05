@@ -146,7 +146,7 @@
   #page > div {
     padding: 0;
     width: 100%;
-    z-index: 4;
+    z-index: 1;
   }
   
   #page #title {
