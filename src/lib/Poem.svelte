@@ -32,7 +32,6 @@
 
   $effect(() => {
     if (poemLines.length > 0) {
-      console.log('fittying lines');
       lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
       fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
     }
