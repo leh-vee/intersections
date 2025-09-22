@@ -45,7 +45,7 @@
     onAllTilesLoaded(() => { areTilesLoaded = true });
 
     const slugs = Object.keys($poemIndex);
-    const randomPoemCoords = $poemIndex[slugs[Math.floor(Math.random() * slugs.length)]].coordinates;
+    const initialCtrCoords = [-79.55, 43.675];
 
     const markerFeatures = slugs.map(slug => {
       const p = $poemIndex[slug];
@@ -69,7 +69,7 @@
       }),
       layers: [tileLayer, markerLayer],
       view: new View({
-        center: fromLonLat(randomPoemCoords),
+        center: fromLonLat(initialCtrCoords),
         zoom: 12,
         minZoom: 12,
         maxZoom: 16,
