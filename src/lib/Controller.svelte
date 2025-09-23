@@ -1,6 +1,7 @@
 <script>
   // @ts-nocheck
   import Map from '$lib/Map.svelte';
+  import MatrixIndex from '$lib/MatrixIndex.svelte';
   import Poem from '$lib/Poem.svelte';
   import { pushState } from '$app/navigation';
   import { page } from '$app/state';
@@ -24,7 +25,7 @@
       <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
     </div>
     <div id="matrix-index" class="card-side">
-      <h2>M is for Matrix</h2>
+      <MatrixIndex />
     </div>
   </div>
 </div>
