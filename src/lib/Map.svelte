@@ -11,7 +11,7 @@
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
   import { poemIndex } from '$lib/store.js';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { animate } from '$lib/util.js';
   import Supernova from '$lib/Supernova.svelte';
@@ -26,7 +26,7 @@
     format: new MVT(), url: tileUrl 
   });
 
-  let map, tileLayer;
+  let mapEl, map, tileLayer;
   const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
   const viewExtent = [
     ...fromLonLat([cityExtentCoords[0], cityExtentCoords[1]]),
@@ -287,8 +287,41 @@
           'stroke-color': rgbToHex(color),
           'stroke-width': 1,
         });
+      },
+      onDone: () => {
+        areStreetsVisibile = true;
       }
     });
+  }
+
+  let areStreetsVisibile = $state(false);
+
+  $effect(() => {
+    if (areStreetsVisibile) {
+      mapEl.addEventListener('pointerdown', handleUserTouch);
+      startIdleTimer();
+    }
+  });
+
+  let idleTimeout;
+  const idleDelay = 3141; // pi seconds
+
+  function startIdleTimer() {
+    clearIdleTimer();
+    idleTimeout = setTimeout(() => {
+      dispatch('userIdle');
+    }, idleDelay);
+  }
+
+  function clearIdleTimer() {
+    if (idleTimeout) {
+      clearTimeout(idleTimeout);
+      idleTimeout = null;
+    }
+  }
+
+  function handleUserTouch() {
+    startIdleTimer();
   }
 
   let supernovaBoundingBox = $state(null);
@@ -300,9 +333,14 @@
     supernovaBoundingBox = null;
   }
 
+  onDestroy(() => {
+    clearIdleTimer
+    console.log('map idle timer cleared');
+  });
+
 </script>
 
-<div id='content-map' use:initializeMap></div>
+<div id='content-map' use:initializeMap bind:this={ mapEl }></div>
 {#if isSupernova}
   <Supernova bb={ supernovaBoundingBox } on:goneNova={ markerSelected } />
 {/if}
