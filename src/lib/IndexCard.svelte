@@ -20,21 +20,22 @@
 
 </script>
 
-<div id="index-container" class:hidden={showPoem}>
-  <div id="index-card" class:flipped={isEmForMatrix}>
-    <div id="map-index" class="card-side">
-      {#if isEmForMap}
-        <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
-      {/if}
-    </div>
-    <div id="matrix-index" class="card-side">
-      {#if isEmForMatrix}
-        <Matrix />
-      {/if}
+{#if !showPoem}
+  <div id="index-container">
+    <div id="index-card" class:flipped={isEmForMatrix}>
+      <div id="map-index" class="card-side">
+        {#if isEmForMap}
+          <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
+        {/if}
+      </div>
+      <div id="matrix-index" class="card-side">
+        {#if isEmForMatrix}
+          <Matrix />
+        {/if}
+      </div>
     </div>
   </div>
-</div>
-{#if showPoem}
+{:else}
   <Poem id={ poemId } />
 {/if}
 
@@ -71,10 +72,5 @@
   
   .card-side#matrix-index {
     transform: rotateY(180deg);
-  }
-
-  .hidden {
-    opacity: 0;
-    pointer-events: none;
   }
 </style>
