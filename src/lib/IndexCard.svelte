@@ -1,7 +1,7 @@
 <script>
   // @ts-nocheck
   import Map from '$lib/Map.svelte';
-  import MatrixIndex from '$lib/MatrixIndex.svelte';
+  import Matrix from '$lib/Matrix.svelte';
   import Poem from '$lib/Poem.svelte';
   import { pushState } from '$app/navigation';
   import { page } from '$app/state';
@@ -29,7 +29,7 @@
     </div>
     <div id="matrix-index" class="card-side">
       {#if isEmForMatrix}
-        <MatrixIndex />
+        <Matrix />
       {/if}
     </div>
   </div>
