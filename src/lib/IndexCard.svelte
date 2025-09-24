@@ -11,7 +11,6 @@
 
   let poemId = $state(slug);
   let isEmForMatrix = $state(false);
-  let isEmForMap = $derived(!isEmForMatrix);
 
   function poemSelected(id) {
     poemId = id;
@@ -24,14 +23,10 @@
   <div id="index-container">
     <div id="index-card" class:flipped={isEmForMatrix}>
       <div id="map-index" class="card-side">
-        {#if isEmForMap}
-          <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
-        {/if}
+        <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
       </div>
       <div id="matrix-index" class="card-side">
-        {#if isEmForMatrix}
-          <Matrix />
-        {/if}
+        <Matrix />
       </div>
     </div>
   </div>
