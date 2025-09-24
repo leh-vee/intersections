@@ -1,7 +1,7 @@
 <script>
-  import Controller from '$lib/Controller.svelte';
+  import IndexCard from '$lib/IndexCard.svelte';
 
   let { data } = $props();
 </script>
 
-<Controller slug={ data.slug } />
+<IndexCard slug={ data.slug } />
