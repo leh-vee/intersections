@@ -41,16 +41,13 @@
 <style>
   #index-container {
     perspective: 1200px;
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
   }
   
   #index-card {
     width: 100%;
     height: 100%;
-    position: absolute;
     transition: transform 1s cubic-bezier(.4,2,.3,1);
     transform-style: preserve-3d;
   }
@@ -74,11 +71,6 @@
   
   .card-side#matrix-index {
     transform: rotateY(180deg);
-    background: #222;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .hidden {

@@ -52,6 +52,7 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     margin: 1%;
+    height: 100%;
   }
 
   span.cell {
