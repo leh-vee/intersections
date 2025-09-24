@@ -48,23 +48,23 @@
 
 <style>
   .matrix {
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    margin: 1%;
-    height: 100%;
+    margin: 2%;
   }
 
   span.cell {
     padding: 5%;
-    color: #BEEEFF;
+    color: dimgrey;
     display: flex;
   }
   
   span#ellipsis {
     font-family: 'Trebuchet MS';
-    transform: translateY(25%);
-    font-size: 125%;
+    transform: translateY(12%);
+    font-size: 200%;
   }
   
   span.digit {
@@ -77,7 +77,7 @@
   }
 
   span a {
-    color: #BEEEFF;
+    color: gold;
     text-decoration: none;
     font-weight: 400;
   }
