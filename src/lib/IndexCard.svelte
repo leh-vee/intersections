@@ -7,10 +7,11 @@
   import { page } from '$app/state';
 
   let { slug = undefined } = $props();
+  let showPoem = $derived(page.state.showPoem === true || slug !== undefined);
 
   let poemId = $state(slug);
   let isEmForMatrix = $state(false);
-  let showPoem = $derived(page.state.showPoem === true || slug !== undefined);
+  let isEmForMap = $derived(!isEmForMatrix);
 
   function poemSelected(id) {
     poemId = id;
@@ -22,10 +23,14 @@
 <div id="index-container" class:hidden={showPoem}>
   <div id="index-card" class:flipped={isEmForMatrix}>
     <div id="map-index" class="card-side">
-      <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
+      {#if isEmForMap}
+        <Map on:markerSelected={e => poemSelected(e.detail)} on:userIdle={ () => { isEmForMatrix = true } } />
+      {/if}
     </div>
     <div id="matrix-index" class="card-side">
-      <MatrixIndex />
+      {#if isEmForMatrix}
+        <MatrixIndex />
+      {/if}
     </div>
   </div>
 </div>
@@ -39,6 +44,7 @@
     width: 100vw;
     height: 100vh;
     position: relative;
+    overflow: hidden;
   }
   
   #index-card {
