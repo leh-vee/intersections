@@ -1,5 +1,4 @@
 <script>
-  // @ts-nocheck
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
   import Poem from '$lib/Poem.svelte';
@@ -20,7 +19,10 @@
 </script>
 
 {#if !showPoem}
-  <div id="index-container">
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<span id='flip' onclick={ () => { isEmForMatrix = !isEmForMatrix } }>FLIP</span>
+<div id="index-container">
     <div id="index-card" class:flipped={isEmForMatrix}>
       <div id="map-index" class="card-side">
         <Map on:markerSelected={e => poemSelected(e.detail)} />
@@ -35,6 +37,13 @@
 {/if}
 
 <style>
+  #flip {
+    position: fixed;
+    top: 2px;
+    left: 5px;
+    z-index: 5;
+  }
+
   #index-container {
     perspective: 1200px;
     width: 100%;
