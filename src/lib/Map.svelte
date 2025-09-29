@@ -11,7 +11,7 @@
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
   import { poemIndex } from '$lib/store.js';
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { animate } from '$lib/util.js';
   import Supernova from '$lib/Supernova.svelte';
@@ -296,34 +296,6 @@
 
   let areStreetsVisibile = $state(false);
 
-  $effect(() => {
-    if (areStreetsVisibile) {
-      mapEl.addEventListener('pointerdown', handleUserTouch);
-      startIdleTimer();
-    }
-  });
-
-  let idleTimeout;
-  const idleDelay = 3141; // pi seconds
-
-  function startIdleTimer() {
-    clearIdleTimer();
-    idleTimeout = setTimeout(() => {
-      dispatch('userIdle');
-    }, idleDelay);
-  }
-
-  function clearIdleTimer() {
-    if (idleTimeout) {
-      clearTimeout(idleTimeout);
-      idleTimeout = null;
-    }
-  }
-
-  function handleUserTouch() {
-    startIdleTimer();
-  }
-
   let supernovaBoundingBox = $state(null);
   let selectedMarkerId = null;
   let isSupernova = $derived(supernovaBoundingBox !== null);
@@ -332,11 +304,6 @@
     dispatch('markerSelected', selectedMarkerId);
     supernovaBoundingBox = null;
   }
-
-  onDestroy(() => {
-    clearIdleTimer
-    console.log('map idle timer cleared');
-  });
 
 </script>
 
