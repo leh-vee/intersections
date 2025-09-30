@@ -14,7 +14,6 @@
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { animate } from '$lib/util.js';
-  import Supernova from '$lib/Supernova.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -107,16 +106,10 @@
     map.on('click', (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
-        const coord = marker.getGeometry().getCoordinates();
-        const pixel = map.getPixelFromCoordinate(coord);
-        const mapRect = map.getTargetElement().getBoundingClientRect();
-        const left =  pixel[0] + mapRect.left;
-        const top = pixel[1] + mapRect.top;
-
-        supernovaBoundingBox = { left, top };
         selectedMarkerId = marker.get('id');
+        dispatch('markerSelected', selectedMarkerId);
       }
-    });
+  });
 
     return {
       destroy() {
@@ -295,22 +288,11 @@
   }
 
   let areStreetsVisibile = $state(false);
-
-  let supernovaBoundingBox = $state(null);
   let selectedMarkerId = null;
-  let isSupernova = $derived(supernovaBoundingBox !== null);
-
-  function markerSelected() {
-    dispatch('markerSelected', selectedMarkerId);
-    supernovaBoundingBox = null;
-  }
 
 </script>
 
 <div id='content-map' use:initializeMap bind:this={ mapEl }></div>
-{#if isSupernova}
-  <Supernova bb={ supernovaBoundingBox } on:goneNova={ markerSelected } />
-{/if}
 
 <style>
   #content-map {
