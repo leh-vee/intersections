@@ -1,12 +1,10 @@
 <script>
   import { poemIndex, longTailOfPi } from '$lib/store.js';
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
 
   function metaAt(index) {
     return metaTailMap[index];
-  } 
-
-  function routeForPoemAt(index) {
-    return `/${metaTailMap[index]}`;
   }
 
   function randomIntBetween(low, high) {
@@ -27,6 +25,10 @@
 
   const shortTailLength = Math.max(metaTailMap.length, 100);
   const shortTailOfPi = $longTailOfPi.slice(0, shortTailLength);
+
+  function clickedAtIndex(i) {
+    dispatch('piSliceSelected', metaTailMap[i]);
+  }
 </script>
 
 <div class='matrix'>
@@ -38,9 +40,11 @@
         {digit}
       </span>
     {:else}
-      <a href={routeForPoemAt(i)} class='x-drift'>
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <span onclick={ () => clickedAtIndex(i) } class='marked x-drift'>
         {digit}
-      </a>
+      </span>
     {/if}
     </span>
   {/each}
@@ -76,13 +80,12 @@
     align-items: center;
   }
 
-  span a {
+  span .marked {
     color: gold;
-    text-decoration: none;
     font-weight: 400;
   }
 
-  .digit a {
+  .digit .marked {
     font-size: 150%;
   }
 

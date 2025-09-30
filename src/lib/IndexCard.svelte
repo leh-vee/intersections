@@ -6,6 +6,7 @@
   let indexCardEl = $state(undefined);
   let isSideFlipped = $state(false);
   let poemId = $state(undefined);
+  let isEmForMatrix = $state(false);
 
   $effect(() => {
     if (indexCardEl !== undefined) indexCardEl.addEventListener('transitionend', showPoem);
@@ -16,18 +17,31 @@
   });
 
   function showPoem() {
-    goto(`/${poemId}`);
+    if (isSideFlipped) {
+      goto(`/${poemId}`);
+    }
+  }
+
+  function stopSideFlip() {
+    isSideFlipped = false;
+    isEmForMatrix = true;
+  }
+
+  function setPoemId(id) {
+    poemId = id;
   }
 
 </script>
 
 <div id="index-container">
-  <div id="index-card" class:flipped={ isSideFlipped } bind:this={ indexCardEl }>
+  <div id="index-card" class:flipped-over={ isEmForMatrix } class:side-flipped={ isSideFlipped } bind:this={ indexCardEl }>
     <div id="map-index" class="card-side">
-      <Map on:markerSelected={ e => { poemId = e.detail } } />
+      <Map on:markerSelected={ e => setPoemId(e.detail) } />
     </div>
-    <div id="matrix-index" class="card-side">
-      <Matrix />
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div id="matrix-index" class="card-side" onclick={ stopSideFlip }>
+      <Matrix on:piSliceSelected={ e => setPoemId(e.detail) } />
     </div>
   </div>
 </div>
@@ -47,8 +61,12 @@
     transition: transform 1s ease-in-out;
     transform-style: preserve-3d;
   }
+
+  #index-card.flipped-over {
+    transform: rotateY(180deg);
+  }
   
-  #index-card.flipped {
+  #index-card.side-flipped {
     transform: rotateY(270deg);
   }
   
