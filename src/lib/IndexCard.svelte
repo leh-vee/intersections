@@ -5,14 +5,24 @@
   import { pushState } from '$app/navigation';
   import { page } from '$app/state';
 
+  let indexCardEl = $state(null);
+
+  $effect(() => {
+    if (indexCardEl !== null) indexCardEl.addEventListener('transitionend', pushPoemState);
+  });
+
   let { slug = undefined } = $props();
   let showPoem = $derived(page.state.showPoem === true || slug !== undefined);
 
-  let poemId = $state(slug);
   let isEmForMatrix = $state(false);
+  let poemId = $state(slug);
 
   function poemSelected(id) {
+    isEmForMatrix = true;
     poemId = id;
+  }
+  
+  function pushPoemState() {
     pushState(`/${poemId}`, { showPoem: true });
   }
 
@@ -20,9 +30,9 @@
 
 {#if !showPoem}
 <div id="index-container">
-    <div id="index-card" class:flipped={isEmForMatrix}>
+    <div id="index-card" class:flipped={ isEmForMatrix } bind:this={ indexCardEl }>
       <div id="map-index" class="card-side">
-        <Map on:markerSelected={e => poemSelected(e.detail)} />
+        <Map on:markerSelected={ e => poemSelected(e.detail) } />
       </div>
       <div id="matrix-index" class="card-side">
         <Matrix />
