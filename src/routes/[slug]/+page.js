@@ -1,7 +1,4 @@
-// @ts-nocheck
-import { poemIndex } from '$lib/store.js';
-
-export async function load({ fetch, params }) {
+export async function load({ params }) {
   const slug = params.slug;
 
 	return { slug };

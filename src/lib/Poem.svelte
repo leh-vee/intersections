@@ -1,5 +1,4 @@
 <script>
-  // @ts-nocheck
   import { poemIndex } from '$lib/store.js';
   import { fetchPoemLines } from '$lib/api/drive';
   import fitty from 'fitty';

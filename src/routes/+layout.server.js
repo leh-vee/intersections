@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { fetchCsvIndex, parseCsvIndex } from '$lib/api/drive';
 
 export async function load() {

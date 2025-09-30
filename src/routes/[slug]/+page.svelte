@@ -1,7 +1,7 @@
 <script>
-  import IndexCard from '$lib/IndexCard.svelte';
+  import Poem from '$lib/Poem.svelte';
 
   let { data } = $props();
 </script>
 
-<IndexCard slug={ data.slug } />
+<Poem id={ data.slug } />
