@@ -70,6 +70,11 @@
     transform: translateY(12%);
     font-size: 200%;
   }
+
+  span#ellipsis a {
+    text-decoration: none;
+    color: gold;
+  }
   
   span.digit {
     font-size: 30px;
