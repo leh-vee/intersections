@@ -1,39 +1,24 @@
 <script>
-  import { poemIndex, longTailOfPi } from '$lib/store.js';
+  import { poemIndex, piTail, poemTailIndexMap } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
   function metaAt(index) {
-    return metaTailMap[index];
+    return $poemTailIndexMap[index];
   }
 
   function randomIntBetween(low, high) {
     return Math.floor(Math.random() * (high - low + 1)) + low;
   }
 
-  const metaTailMap = new Array();
-  const takenTailIndices = [];
-
-  Object.keys($poemIndex).forEach(slug => {
-    const sefirahId = $poemIndex[slug].sefirahId;
-    const tailIndex = $longTailOfPi.findIndex((d, i) => {
-      return sefirahId === d && !takenTailIndices.includes(i);
-    });
-    metaTailMap[tailIndex] = slug;
-    takenTailIndices.push(tailIndex);
-  })
-
-  const shortTailLength = Math.max(metaTailMap.length, 100);
-  const shortTailOfPi = $longTailOfPi.slice(0, shortTailLength);
-
   function clickedAtIndex(i) {
-    dispatch('piSliceSelected', metaTailMap[i]);
+    dispatch('piSliceSelected', $poemTailIndexMap[i]);
   }
 </script>
 
 <div class='matrix'>
   <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
-  {#each shortTailOfPi as digit, i}
+  {#each $piTail as digit, i}
     <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
     {#if metaAt(i) === undefined}
       <span class='y-drift'>

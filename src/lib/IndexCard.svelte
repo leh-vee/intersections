@@ -13,7 +13,6 @@
       goto(`/${poemId}`);
       $isEmForMatrix = !$isEmForMatrix;
     } 
-
   }
 
   function poemTransition(id, rAngle) {
