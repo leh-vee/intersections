@@ -3,6 +3,36 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
+  const matrixCellPx = 60;
+  const totalCells = $piTail.length;
+  const renderedToVisibleCellsRatio = 2;
+  let matrixWidth = $state(undefined); 
+  let bHeight = $state(undefined);
+  let scrollY = $state(undefined);
+
+  let cellsPerRow = $derived(Math.floor(matrixWidth / matrixCellPx));
+  let visibleRows = $derived(Math.floor(bHeight / matrixCellPx));
+  let nRenderedRows = $derived(visibleRows * renderedToVisibleCellsRatio);
+  let renderedSegmentHeight = $derived(nRenderedRows * matrixCellPx);
+  let nRenderedCells = $derived(nRenderedRows * cellsPerRow);
+  
+  let totalRows = $derived(Math.ceil(totalCells / cellsPerRow));
+  let matrixHeight = $derived(totalRows * matrixCellPx);
+  let renderedSegmentTop = $derived.by(() => {
+    let top = 0;
+    if ((matrixHeight - scrollY) < renderedSegmentHeight) {
+      top = matrixHeight - renderedSegmentHeight;
+    } else if (scrollY > bHeight) {
+      top = scrollY - Math.round(bHeight / 2);
+    }
+    return top;
+  });
+  let firstVisibleRowIndex = $derived(Math.floor(renderedSegmentTop / matrixCellPx));
+  let firstVisibleCellIndex = $derived(firstVisibleRowIndex * cellsPerRow);
+  let lastVisibleCellIndex = $derived(Math.min(firstVisibleCellIndex + nRenderedCells, $piTail.length));
+  
+  let visibleTail = $derived($piTail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
+
   function metaAt(index) {
     return $poemTailIndexMap[index];
   }
@@ -14,45 +44,61 @@
   function clickedAtIndex(i) {
     dispatch('piSliceSelected', $poemTailIndexMap[i]);
   }
+
 </script>
 
-<div class='matrix'>
-  <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
-  {#each $piTail as digit, i}
-    <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
-    {#if metaAt(i) === undefined}
-      <span class='y-drift'>
-        {digit}
-      </span>
-    {:else}
-      <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <!-- svelte-ignore a11y_no_static_element_interactions -->
-      <span onclick={ () => clickedAtIndex(i) } class='marked x-drift'>
-        {digit}
-      </span>
+<svelte:window bind:innerHeight={ bHeight } bind:scrollY={scrollY} />
+
+<div id='matrix' style="--cell-size: {matrixCellPx}px; height:{matrixHeight}px" >
+  <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
+    {#if firstVisibleCellIndex === 0}
+      <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
     {/if}
-    </span>
-  {/each}
+    {#each visibleTail as digit, i}
+      <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
+      {#if metaAt(i) === undefined}
+        <span class='y-drift'>
+          {digit}
+        </span>
+      {:else}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <span onclick={ () => clickedAtIndex(i) } class='marked x-drift'>
+          {digit}
+        </span>
+      {/if}
+      </span>
+    {/each}
+  </div>
 </div>
 
 <style>
-  .matrix {
-    height: 100%;
+  #matrix {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  #visible-segment {
+    position: absolute;
+    width: 96%;
+    margin: 0 2%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    margin: 2%;
+    overflow-y: visible;
   }
 
   span.cell {
-    padding: 5%;
     color: dimgrey;
     display: flex;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    justify-content: center;
   }
   
   span#ellipsis {
     font-family: 'Trebuchet MS';
-    transform: translateY(12%);
     font-size: 200%;
   }
 
@@ -66,7 +112,6 @@
     font-family: "Rubik", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
-    justify-content: center;
     align-items: center;
   }
 
