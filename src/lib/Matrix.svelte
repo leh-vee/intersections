@@ -34,7 +34,7 @@
   let visibleTail = $derived($piTail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
   function metaAt(index) {
-    return $poemTailIndexMap[index + firstVisibleCellIndex];
+    return $poemTailIndexMap[index];
   }
 
   function randomIntBetween(low, high) {
@@ -56,14 +56,14 @@
     {/if}
     {#each visibleTail as digit, i}
       <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
-      {#if metaAt(i) === undefined}
+      {#if metaAt(i + firstVisibleCellIndex) === undefined}
         <span class='y-drift'>
           {digit}
         </span>
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span onclick={ () => clickedAtIndex(i) } class='marked x-drift'>
+        <span onclick={ () => clickedAtIndex(i + firstVisibleCellIndex) } class='marked x-drift'>
           {digit}
         </span>
       {/if}
