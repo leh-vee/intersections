@@ -34,7 +34,7 @@
   let visibleTail = $derived($piTail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
   function metaAt(index) {
-    return $poemTailIndexMap[index];
+    return $poemTailIndexMap[index + firstVisibleCellIndex];
   }
 
   function randomIntBetween(low, high) {
