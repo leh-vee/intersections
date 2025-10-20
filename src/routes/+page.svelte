@@ -5,7 +5,8 @@
   let { data } = $props();
 
   const sefirahIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const shortTailLength = Object.keys($poemIndex).length * 10;
+  const nCrossroads = 4713;
+  const shortTailLength = Math.min(Object.keys($poemIndex).length * 10, nCrossroads);
 
   $piTail = data.longTailOfPi.slice(0, shortTailLength);
 
