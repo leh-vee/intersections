@@ -15,7 +15,7 @@
     const tailLength = $piTail.length;
     const nSlicesShort = tailLength % cellsPerRow;
     if (nSlicesShort > 0) tail = [...$piTail, ...$extraTailEnd.slice(0, cellsPerRow - nSlicesShort)];
-    return tail;
+    return tail.slice(0, tail.length - 1);
   });
   let totalCells = $derived(tail.length);
   let visibleRows = $derived(Math.floor(browserHeight / matrixCellPx));
@@ -78,6 +78,10 @@
       {/if}
       </span>
     {/each}
+    {#if lastVisibleCellIndex === tail.length}
+      <!-- svelte-ignore a11y_missing_attribute -->
+      <span id='question-mark' class='cell'><a>?</a></span>
+    {/if}
   </div>
 </div>
 
@@ -104,6 +108,7 @@
     width: var(--cell-size);
     height: var(--cell-size);
     justify-content: center;
+    align-items: center;
   }
   
   span#ellipsis {
@@ -115,21 +120,23 @@
     text-decoration: none;
     color: gold;
   }
+
+  #question-mark {
+    font-family: "Rubik", sans-serif;
+    font-size: 40px;
+    color: gold;
+  }
   
   span.digit {
     font-size: 30px;
     font-family: "Rubik", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
-    align-items: center;
   }
 
-  span .marked {
+  span.digit .marked {
     color: gold;
     font-weight: 400;
-  }
-
-  .digit .marked {
     font-size: 150%;
   }
 
