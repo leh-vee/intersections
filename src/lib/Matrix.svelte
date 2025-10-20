@@ -7,11 +7,11 @@
   const totalCells = $piTail.length;
   const renderedToVisibleCellsRatio = 2;
   let matrixWidth = $state(undefined); 
-  let bHeight = $state(undefined);
+  let browserHeight = $state(undefined);
   let scrollY = $state(undefined);
 
   let cellsPerRow = $derived(Math.floor(matrixWidth / matrixCellPx));
-  let visibleRows = $derived(Math.floor(bHeight / matrixCellPx));
+  let visibleRows = $derived(Math.floor(browserHeight / matrixCellPx));
   let nRenderedRows = $derived(visibleRows * renderedToVisibleCellsRatio);
   let renderedSegmentHeight = $derived(nRenderedRows * matrixCellPx);
   let nRenderedCells = $derived(nRenderedRows * cellsPerRow);
@@ -22,11 +22,13 @@
     let top = 0;
     if ((matrixHeight - scrollY) < renderedSegmentHeight) {
       top = matrixHeight - renderedSegmentHeight;
-    } else if (scrollY > bHeight) {
-      top = scrollY - Math.round(bHeight / 2);
+    } else if (scrollY > browserHeight) {
+      top = scrollY - Math.round(browserHeight / 2);
     }
+    top = Math.floor(top / matrixCellPx) * matrixCellPx;
     return top;
   });
+
   let firstVisibleRowIndex = $derived(Math.floor(renderedSegmentTop / matrixCellPx));
   let firstVisibleCellIndex = $derived(firstVisibleRowIndex * cellsPerRow);
   let lastVisibleCellIndex = $derived(Math.min(firstVisibleCellIndex + nRenderedCells, $piTail.length));
@@ -47,7 +49,7 @@
 
 </script>
 
-<svelte:window bind:innerHeight={ bHeight } bind:scrollY={scrollY} />
+<svelte:window bind:innerHeight={ browserHeight } bind:scrollY={scrollY} />
 
 <div id='matrix' style="--cell-size: {matrixCellPx}px; height:{matrixHeight}px" >
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
