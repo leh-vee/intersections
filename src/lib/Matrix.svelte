@@ -1,16 +1,23 @@
 <script>
-  import { poemIndex, piTail, poemTailIndexMap } from '$lib/store.js';
+  import { poemIndex, piTail, poemTailIndexMap, extraTailEnd } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
   const matrixCellPx = 60;
-  const totalCells = $piTail.length;
   const renderedToVisibleCellsRatio = 2;
   let matrixWidth = $state(undefined); 
   let browserHeight = $state(undefined);
   let scrollY = $state(undefined);
-
+  
   let cellsPerRow = $derived(Math.floor(matrixWidth / matrixCellPx));
+  let tail = $derived.by(() => {
+    let tail = [...$piTail];
+    const tailLength = $piTail.length;
+    const nSlicesShort = tailLength % cellsPerRow;
+    if (nSlicesShort > 0) tail = [...$piTail, ...$extraTailEnd.slice(0, cellsPerRow - nSlicesShort)];
+    return tail;
+  });
+  let totalCells = $derived(tail.length);
   let visibleRows = $derived(Math.floor(browserHeight / matrixCellPx));
   let nRenderedRows = $derived(visibleRows * renderedToVisibleCellsRatio);
   let renderedSegmentHeight = $derived(nRenderedRows * matrixCellPx);
@@ -31,9 +38,9 @@
 
   let firstVisibleRowIndex = $derived(Math.floor(renderedSegmentTop / matrixCellPx));
   let firstVisibleCellIndex = $derived(firstVisibleRowIndex * cellsPerRow);
-  let lastVisibleCellIndex = $derived(Math.min(firstVisibleCellIndex + nRenderedCells, $piTail.length));
+  let lastVisibleCellIndex = $derived(Math.min(firstVisibleCellIndex + nRenderedCells, tail.length));
   
-  let visibleTail = $derived($piTail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
+  let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
   function metaAt(index) {
     return $poemTailIndexMap[index];

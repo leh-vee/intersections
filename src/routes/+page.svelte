@@ -1,5 +1,5 @@
 <script>
-  import { poemIndex, piTail, poemTailIndexMap } from '$lib/store.js';
+  import { poemIndex, piTail, poemTailIndexMap, extraTailEnd } from '$lib/store.js';
   import IndexCard from '$lib/IndexCard.svelte';
 
   let { data } = $props();
@@ -9,6 +9,7 @@
   const shortTailLength = Math.min(Object.keys($poemIndex).length * 10, nCrossroads);
 
   $piTail = data.longTailOfPi.slice(0, shortTailLength);
+  $extraTailEnd = data.longTailOfPi.slice(shortTailLength + 1, shortTailLength + 21);
 
   const tailIndicesByInt = sefirahIds.map(int => {
     const indices = $piTail.reduce((acc, val, idx) => {
