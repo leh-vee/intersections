@@ -1,5 +1,4 @@
 <script lang="js">
-  // @ts-nocheck
   import { Map, View, Feature } from 'ol';
   import { Point } from 'ol/geom.js';
   import { fromLonLat } from 'ol/proj.js';
