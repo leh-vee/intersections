@@ -178,7 +178,7 @@
   
   #more button {
     font-family: "Rubik", sans-serif;
-    background-color: #051021;
+    background-color: black;
     color: #BEEEFF;
     border: 2px solid dimgrey;
     font-size: 45px;
