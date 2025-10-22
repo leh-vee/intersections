@@ -7,7 +7,8 @@
   const renderedToVisibleCellsRatio = 2;
   let matrixWidth = $state(undefined); 
   let browserHeight = $state(undefined);
-  let scrollY = $state(undefined);
+  let matrixEl;
+  let scrollY = $state(0);
   
   let cellsPerRow = $derived(Math.floor(matrixWidth / matrixCellPx));
   let tail = $derived.by(() => {
@@ -29,7 +30,7 @@
     let top = 0;
     if ((matrixHeight - scrollY) < renderedSegmentHeight) {
       top = matrixHeight - renderedSegmentHeight;
-    } else if (scrollY > browserHeight) {
+    } else if (scrollY > (browserHeight / 2)) {
       top = scrollY - Math.round(browserHeight / 2);
     }
     top = Math.floor(top / matrixCellPx) * matrixCellPx;
@@ -58,11 +59,15 @@
     dispatch('piSliceSelected', $poemTailIndexMap[i]);
   }
 
+  function matrixScrolled() {
+    scrollY = matrixEl.scrollTop;
+  }
+
 </script>
 
-<svelte:window bind:innerHeight={ browserHeight } bind:scrollY={scrollY} />
+<svelte:window bind:innerHeight={ browserHeight } />
 
-<div id='matrix' style="--cell-size: {matrixCellPx}px; height:{matrixHeight}px" >
+<div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={matrixScrolled} bind:this={matrixEl}>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
       <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
@@ -94,6 +99,8 @@
     position: absolute;
     top: 0;
     width: 100%;
+    height: 100%;
+    overflow-y: scroll;
   }
 
   #visible-segment {
