@@ -15,7 +15,7 @@
     const tailLength = $piTail.length;
     const nSlicesShort = tailLength % cellsPerRow;
     if (nSlicesShort > 0) tail = [...$piTail, ...$extraTailEnd.slice(0, cellsPerRow - nSlicesShort)];
-    return tail.slice(0, tail.length - 1);
+    return tail.slice(0, tail.length - 2);
   });
   let totalCells = $derived(tail.length);
   let visibleRows = $derived(Math.floor(browserHeight / matrixCellPx));
@@ -37,7 +37,11 @@
   });
 
   let firstVisibleRowIndex = $derived(Math.floor(renderedSegmentTop / matrixCellPx));
-  let firstVisibleCellIndex = $derived(firstVisibleRowIndex * cellsPerRow);
+  let firstVisibleCellIndex = $derived.by(() => {
+    let index = firstVisibleRowIndex * cellsPerRow;
+    if (firstVisibleRowIndex > 0) index--;
+    return index;
+  });
   let lastVisibleCellIndex = $derived(Math.min(firstVisibleCellIndex + nRenderedCells, tail.length));
   
   let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
