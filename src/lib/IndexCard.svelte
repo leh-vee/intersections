@@ -64,7 +64,7 @@
   }
   
   .card-side#map-index {
-    z-index: 2;
+    z-index: -1;
   }
   
   .card-side#matrix-index {
