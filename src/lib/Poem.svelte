@@ -2,7 +2,7 @@
   import { poemIndex } from '$lib/store.js';
   import { fetchPoemLines } from '$lib/api/drive';
   import fitty from 'fitty';
-  import MapTiles from '$lib/MapTiles.svelte';
+  import StreetLines from '$lib/StreetLines.svelte';
 
   let { id } = $props();
 
@@ -124,7 +124,7 @@
 
 </script>
 
-<MapTiles centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } gild={ isLit } />
+<StreetLines centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } gild={ isLit } />
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ title }</h3>
