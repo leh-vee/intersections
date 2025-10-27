@@ -44,6 +44,18 @@
 	});
 
   let btnEl = $state(false);
+  let btnCentrePx = $derived.by(() => {
+    let px = [0, 0];
+    if (btnEl) {
+      const btnElRect = btnEl.getBoundingClientRect();
+      px = [
+        btnElRect.left + btnElRect.width / 2,
+        btnElRect.top + btnElRect.height / 2
+      ];
+    }
+    return px;
+  });
+
   
   let btnElTop = $derived.by(() => {
     let top = 0;
@@ -112,7 +124,7 @@
 
 </script>
 
-<MapTiles centreCoordsGcs={ coords } gild={ isLit } />
+<MapTiles centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } gild={ isLit } />
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ title }</h3>

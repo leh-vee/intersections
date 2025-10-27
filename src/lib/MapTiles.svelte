@@ -5,8 +5,9 @@
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
 
-  let { centreCoordsGcs, zoom = 16, gild = false } = $props();
+  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+  let isMapVisible = $state(false);
 
   $effect(() => {
     if (vectorLayer) {
@@ -48,6 +49,13 @@
         maxZoom: zoom
       })
     });
+
+    map.once('rendercomplete', () => {
+      const size = map.getSize();
+      map.getView().centerOn(fromLonLat(coords), size, centreOnPx);
+      isMapVisible = true;
+    });
+
     return {
       destroy() {
         if (map) {
@@ -67,8 +75,8 @@
   
 </script>
 
-<div id='map' use:initializeMap={centreCoordsGcs}></div>
-
+<div id='map' use:initializeMap={centreCoordsGcs}
+  style="visibility: {isMapVisible ? 'visible' : 'hidden'}"></div>
 
 <style>
   #map {
