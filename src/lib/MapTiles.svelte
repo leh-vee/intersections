@@ -1,6 +1,4 @@
 <script lang="js">
-  // @ts-nocheck
-
   import { Map, View } from 'ol';
   import { fromLonLat } from 'ol/proj.js';
   import VectorTileLayer from 'ol/layer/VectorTile.js';
