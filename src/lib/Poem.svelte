@@ -124,7 +124,7 @@
 
 </script>
 
-<StreetLines centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } gild={ isLit } />
+<StreetLines centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } rotationFactor={ Number(sefirahId) } gild={ isLit } />
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ title }</h3>
