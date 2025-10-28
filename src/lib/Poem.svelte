@@ -55,28 +55,8 @@
     }
     return px;
   });
-
-  
-  let btnElTop = $derived.by(() => {
-    let top = 0;
-    if (btnEl) {
-      const btnElRect = btnEl.getBoundingClientRect();
-      top = window.innerHeight - btnElRect.top;
-    }
-    return top;
-  });
   
   let poemEl = $state(false); 
-  
-  let isPoemOverflowing = $derived.by(() => {
-    let isOverflowing = false;
-    if (poemEl && areLinesFitted) {
-      const poemElRect = poemEl.getBoundingClientRect();
-      const deltaFromBottom = window.innerHeight - poemElRect.bottom;
-      if (deltaFromBottom <= 100) isOverflowing = true;
-    }
-    return isOverflowing;  
-  });
 
   let isLit = $state(false);
   let isTyping = false;
@@ -130,18 +110,47 @@
     <h3>{ title }</h3>
   </div>
   <div id='poem' bind:this={ poemEl }>
-    <div id='text' style:padding-bottom="{isPoemOverflowing ? btnElTop : 0}px">
+    <div id='text'>
       {#each poemLines as line, i}
         <span class='line' bind:this={ lineEls[i] }>{line}</span>
       {/each}
     </div>
   </div>
-  <div id='more'>
-    <button bind:this={ btnEl } onclick={ lightBurst }>{ sefirahId }</button>
-  </div>
+  <div id='spacer'></div>
+  <svg width='100' height='100' viewBox='0 0 100 100'>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <circle bind:this={ btnEl } onclick={ lightBurst } cx="50" cy="50" r="49" />
+    <text x="50" y="52">{sefirahId}</text>
+  </svg>
 </div>
 
 <style>
+  svg {
+    position: absolute;
+    bottom: 2dvh;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  svg circle {
+    stroke: dimgray;
+    stroke-width: 2;
+    z-index: 2;
+  }
+
+  svg text {
+    text-anchor: middle;
+    alignment-baseline: middle;
+    fill: #BEEEFF;
+    font-family: "Rubik", sans-serif;
+    font-size: 45px;
+  }
+
+  svg circle:active {
+    border-color: gold;
+  }
+
   #page {
     position: absolute;
     top: 0;
@@ -175,7 +184,7 @@
     bottom: 2px;
   }
 
-  #page #more {
+  #page #spacer {
     flex: 1;
   }
   
@@ -186,24 +195,6 @@
     width: 80%;
     margin: 0 auto;
     padding: 5px 0;
-  }
-  
-  #more button {
-    font-family: "Rubik", sans-serif;
-    background-color: black;
-    color: #BEEEFF;
-    border: 2px solid dimgrey;
-    font-size: 45px;
-    border-radius: 50%;
-    height: 100px;
-    width: 100px;
-    position: absolute;
-    bottom: 2dvh;
-    right: calc(50% - 50px);
-  }
-  
-  #more button:active {
-    border-color: gold;
   }
   
   #poem #text {
