@@ -36,27 +36,31 @@
     }
   });
 
+  const btnRadiusPx = 50;
+  let btnEl, poemEl;
+  let poemOverflowPx = $state(0);
+  let btnCentrePx = $state([0,0]);
+
   $effect(() => {
     if (areLinesFitted) {
       fittyLineEls.forEach(el => el.freeze());
       isPoemVisible = true;
+      const btnRect = btnEl.getBoundingClientRect();
+      btnCentrePx = [
+        btnRect.left + btnRect.width / 2,
+        btnRect.top + btnRect.height / 2
+      ];
+      const poemRect = poemEl.getBoundingClientRect();
+      if (poemRect.bottom > btnRect.top) {
+        poemOverflowPx = Math.ceil(
+          Math.min(
+            (poemRect.bottom - btnRect.top + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
+            window.innerHeight - btnRect.top + 5 // text overflows the screen; the 5 adds a margin 
+          )
+        );
+      }
     }
 	});
-
-  let btnEl = $state(false);
-  let btnCentrePx = $derived.by(() => {
-    let px = [0, 0];
-    if (btnEl) {
-      const btnElRect = btnEl.getBoundingClientRect();
-      px = [
-        btnElRect.left + btnElRect.width / 2,
-        btnElRect.top + btnElRect.height / 2
-      ];
-    }
-    return px;
-  });
-  
-  let poemEl = $state(false); 
 
   let isLit = $state(false);
   let isTyping = false;
@@ -111,7 +115,7 @@
     <h3>{ title }</h3>
   </div>
   <div id='poem' bind:this={ poemEl }>
-    <div id='text'>
+    <div id='text' style:padding-bottom="{ poemOverflowPx }px">
       {#each poemLines as line, i}
         <span class='line' bind:this={ lineEls[i] }>{line}</span>
       {/each}
@@ -120,9 +124,9 @@
   <div id='spacer'></div>
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <svg onclick={ lightBurst } width='100' height='100' viewBox='0 0 100 100'>
-    <circle bind:this={ btnEl } cx="50" cy="50" r="49" />
-    <text x="50" y="52">{sefirahId}</text>
+  <svg onclick={ lightBurst } width={ btnRadiusPx * 2 } height={ btnRadiusPx * 2 } viewBox='0 0 100 100'>
+    <circle bind:this={ btnEl } cx={ btnRadiusPx } cy={ btnRadiusPx } r={ btnRadiusPx - 1 } />
+    <text x={ btnRadiusPx } y={ btnRadiusPx + 2 }>{sefirahId}</text>
   </svg>
 </div>
 
