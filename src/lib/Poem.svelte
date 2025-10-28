@@ -61,7 +61,8 @@
   let isLit = $state(false);
   let isTyping = false;
 
-  function lightBurst() {
+  function lightBurst(event) {
+    if (event.target.tagName !== 'circle' && event.target.tagName !== 'text') return;
     if (isTyping) return null;
     isLit = true;
     if (nextLineToType < nLines) typeLine();
@@ -117,10 +118,10 @@
     </div>
   </div>
   <div id='spacer'></div>
-  <svg width='100' height='100' viewBox='0 0 100 100'>
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <circle bind:this={ btnEl } onclick={ lightBurst } cx="50" cy="50" r="49" />
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <svg onclick={ lightBurst } width='100' height='100' viewBox='0 0 100 100'>
+    <circle bind:this={ btnEl } cx="50" cy="50" r="49" />
     <text x="50" y="52">{sefirahId}</text>
   </svg>
 </div>
@@ -136,7 +137,10 @@
   svg circle {
     stroke: dimgray;
     stroke-width: 2;
-    z-index: 2;
+  }
+
+  svg circle:active {
+    stroke: gold;
   }
 
   svg text {
@@ -145,10 +149,7 @@
     fill: #BEEEFF;
     font-family: "Rubik", sans-serif;
     font-size: 45px;
-  }
-
-  svg circle:active {
-    border-color: gold;
+    z-index: 2;
   }
 
   #page {
