@@ -39,7 +39,7 @@
   const btnRadiusPx = 50;
   let btnEl, poemEl;
   let poemOverflowPx = $state(0);
-  let btnCentrePx = $state([0,0]);
+  let btnCentrePx = $state(false);
 
   $effect(() => {
     if (areLinesFitted) {
@@ -109,7 +109,9 @@
 
 </script>
 
-<StreetLines centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } rotationFactor={ Number(sefirahId) } gild={ isLit } />
+{#if btnCentrePx}
+  <StreetLines centreCoordsGcs={ coords } centreOnPx= { btnCentrePx } rotationFactor={ Number(sefirahId) } gild={ isLit } />
+{/if}
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
     <h3>{ title }</h3>
