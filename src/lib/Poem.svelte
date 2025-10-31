@@ -3,11 +3,12 @@
   import { fetchPoemLines } from '$lib/api/drive';
   import fitty from 'fitty';
   import StreetLines from '$lib/StreetLines.svelte';
+  import HitMeButton from '$lib/HitMeButton.svelte';
 
   let { id } = $props();
 
-  let poemMetaData = $derived($poemIndex[id]);
-  let title = $derived(poemMetaData.title);
+  const poemMetaData = $poemIndex[id];
+
   let sefirahId = $derived(poemMetaData.sefirahId);
   let coords = $derived(poemMetaData.coordinates);
   let poemLines = $state([]);
@@ -36,29 +37,10 @@
     }
   });
 
-  const btnRadiusPx = 50;
-  let btnEl, poemEl;
-  let poemOverflowPx = $state(0);
-  let btnCentrePx = $state(false);
-
   $effect(() => {
-    if (areLinesFitted) {
+    if (areLinesFitted && !isPoemVisible) {
       fittyLineEls.forEach(el => el.freeze());
       isPoemVisible = true;
-      const btnRect = btnEl.getBoundingClientRect();
-      btnCentrePx = [
-        btnRect.left + btnRect.width / 2,
-        btnRect.top + btnRect.height / 2
-      ];
-      const poemRect = poemEl.getBoundingClientRect();
-      if (poemRect.bottom > btnRect.top) {
-        poemOverflowPx = Math.ceil(
-          Math.min(
-            (poemRect.bottom - btnRect.top + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
-            window.innerHeight - btnRect.top + 5 // text overflows the screen; the 5 adds a margin 
-          )
-        );
-      }
     }
 	});
 
@@ -66,7 +48,6 @@
   let isTyping = false;
 
   function lightBurst(event) {
-    if (event.target.tagName !== 'circle' && event.target.tagName !== 'text') return;
     if (isTyping) return null;
     isLit = true;
     if (nextLineToType < nLines) typeLine();
@@ -86,12 +67,12 @@
     isTyping = true;
     const lineEl = lineEls[nextLineToType];
     const elTextContent = lineEl.textContent;
-    const text =  elTextContent;
+    const text = elTextContent;
     let nextCharIndex = 1;
     let addCharIntervalId;
     const typeChar = () => {
-      const char = text.slice(nextCharIndex - 1, nextCharIndex);
       lineEl.textContent = text.slice(0, nextCharIndex);
+      const char = text.slice(nextCharIndex - 1, nextCharIndex);
       if (nextCharIndex < elTextContent.length) {
         if (nextCharIndex === 1) lineEl.style.visibility = 'visible';
         nextCharIndex += 1;
@@ -106,7 +87,41 @@
     typeChar();
   }
 
+  const title = poemMetaData.title;
+  let lastTitleIndex = $state(0);
+  let typedTitle = $derived(title.slice(0, lastTitleIndex));
 
+  function typeTitle() {
+    const typeChar = () => {
+      lastTitleIndex = lastTitleIndex + 1;
+      if (typedTitle.length < title.length) {
+        setTimeout(typeChar, 1000);
+      }
+    }
+    typeChar();
+  }
+
+  let poemEl;
+  let poemOverflowPx = $state(0);
+  let btnCentrePx = $state(false);
+
+  function finalizeLayout(event) {
+    console.log('button drawn from Poem');
+    const btnRect = event.detail;
+    btnCentrePx = [
+      btnRect.left + btnRect.width / 2,
+      btnRect.top + btnRect.height / 2
+    ];
+    const poemRect = poemEl.getBoundingClientRect();
+    if (poemRect.bottom > btnRect.top) {
+      poemOverflowPx = Math.ceil(
+        Math.min(
+          (poemRect.bottom - btnRect.top + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
+          window.innerHeight - btnRect.top + 5 // text overflows the screen; the 5 adds a margin 
+        )
+      );
+    }
+  }
 </script>
 
 {#if btnCentrePx}
@@ -114,50 +129,24 @@
 {/if}
 <div id='page' style="visibility: {isPoemVisible ? 'visible' : 'hidden'};">
   <div id='title'>
-    <h3>{ title }</h3>
+    {#if btnCentrePx}
+      <h3>{ title }</h3>
+    {/if}
   </div>
   <div id='poem' bind:this={ poemEl }>
     <div id='text' style:padding-bottom="{ poemOverflowPx }px">
       {#each poemLines as line, i}
-        <span class='line' bind:this={ lineEls[i] }>{line}</span>
+        <span class='line' bind:this={ lineEls[i] }>{ line }</span>
       {/each}
     </div>
   </div>
   <div id='spacer'></div>
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <svg onclick={ lightBurst } width={ btnRadiusPx * 2 } height={ btnRadiusPx * 2 } viewBox='0 0 100 100'>
-    <circle bind:this={ btnEl } cx={ btnRadiusPx } cy={ btnRadiusPx } r={ btnRadiusPx - 1 } />
-    <text x={ btnRadiusPx } y={ btnRadiusPx + 2 }>{sefirahId}</text>
-  </svg>
+  {#if areLinesFitted }
+    <HitMeButton piSlice={ sefirahId } on:drawn={ finalizeLayout } on:clicked={ lightBurst } />
+  {/if}
 </div>
 
 <style>
-  svg {
-    position: absolute;
-    bottom: 2dvh;
-    width: 100%;
-    z-index: 1;
-  }
-  
-  svg circle {
-    stroke: dimgray;
-    stroke-width: 2;
-  }
-
-  svg circle:active {
-    stroke: gold;
-  }
-
-  svg text {
-    text-anchor: middle;
-    alignment-baseline: middle;
-    fill: #BEEEFF;
-    font-family: "Rubik", sans-serif;
-    font-size: 45px;
-    z-index: 2;
-  }
-
   #page {
     position: absolute;
     top: 0;
