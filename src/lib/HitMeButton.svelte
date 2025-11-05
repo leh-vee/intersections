@@ -18,12 +18,6 @@
     isDrawn = true;
     dispatch('drawn', btnRect);
   }
-
-  function clicked(event) {
-    if (event.target.tagName !== 'circle' && event.target.tagName !== 'text') return;
-    dispatch('clicked');
-  }
-
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -63,14 +57,5 @@
 
   svg circle:active {
     stroke: gold;
-  }
-
-  svg text {
-    text-anchor: middle;
-    alignment-baseline: middle;
-    fill: #BEEEFF;
-    font-family: "Rubik", sans-serif;
-    font-size: 45px;
-    z-index: 2;
   }
 </style>

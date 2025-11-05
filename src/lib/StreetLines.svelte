@@ -5,7 +5,7 @@
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
 
-  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotationFactor = 0 } = $props();
+  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotation = 0 } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
   let isMapVisible = $state(false);
 
@@ -37,8 +37,6 @@
         'stroke-width': 1
       },
     });
-
-    let rotation = (rotationFactor === 0) ? 0 : (2 * Math.PI / 9 * rotationFactor) + 0.3;
     
     map = new Map({
       target: node.id,
