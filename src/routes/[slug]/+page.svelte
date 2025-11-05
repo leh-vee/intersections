@@ -1,7 +1,7 @@
 <script>
-  import Poem from '$lib/Poem.svelte';
+  import ThePage from '$lib/ThePage.svelte';
 
   let { data } = $props();
 </script>
 
-<Poem id={ data.slug } />
+<ThePage id={ data.slug } />

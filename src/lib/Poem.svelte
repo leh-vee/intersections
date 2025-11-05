@@ -3,7 +3,7 @@
   import { fetchPoemLines } from '$lib/api/drive';
   import fitty from 'fitty';
   import StreetLines from '$lib/StreetLines.svelte';
-  import HitMeButton from '$lib/HitMeButton.svelte';
+  import HitMeButton from '$lib/HitMEButton.svelte';
 
   let { id } = $props();
 
