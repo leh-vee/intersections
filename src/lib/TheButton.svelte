@@ -1,16 +1,16 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  import { quadInOut } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
   let { x, y, r, n, showNumber = false } = $props();
 
-  const dashArray = 360;
+  const dashArray = 2 * Math.PI * r;
   const dashOffset = tweened(dashArray, {
 		duration: Math.PI * 1000,
-		easing: cubicOut
+		easing: quadInOut
 	});
 
   let isDrawn = $state(false);

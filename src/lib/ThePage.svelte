@@ -27,7 +27,7 @@
   });
 
   function setDimensions() {
-    btnRadius = Math.round(browserHeight / 16);
+    btnRadius = Math.round(browserHeight / 14);
     const x = browserWidth / 2; 
     const y = browserHeight - Math.round(browserHeight * 0.05) - btnRadius; 
     btnPxCoords = [x, y];

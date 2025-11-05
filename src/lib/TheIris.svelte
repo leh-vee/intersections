@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  import { expoOut } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -8,8 +8,8 @@
   let { x, y, btnRadius, closedRadius, openIris = false } = $props();
 
   const radius = tweened(closedRadius + btnRadius, {
-		duration: Math.PI * 1000,
-		easing: cubicOut
+		duration: Math.PI * 500,
+		easing: expoOut
 	});
 
   $effect(async () => {
