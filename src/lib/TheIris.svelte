@@ -8,7 +8,7 @@
   let { x, y, btnRadius, closedRadius, openIris = false } = $props();
 
   const radius = tweened(closedRadius + btnRadius, {
-		duration: 6000,
+		duration: Math.PI * 1000,
 		easing: expoOut
 	});
 

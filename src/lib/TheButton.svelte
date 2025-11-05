@@ -7,7 +7,7 @@
 
   let { x, y, r, n, showNumber = false } = $props();
 
-  const dashArray = 2 * Math.PI * r;
+  let dashArray = 2 * Math.PI * r;
   const dashOffset = tweened(dashArray, {
 		duration: Math.PI * 1000,
 		easing: quadInOut
