@@ -38,6 +38,8 @@
   let irisRadius = $state(undefined);
   let isIrisWipedOpen = $state(false);
 
+  let openPerspective = $state(false);
+
   let perspectivalRadians = $derived.by(() => {
     const rotationFactor = Number(sefirahId);
     let rad = 0;
@@ -46,8 +48,6 @@
     }
     return rad;
   });
-
-  let perspectivalDegrees = $derived(perspectivalRadians * (180 / Math.PI));
 
   let isPoemVisible = $derived(arePoemLinesFetched && isIrisWipedOpen);
   
@@ -95,12 +95,13 @@
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } showId={ isIrisWipedOpen } lit={ hitMe } />
       {#if !isIrisWipedOpen}
         <Iris x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ irisRadius }
-          wipeStartAngle={ perspectivalDegrees } on:wiped={ () => { isIrisWipedOpen = true } } />
-        {/if}
+          open={ true } on:wiped={ () => { isIrisWipedOpen = true } } />
+      {/if}
+      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
+        id={ sefirahId } showId={ isIrisWipedOpen } lit={ hitMe } 
+        on:drawn={ ()=> { openPerspective = true } } />
     </svg>
   {/if}
 </div>
