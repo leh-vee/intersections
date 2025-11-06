@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { quadInOut } from 'svelte/easing';
+  import { cubicOut } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -9,12 +9,12 @@
 
   const tweenedAngle = tweened(0.1, {
 		duration: Math.PI * 2000,
-		easing: quadInOut
+		easing: cubicOut
 	});
 
   $effect((async () => {
     if (open) {
-      await tweenedAngle.set(180);
+      await curtain.set(1);
       dispatch('wiped');
     }
   }));
@@ -41,16 +41,45 @@
     return sectorPath(x, y, r, $tweenedAngle, 360 - $tweenedAngle);
   });
 
+  let browserHeight = $state(undefined);
+  let browserWidth = $state(undefined);
+
+  const curtain = tweened(0, {
+    duration: Math.PI * 1000,
+    easing: cubicOut
+  });
+
+  let leftTx = $derived.by(() => -($curtain) * (browserWidth / 2));
+  let rightTx = $derived.by(() => ($curtain) * (browserWidth / 2));
+
 </script>
 
-{#if open}
+<svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
+<g class="curtains">
+  <rect
+    x="0"
+    y="0"
+    width={ browserWidth / 2 }
+    height={ browserHeight }
+    transform={`translate(${leftTx},0)`}
+  />
+  <rect
+    x={ browserWidth / 2 }
+    y="0"
+    width={ browserWidth / 2 }
+    height={ browserHeight }
+    transform={`translate(${rightTx},0)`}
+  />
+</g>
+
+<!-- {#if open}
   <path d={ d } />
 {:else}
   <circle cx={ x } cy={ y } r={ r } />
-{/if}
+{/if} -->
 
 <style>
-  path, circle {
+  rect {
     stroke: none;
     fill: black;
   }

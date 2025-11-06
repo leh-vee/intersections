@@ -49,7 +49,7 @@
     return rad;
   });
 
-  let isPoemVisible = $derived(arePoemLinesFetched && isIrisWipedOpen);
+  let isPoemVisible = $derived(arePoemLinesFetched && openPerspective);
   
   $effect(() => {
     if (browserHeight !== undefined && browserWidth !== undefined) setDimensions();
@@ -100,7 +100,7 @@
           open={ true } on:wiped={ () => { isIrisWipedOpen = true } } />
       {/if}
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } showId={ isIrisWipedOpen } lit={ hitMe } 
+        id={ sefirahId } showId={ openPerspective } lit={ hitMe } 
         on:drawn={ ()=> { openPerspective = true } } />
     </svg>
   {/if}
