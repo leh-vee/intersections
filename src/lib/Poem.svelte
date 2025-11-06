@@ -1,7 +1,7 @@
 <script>
   import fitty from 'fitty';
 
-  let { title, lines, typeNextLine = false } = $props();
+  let { title, lines, overflowY, typeNextLine = false } = $props();
   
   let nLines = $derived(lines.length);
   let lineEls = $state([]);
@@ -23,6 +23,7 @@
     if (areLinesFitted && !isTextVisible) {
       fittyLineEls.forEach(el => el.freeze());
       isTextVisible = true;
+      addOverflowBuffer();
     }
 	});
 
@@ -68,13 +69,13 @@
   let poemEl;
   let poemOverflowPx = $state(0);
 
-  function finalizeLayout(event) {
+  function addOverflowBuffer() {
     const poemRect = poemEl.getBoundingClientRect();
-    if (poemRect.bottom > btnRect.top) {
+    if (poemRect.bottom > overflowY) {
       poemOverflowPx = Math.ceil(
         Math.min(
-          (poemRect.bottom - btnRect.top + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
-          window.innerHeight - btnRect.top + 5 // text overflows the screen; the 5 adds a margin 
+          (poemRect.bottom - overflowY + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
+          window.innerHeight - overflowY + 5 // text overflows the screen; the 5 adds a margin 
         )
       );
     }
@@ -113,7 +114,6 @@
   #the-text > div {
     padding: 0;
     width: 100%;
-    z-index: 1;
   }
   
   #the-text #title {

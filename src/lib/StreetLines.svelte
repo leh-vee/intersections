@@ -4,6 +4,9 @@
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
 
   let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotationFactor = 0 } = $props();
   let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
@@ -76,8 +79,15 @@
     }
   }
 
-  let tilesLoading = 0;
-  let tilesLoaded = 0;
+  let tilesLoading = $state(0);
+  let tilesLoaded = $state(0);
+
+  $effect(() => {
+    if (isMapVisible && tilesLoaded === tilesLoading) {
+      dispatch('loaded');
+    }
+  });
+
   vectorTileSource.on('tileloadstart', () => {
     tilesLoading += 1;
   });

@@ -1,21 +1,23 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  let { w, h } = $props();
+  let { w, h, draw = false } = $props();
 
   const curtain = tweened(0, {
     duration: 3000,
     easing: cubicOut
   });
 
-  onMount(async () => {
-    await curtain.set(1);
-    dispatch('drawn');
-  });
+  $effect((async () => {
+    if (draw) {
+      await curtain.set(1);
+      dispatch('drawn');
+    }
+  }));
 
   let leftTx = $derived.by(() => -($curtain) * (w / 2));
   let rightTx = $derived.by(() => ($curtain) * (w / 2));

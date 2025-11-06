@@ -32,8 +32,9 @@
 
   let areDimensionsSet = $state(false);
   
-  let btnPxCoords = $state(undefined);
   let btnRadius = $state(undefined);
+  let btnPxCoords = $state(undefined);
+  let btnTopY = $state(undefined);
   
   $effect(() => {
     if (browserHeight !== undefined && browserWidth !== undefined) setDimensions();
@@ -44,9 +45,11 @@
     const x = browserWidth / 2; 
     const y = browserHeight - Math.round(browserHeight * 0.05) - btnRadius; 
     btnPxCoords = [x, y];
+    btnTopY = y - btnRadius;
     areDimensionsSet = true;
   }
 
+  let areMapTilesLoaded = $state(false);
   let isBtnReady = $state(false);
   let areCurtainsDrawn = $state(false);
   let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn && isBtnReady);
@@ -73,18 +76,19 @@
 <svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
 
 <StreetLines centreCoordsGcs={ coords } centreOnPx= { btnPxCoords } 
-  rotationFactor={ sefirahId } gild={ hitMe } />
+  rotationFactor={ sefirahId } gild={ hitMe } on:loaded={ () => { areMapTilesLoaded = true } } />
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
 
 <div id='page' onclick={ pageClicked }>
   {#if isPoemVisible}
-    <Poem title={ poemTitle } lines={ poemLines } typeNextLine = { hitMe } />
+    <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
+      typeNextLine = { hitMe } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <Curtains w={ innerWidth } h={ innerHeight } 
+      <Curtains w={ innerWidth } h={ innerHeight } draw={ areMapTilesLoaded }
         on:drawn={ () => { areCurtainsDrawn = true } } />
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
         id={ sefirahId } showId={ isPoemVisible } lit={ hitMe } 
