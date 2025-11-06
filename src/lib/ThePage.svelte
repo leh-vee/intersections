@@ -1,7 +1,7 @@
 <script>
   import StreetLines from '$lib/StreetLines.svelte';
   import TheButton from '$lib/TheButton.svelte';
-  import Iris from '$lib/Iris.svelte';
+  import Curtains from '$lib/Curtains.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex } from '$lib/store.js';
@@ -34,22 +34,6 @@
   
   let btnPxCoords = $state(undefined);
   let btnRadius = $state(undefined);
-
-  let irisRadius = $state(undefined);
-  let isIrisWipedOpen = $state(false);
-
-  let openPerspective = $state(false);
-
-  let perspectivalRadians = $derived.by(() => {
-    const rotationFactor = Number(sefirahId);
-    let rad = 0;
-    if (rotationFactor !== 0) {
-      rad = (2 * Math.PI / 9 * rotationFactor) + 0.3;
-    }
-    return rad;
-  });
-
-  let isPoemVisible = $derived(arePoemLinesFetched && openPerspective);
   
   $effect(() => {
     if (browserHeight !== undefined && browserWidth !== undefined) setDimensions();
@@ -60,13 +44,15 @@
     const x = browserWidth / 2; 
     const y = browserHeight - Math.round(browserHeight * 0.05) - btnRadius; 
     btnPxCoords = [x, y];
-    irisRadius = Math.ceil(Math.hypot(x, y));
     areDimensionsSet = true;
   }
 
+  let isBtnReady = $state(false);
+  let areCurtainsDrawn = $state(false);
+  let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn && isBtnReady);
   let hitMe = $state(false);
 
-  function clicked(event) {
+  function pageClicked(event) {
     if (isPoemVisible && isBtnClick(event.clientX, event.clientY)) {
       hitMe = true;
       setTimeout(() => {
@@ -85,23 +71,24 @@
 </script>
 
 <svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
+
 <StreetLines centreCoordsGcs={ coords } centreOnPx= { btnPxCoords } 
-  rotation={ perspectivalRadians } gild={ hitMe } />
+  rotationFactor={ sefirahId } gild={ hitMe } />
+
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
-<div id='page' onclick={ clicked }>
+
+<div id='page' onclick={ pageClicked }>
   {#if isPoemVisible}
     <Poem title={ poemTitle } lines={ poemLines } typeNextLine = { hitMe } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      {#if !isIrisWipedOpen}
-        <Iris x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ irisRadius }
-          open={ true } on:wiped={ () => { isIrisWipedOpen = true } } />
-      {/if}
+      <Curtains w={ innerWidth } h={ innerHeight } 
+        on:drawn={ () => { areCurtainsDrawn = true } } />
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } showId={ openPerspective } lit={ hitMe } 
-        on:drawn={ ()=> { openPerspective = true } } />
+        id={ sefirahId } showId={ isPoemVisible } lit={ hitMe } 
+        on:ready={ () => { isBtnReady = true } } />
     </svg>
   {/if}
 </div>

@@ -1,16 +1,14 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { circOut } from 'svelte/easing';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
   let { x, y, r, id, showId = false, lit = false } = $props();
 
-  // circumference
   const C = $derived(2 * Math.PI * r);
 
-  // master progress (0→1)
   const progress = tweened(0, {
     duration: Math.PI * 1000,
     easing: circOut
@@ -62,13 +60,9 @@
     return () => cancelAnimationFrame(frame);
   });
 
-  let isDrawn = $state(false);
-  $effect(async () => {
-    if (!isDrawn) {
-      await progress.set(1);
-      isDrawn = true;
-      dispatch('drawn');
-    }
+  onMount(async () => {
+    await progress.set(1);
+    dispatch('ready');
   });
 </script>
 
