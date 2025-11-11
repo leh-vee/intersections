@@ -1,11 +1,11 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { circOut } from 'svelte/easing';
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  let { x, y, r, id, showId = false, lit = false } = $props();
+  let { x, y, r, id, showId = false, lit = false, animateIn } = $props();
 
   const C = $derived(2 * Math.PI * r);
 
@@ -60,9 +60,11 @@
     return () => cancelAnimationFrame(frame);
   });
 
-  onMount(async () => {
-    await progress.set(1);
-    dispatch('ready');
+  $effect(async () => {
+    if (animateIn) {
+      await progress.set(1);
+      dispatch('ready');
+    }
   });
 </script>
 

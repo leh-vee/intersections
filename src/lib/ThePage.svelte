@@ -9,10 +9,10 @@
   let { id } = $props();
 
   let poemMetaData = $state($poemIndex[id]);
-
   let poemTitle = $derived(poemMetaData.title);
+  let sefirahId = $derived(poemMetaData.sefirahId);
+  let coords = $derived(poemMetaData.coordinates);
   let poemLines = $state([]);
-
   let arePoemLinesFetched = $derived(poemLines.length > 0);
 
   $effect(() => {
@@ -24,17 +24,12 @@
     }
   });
 
-  let sefirahId = $derived(poemMetaData.sefirahId);
-  let coords = $derived(poemMetaData.coordinates);
-
   let browserHeight = $state(undefined);
   let browserWidth = $state(undefined);
-
-  let areDimensionsSet = $state(false);
-  
   let btnRadius = $state(undefined);
   let btnPxCoords = $state(undefined);
   let btnTopY = $state(undefined);
+  let areDimensionsSet = $state(false);  
   
   $effect(() => {
     if (browserHeight !== undefined && browserWidth !== undefined) setDimensions();
@@ -88,11 +83,11 @@
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <Curtains w={ innerWidth } h={ innerHeight } draw={ areMapTilesLoaded }
+      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ areMapTilesLoaded }
         on:drawn={ () => { areCurtainsDrawn = true } } />
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
         id={ sefirahId } showId={ isPoemVisible } lit={ hitMe } 
-        on:ready={ () => { isBtnReady = true } } />
+        on:ready={ () => { isBtnReady = true } } animateIn={ areMapTilesLoaded } />
     </svg>
   {/if}
 </div>

@@ -5,15 +5,15 @@
 
   const dispatch = createEventDispatcher();
 
-  let { w, h, draw = false } = $props();
+  let { w, h, animateIn } = $props();
 
   const curtain = tweened(0, {
-    duration: 3000,
+    duration: Math.PI * 1000,
     easing: cubicOut
   });
 
   $effect((async () => {
-    if (draw) {
+    if (animateIn) {
       await curtain.set(1);
       dispatch('drawn');
     }
