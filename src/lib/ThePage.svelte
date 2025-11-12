@@ -45,9 +45,12 @@
   }
 
   let areMapTilesLoaded = $state(false);
+  let isSpinner = $state(false);
+  let drawCurtains = $derived(isSpinner & areMapTilesLoaded);
+
   let isBtnReady = $state(false);
   let areCurtainsDrawn = $state(false);
-  let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn && isBtnReady);
+  let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
   let hitMe = $state(false);
 
   function pageClicked(event) {
@@ -83,11 +86,11 @@
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ areMapTilesLoaded }
+      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains }
         on:drawn={ () => { areCurtainsDrawn = true } } />
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
         id={ sefirahId } showId={ isPoemVisible } lit={ hitMe } 
-        on:ready={ () => { isBtnReady = true } } animateIn={ areMapTilesLoaded } />
+        on:isFullsizeSpinner={ () => { isSpinner = true } } unify={ drawCurtains } />
     </svg>
   {/if}
 </div>
