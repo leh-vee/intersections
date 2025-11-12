@@ -15,7 +15,7 @@
 
   $effect(() => {
     if (nLines === nLineEls) {
-      lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++ ));
+      lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++));
       fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
     }
   });
@@ -28,8 +28,8 @@
     }
 	});
 
-  let isTyping = false;
-  let nextLineToType = 0;
+  let isTyping = $state(false);
+  let nextLineToType = $state(0);
 
   $effect(() => {
     if (typeNextLine && nextLineToType < nLineEls && !isTyping) typeLine();
@@ -46,7 +46,6 @@
     const elTextContent = lineEl.textContent;
     const text = elTextContent;
     let nextCharIndex = 1;
-    let addCharIntervalId;
     const typeChar = () => {
       lineEl.textContent = text.slice(0, nextCharIndex);
       const char = text.slice(nextCharIndex - 1, nextCharIndex);
@@ -86,7 +85,9 @@
   <div id='poem' bind:this={ poemEl }>
     <div id='text' style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
-        <span class='line' bind:this={ lineEls[i] }>{ line }</span>
+        <span class='line' bind:this={ lineEls[i] }
+          class:next={ i === nextLineToType && !isTyping } 
+          class:typing={ i === nextLineToType && isTyping } >{ line }</span>
       {/each}
     </div>
   </div>
@@ -134,5 +135,26 @@
     white-space: nowrap;
     display: block;
     visibility: hidden;
+  }
+  
+  .line.next::before, .line.typing::after {
+    content: '';
+    display: inline-block;
+    width: 0.5em;   /* scales with font-size from fitty */
+    height: 0.5em;
+    margin-left: 0.15em;
+    background: gold;
+    border-radius: 9999px;
+    transform-origin: center;
+    animation: cursor-pulse 900ms ease-in-out infinite;
+    vertical-align: 0.05em;
+    box-shadow: 0 0 0.2em rgba(255, 215, 0, 0.8);
+    visibility: visible;
+  }
+
+  @keyframes cursor-pulse {
+    0%   { transform: scale(0.7); opacity: 0.75; }
+    50%  { transform: scale(1.0); opacity: 1; }
+    100% { transform: scale(0.7); opacity: 0.75; }
   }
 </style>
