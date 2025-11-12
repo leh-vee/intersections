@@ -69,14 +69,15 @@
 
   function addOverflowBuffer() {
     const poemRect = poemEl.getBoundingClientRect();
-    if (poemRect.bottom > overflowY) {
+    const poemBtmPx = poemRect.bottom 
+    const windowHeight = window.innerHeight;
+    if (poemBtmPx > overflowY) {
+      // text overflows a) button only b) full screen 
       poemOverflowPx = Math.ceil(
-        Math.min(
-          (poemRect.bottom - overflowY + 5) * 2, // text overflows button but not the screen; the 5 adds a margin
-          window.innerHeight - overflowY + 5 // text overflows the screen; the 5 adds a margin 
-        )
+        Math.min(((poemBtmPx - overflowY) * 2), windowHeight - overflowY)
       );
-    }
+      poemOverflowPx += 5; // add 5px margin
+    } 
   }
 </script>
 
