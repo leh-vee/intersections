@@ -5,18 +5,22 @@
 
   const dispatch = createEventDispatcher();
 
-  let { x, y, r, id, showId = false, lit = false, unify } = $props();
+  let { x, y, r, id, lit = false, unify } = $props();
 
   const circumference = r * Math.PI;
 
+  let isLabelVisibile = $state(false);
+
   const btnRadius = tweened(0, {
-    duration: Math.PI * 1000,
+    duration: 3000,
     easing: sineIn
   });
 
   onMount(async () => {
     await btnRadius.set(r);
-    dispatch('isFullsizeSpinner');
+    setTimeout(() => {
+        dispatch('spinning');
+      }, 141);
   });
 
   const dashLengthFactor = tweened(24, {
@@ -26,7 +30,11 @@
   
   $effect(async () => {
     if (unify) {
-      await dashLengthFactor.set(0)
+      await dashLengthFactor.set(0);
+      isLabelVisibile = true;
+      setTimeout(() => {
+        dispatch('ready');
+      }, 1000);
     }
   });
 
@@ -38,7 +46,7 @@
 <g class='rotate' transform-origin={ `${x}px ${y}px` }>
   <circle cx={x} cy={y} r={ $btnRadius } stroke-dasharray={ `${dash}, ${gap}` } />
 </g>
-{#if showId}
+{#if isLabelVisibile}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
 

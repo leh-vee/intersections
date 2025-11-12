@@ -1,4 +1,5 @@
 <script>
+  import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
 
   let { title, lines, overflowY, typeNextLine = false } = $props();
@@ -63,9 +64,6 @@
     typeChar();
   }
 
-  let lastTitleIndex = $state(0);
-  let typedTitle = $derived(title.slice(0, lastTitleIndex));
-
   let poemEl;
   let poemOverflowPx = $state(0);
 
@@ -83,9 +81,7 @@
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <div id='title'>
-    <h3>{ title }</h3>
-  </div>
+  <Title title={ title } />
   <div id='poem' bind:this={ poemEl }>
     <div id='text' style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
@@ -116,13 +112,6 @@
     width: 100%;
   }
   
-  #the-text #title {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  
   #the-text #poem {
     overflow-y: scroll;
     position: relative;
@@ -131,15 +120,6 @@
 
   #the-text #spacer {
     flex: 1;
-  }
-  
-  #title h3 {
-    font-weight: 400;
-    border-bottom: 2px solid black;
-    color: ghostwhite;
-    width: 80%;
-    margin: 0 auto;
-    padding: 5px 0;
   }
   
   #poem #text {

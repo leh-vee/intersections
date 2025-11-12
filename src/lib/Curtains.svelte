@@ -1,9 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
-  import { createEventDispatcher } from 'svelte';
-
-  const dispatch = createEventDispatcher();
 
   let { w, h, animateIn } = $props();
 
@@ -13,10 +10,7 @@
   });
 
   $effect((async () => {
-    if (animateIn) {
-      await curtain.set(1);
-      dispatch('drawn');
-    }
+    if (animateIn) curtain.set(1);
   }));
 
   let leftTx = $derived.by(() => -($curtain) * (w / 2));
