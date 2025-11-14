@@ -45,7 +45,7 @@
 <style>
   circle {
     stroke: dimgray;
-    stroke-width: 2;
+    stroke-width: 1;
   }
   
   circle.gild {
@@ -57,13 +57,13 @@
 
   @keyframes breathe {
     0%   { 
-      stroke-width: 2;
+      stroke-width: 1;
     }
     50%  { 
       stroke-width: 3;
     }
     100% { 
-      stroke-width: 2;
+      stroke-width: 1;
     }
   }
 
