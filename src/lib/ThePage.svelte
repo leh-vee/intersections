@@ -2,6 +2,7 @@
   import StreetLines from '$lib/StreetLines.svelte';
   import TheButton from '$lib/TheButton.svelte';
   import Curtains from '$lib/Curtains.svelte';
+  import Ray from '$lib/Ray.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex } from '$lib/store.js';
@@ -45,11 +46,13 @@
   }
 
   let areMapTilesLoaded = $state(false);
-  let isBtnSpinner = $state(false);
-  let drawCurtains = $derived(isBtnSpinner & areMapTilesLoaded);
+  let isIrradiated = $state(false);
+  let drawCurtains = $derived(areMapTilesLoaded && isIrradiated);
+  
+  let areCurtainsDrawn = $state(false);
+  let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
 
-  let isBtnReady = $state(false);
-  let isPoemVisible = $derived(arePoemLinesFetched && isBtnReady);
+  let isButtonVisible = $state(false);
   let hitMe = $state(false);
 
   function pageClicked(event) {
@@ -81,15 +84,18 @@
 <div id='page' onclick={ pageClicked }>
   {#if isPoemVisible}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
-      typeNextLine = { hitMe } />
+      typeNextLine={ hitMe } on:cursorReveal={ () => { isButtonVisible = true }} />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains } />
-      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } lit={ hitMe } unify={ drawCurtains }
-        on:spinning={ () => { isBtnSpinner = true } }  
-        on:ready={ () => { isBtnReady = true } } />
+      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains } 
+        on:drawn={ () => { areCurtainsDrawn = true } } />
+      <Ray xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
+        on:pregnantPause={ () => { isIrradiated = true }} />
+      {#if isButtonVisible}
+        <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
+          id={ sefirahId } lit={ hitMe } />
+      {/if}
     </svg>
   {/if}
 </div>

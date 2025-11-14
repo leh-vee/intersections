@@ -19,7 +19,7 @@
   onMount(async () => {
     await finalCharIndex.set(title.length);
     isTyped = true;
-    dispatch('typed');
+    dispatch('titled');
   });
 
 </script>
@@ -46,16 +46,7 @@
   }
   
   #title h3.border {
-    animation: underline 3.14s ease-out forwards;
-  }
-
-  @keyframes underline {
-    0% {
-      border-bottom: 0px solid black; 
-    }
-    100% {
-      border-bottom: 2px solid black; 
-    }
+    border-bottom: 2px solid black;
   }
 
 </style>

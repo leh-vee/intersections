@@ -1,20 +1,26 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
+  import { createEventDispatcher } from 'svelte';
 
-  let { w, h, animateIn } = $props();
+  const dispatch = createEventDispatcher(); 
 
-  const curtain = tweened(0, {
+  let { w, h, animateIn = false } = $props();
+
+  const curtainOpeningPx = tweened(0, {
     duration: Math.PI * 1000,
     easing: cubicOut
   });
 
   $effect((async () => {
-    if (animateIn) curtain.set(1);
+    if (animateIn) {
+      await curtainOpeningPx.set(1);
+      dispatch('drawn');
+    }
   }));
 
-  let leftTx = $derived.by(() => -($curtain) * (w / 2));
-  let rightTx = $derived.by(() => ($curtain) * (w / 2));
+  let leftTx = $derived.by(() => -($curtainOpeningPx) * (w / 2));
+  let rightTx = $derived.by(() => ($curtainOpeningPx) * (w / 2));
 
 </script>
 
