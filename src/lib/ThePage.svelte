@@ -53,6 +53,8 @@
   let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
 
   let isButtonVisible = $state(false);
+  let isBtnReady = $state(false);
+
   let hitMe = $state(false);
 
   function pageClicked(event) {
@@ -84,7 +86,8 @@
 <div id='page' onclick={ pageClicked }>
   {#if isPoemVisible}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
-      typeNextLine={ hitMe } on:cursorReveal={ () => { isButtonVisible = true }} />
+      typeNextLine={ hitMe } on:titled={ () => { isButtonVisible = true }} 
+      cursor={ isBtnReady } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
@@ -94,7 +97,7 @@
         on:pregnantPause={ () => { isIrradiated = true }} />
       {#if isButtonVisible}
         <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-          id={ sefirahId } lit={ hitMe } />
+          id={ sefirahId } lit={ hitMe } on:ready={ ()=> { isBtnReady = true } } />
       {/if}
     </svg>
   {/if}

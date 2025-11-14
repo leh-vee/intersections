@@ -9,21 +9,22 @@
 
   const circumference = r * Math.PI;
 
-  let isLabelVisibile = $state(false);
+  let gild = $state(false);
 
   const btnRadius = tweened(0, {
-    duration: 2000,
+    duration: Math.PI * 1000,
     easing: sineIn
   });
 
   onMount(async () => {
     btnRadius.set(r);
     await dashLengthFactor.set(0);
-    isLabelVisibile = true;
+    gild = true;
+    dispatch('ready');
   });
 
-  const dashLengthFactor = tweened(314, {
-    duration: 6000,
+  const dashLengthFactor = tweened(1000, {
+    duration: Math.PI * 1000,
     easing: circOut
   });
 
@@ -35,9 +36,9 @@
 </script>
 
 <g class:rotate transform-origin={ `${x}px ${y}px` }>
-  <circle cx={x} cy={y} r={ $btnRadius } stroke-dasharray={ dash } />
+  <circle class:gild cx={x} cy={y} r={ $btnRadius } stroke-dasharray={ `${dash}, ${gap}` } />
 </g>
-{#if isLabelVisibile}
+{#if gild}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
 
@@ -45,20 +46,38 @@
   circle {
     stroke: dimgray;
     stroke-width: 2;
-    animation: gild 3.14s linear forwards;
+  }
+  
+  circle.gild {
+    stroke: gold;
+    animation: 
+      gild 3.14s ease-out,
+      breathe 3.14s ease-in-out infinite 3.14s;
+  }
+
+  @keyframes breathe {
+    0%   { 
+      stroke-width: 2;
+    }
+    50%  { 
+      stroke-width: 3;
+    }
+    100% { 
+      stroke-width: 2;
+    }
   }
 
   @keyframes gild {
-    0% {
+    0%   { 
       stroke: dimgray;
     }
-    100% {
+    100% { 
       stroke: gold;
     }
   }
 
   .rotate {
-    animation: spin 31415ms linear infinite;
+    animation: spin 1s linear infinite;
   }
 
   @keyframes spin {

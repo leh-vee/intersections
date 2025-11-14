@@ -1,11 +1,8 @@
 <script>
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
-  import { createEventDispatcher } from 'svelte';
 
-  const dispatch = createEventDispatcher();
-
-  let { title, lines, overflowY, typeNextLine } = $props();
+  let { title, lines, overflowY, typeNextLine, cursor } = $props();
   
   let nLines = $derived(lines.length);
   let lineEls = $state([]);
@@ -13,7 +10,6 @@
   let nLineFitEventCalls = $state(0);
   let areLinesFitted = $derived(nLineFitEventCalls === nLineEls && nLineEls > 0);
   let isTextVisible = $state(false);
-  let cursor = $state(false);
 
   let fittyLineEls;
 
@@ -82,21 +78,15 @@
       poemOverflowPx += 5; // add 5px margin
     } 
   }
-
-  function theEyeIsMyAvatar() {
-    cursor = true;
-    dispatch('cursorReveal');
-  }
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ theEyeIsMyAvatar } />
+  <Title title={ title } on:titled />
   <div id='poem' bind:this={ poemEl }>
     <div id='text' class:cursor style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
         <span class='line' bind:this={ lineEls[i] }
-          class:next={ i === nextLineToType && !isTyping } 
-          class:typing={ i === nextLineToType && isTyping } >{ line }</span>
+          class:next={ i === nextLineToType && !isTyping } >{ line }</span>
       {/each}
     </div>
   </div>
@@ -146,31 +136,45 @@
     visibility: hidden;
   }
   
-  #text.cursor .line.next::before, #text.cursor .line.typing::after {
+  #text.cursor .line.next::before {
     content: '';
     display: inline-block;
     width: 0.5em;   /* scales with font-size from fitty */
     height: 0.5em;
-    margin-left: 0.15em;
-    background: gold;
     border-radius: 9999px;
     transform-origin: center;
+    background: gold;
     animation:
-      emenate 3.14s forwards,
-      breathe 3.14s ease-in-out infinite 3.14s;
+      emenate 3s forwards,
+      breathe 3.14s ease-in-out infinite 3s;
     vertical-align: 0.05em;
     box-shadow: 0 0 0.2em rgba(255, 215, 0, 0.8);
     visibility: visible;
   }
 
   @keyframes emenate {
-    0%   { transform: scale(0); opacity: 0; }
-    100% { transform: scale(0.7); opacity: 1; }
+    0%   { 
+      transform: scale(0); 
+      opacity: 0; 
+    }
+    100% { 
+      transform: scale(0.7); 
+      opacity: 1;
+    }
   }
 
   @keyframes breathe {
-    0%   { transform: scale(0.7); opacity: 1; }
-    50%  { transform: scale(1.0); opacity: 0.8; }
-    100% { transform: scale(0.7); opacity: 1; }
+    0%   { 
+      transform: scale(0.7); 
+      opacity: 1;
+    }
+    50%  { 
+      transform: scale(1); 
+      opacity: 0.8; 
+    }
+    100% { 
+      transform: scale(0.7); 
+      opacity: 1; 
+    }
   }
 </style>
