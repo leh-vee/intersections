@@ -2,7 +2,7 @@
   import StreetLines from '$lib/StreetLines.svelte';
   import TheButton from '$lib/TheButton.svelte';
   import Curtains from '$lib/Curtains.svelte';
-  import Ray from '$lib/Ray.svelte';
+  import Beam from '$lib/Beam.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex } from '$lib/store.js';
@@ -93,7 +93,7 @@
     <svg width="100%" height="100%">
       <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains } 
         on:drawn={ () => { areCurtainsDrawn = true } } />
-      <Ray xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
+      <Beam xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
         on:pregnantPause={ () => { isIrradiated = true }} />
       {#if isButtonVisible}
         <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
