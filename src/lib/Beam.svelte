@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { expoIn, expoOut } from 'svelte/easing';
+  import { expoOut } from 'svelte/easing';
   import { createEventDispatcher, onMount } from 'svelte';
 
   const dispatch = createEventDispatcher(); 
@@ -19,7 +19,7 @@
   function descend() {
     yHeadPx.set(screenHeight, { duration: piSecs, easing: expoOut });
     setTimeout(async () => {
-      await yTailPx.set(screenHeight, { duration: piSecs, easing: expoIn });
+      await yTailPx.set(screenHeight, { duration: piSecs, easing: expoOut });
       ascend();
     }, piRemainderSecs);
   }
@@ -27,7 +27,7 @@
   function ascend() {
     yHeadPx.set(yEndPx, { duration: piSecs, easing: expoOut });
     setTimeout(async () => {
-      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoIn });
+      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoOut });
       dispatch('pregnantPause');
     }, piRemainderSecs);
   }
