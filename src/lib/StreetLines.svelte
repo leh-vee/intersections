@@ -4,13 +4,31 @@
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
+  import { tweened } from 'svelte/motion';
+  import { sineIn } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotationFactor = 0 } = $props();
-  let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotationFactor = 0, dim } = $props();
+  
   let isMapVisible = $state(false);
+
+  const goldRgb = [255, 215, 0];
+  const dimGreyRgb = [105, 105, 105];
+  const strokeRgb = tweened(goldRgb, { duration: 3141, easing: sineIn });
+
+  let strokeColour = $derived.by(() => {
+    let [r, g, b] = $strokeRgb;
+    if (gild) {
+      [r, g, b] = goldRgb;
+    }
+    return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+  }); 
+
+  $effect(() => {
+    if (dim) strokeRgb.set(dimGreyRgb);
+  });
 
   $effect(() => {
     if (vectorLayer) {
