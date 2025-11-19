@@ -1,5 +1,5 @@
 <script>
-  import { cubicInOut, sineInOut } from 'svelte/easing';
+  import { quadInOut, sineInOut } from 'svelte/easing';
   import { tweened } from 'svelte/motion';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -9,7 +9,7 @@
 
   const finalCharIndex = tweened(0, {
     duration: Math.PI * 1000,
-    easing: cubicInOut
+    easing: quadInOut
   });
 
   const widthPercent = tweened(0, {
@@ -21,8 +21,8 @@
 
   onMount(async () => {
     await widthPercent.set(80);
-    await finalCharIndex.set(title.length);
     dispatch('titled');
+    await finalCharIndex.set(title.length);
   });
 
 </script>

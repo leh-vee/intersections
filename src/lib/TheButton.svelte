@@ -34,18 +34,18 @@
   circle {
     stroke: gold;
     stroke-width: 1;
-    /* breathe 3.14s ease-in-out infinite 3.14s; */
+    animation: breathe 3.14s ease-in-out infinite 3.14s;
   }
 
   @keyframes breathe {
     0%   { 
-      stroke-width: 2;
-    }
-    50%  { 
       stroke-width: 1;
     }
-    100% { 
+    50%  { 
       stroke-width: 2;
+    }
+    100% { 
+      stroke-width: 1;
     }
   }
 

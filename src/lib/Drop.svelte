@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { expoOut } from 'svelte/easing';
+  import { expoOut, expoIn } from 'svelte/easing';
   import { createEventDispatcher, onMount } from 'svelte';
 
   const dispatch = createEventDispatcher(); 
@@ -15,7 +15,7 @@
   onMount(() => {
     yHeadPx.set(yEndPx, { duration: piSecs, easing: expoOut });
     setTimeout(async () => {
-      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoOut });
+      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoIn });
       dispatch('splat');
     }, piRemainderSecs);
   })
