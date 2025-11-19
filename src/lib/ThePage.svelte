@@ -94,7 +94,7 @@
       <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains } 
         on:drawn={ () => { areCurtainsDrawn = true } } />
       <Beam xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
-        on:pregnantPause={ () => { isIrradiated = true }} />
+        on:splat={ () => { isIrradiated = true }} />
       {#if isButtonVisible}
         <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
           id={ sefirahId } lit={ hitMe } on:ready={ ()=> { isBtnReady = true } } />
