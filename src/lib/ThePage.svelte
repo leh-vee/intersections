@@ -2,7 +2,7 @@
   import StreetLines from '$lib/StreetLines.svelte';
   import TheButton from '$lib/TheButton.svelte';
   import Curtains from '$lib/Curtains.svelte';
-  import Beam from '$lib/Beam.svelte';
+  import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex } from '$lib/store.js';
@@ -46,8 +46,8 @@
   }
 
   let areMapTilesLoaded = $state(false);
-  let isIrradiated = $state(false);
-  let drawCurtains = $derived(areMapTilesLoaded && isIrradiated);
+  let hasDropped = $state(false);
+  let openSesame = $derived(areMapTilesLoaded && hasDropped);
   
   let areCurtainsDrawn = $state(false);
   let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
@@ -78,28 +78,26 @@
 <svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
 
 <StreetLines centreCoordsGcs={ coords } centreOnPx= { btnPxCoords } 
-  rotationFactor={ sefirahId } gild={ hitMe } dim={ drawCurtains }
-  on:loaded={ () => { areMapTilesLoaded = true } } />
+  rotationFactor={ sefirahId } gild={ hitMe } on:loaded={ () => { areMapTilesLoaded = true } } />
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
 
 <div id='page' onclick={ pageClicked }>
-  {#if isPoemVisible}
+  {#if openSesame}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
-      typeNextLine={ hitMe } on:titled={ () => { isButtonVisible = true }} 
-      cursor={ isBtnReady } />
+      typeNextLine={ hitMe } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
-      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ drawCurtains } 
+      <Curtains w={ innerWidth } h={ innerHeight } animateIn={ openSesame } 
         on:drawn={ () => { areCurtainsDrawn = true } } />
-      <Beam xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
-        on:splat={ () => { isIrradiated = true }} />
-      {#if isButtonVisible}
-        <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-          id={ sefirahId } lit={ hitMe } on:ready={ ()=> { isBtnReady = true } } />
+      {#if !hasDropped}
+        <Drop xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
+          on:splat={ () => { hasDropped = true }} />
       {/if}
+      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
+        id={ sefirahId } lit={ hitMe } animateIn={ openSesame } />
     </svg>
   {/if}
 </div>

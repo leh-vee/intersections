@@ -2,7 +2,7 @@
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
 
-  let { title, lines, overflowY, typeNextLine, cursor } = $props();
+  let { title, lines, overflowY, typeNextLine } = $props();
   
   let nLines = $derived(lines.length);
   let lineEls = $state([]);
@@ -78,10 +78,12 @@
       poemOverflowPx += 5; // add 5px margin
     } 
   }
+
+  let cursor = $state(false);
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled />
+  <Title title={ title } on:titled={ ()=> { cursor = true } } />
   <div id='poem' bind:this={ poemEl }>
     <div id='text' class:cursor style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
@@ -136,7 +138,7 @@
     visibility: hidden;
   }
   
-  #text.cursor .line.next::before {
+ .cursor .line.next::before {
     content: '';
     display: inline-block;
     width: 0.5em;   /* scales with font-size from fitty */

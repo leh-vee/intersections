@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { expoInOut } from 'svelte/easing';
+  import { expoOut } from 'svelte/easing';
   import { createEventDispatcher, onMount } from 'svelte';
 
   const dispatch = createEventDispatcher(); 
@@ -13,24 +13,12 @@
   const piRemainderSecs = (Math.PI - 3) * 1000;
 
   onMount(() => {
-    descend();
-  })
-
-  function descend() {
-    yHeadPx.set(screenHeight, { duration: piSecs, easing: expoInOut });
+    yHeadPx.set(yEndPx, { duration: piSecs, easing: expoOut });
     setTimeout(async () => {
-      await yTailPx.set(screenHeight, { duration: piSecs, easing: expoInOut });
-      ascend();
-    }, piRemainderSecs);
-  }
-
-  function ascend() {
-    yHeadPx.set(yEndPx, { duration: piSecs, easing: expoInOut });
-    setTimeout(async () => {
-      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoInOut });
+      await yTailPx.set(yEndPx, { duration: piSecs, easing: expoOut });
       dispatch('splat');
     }, piRemainderSecs);
-  }
+  })
 
 </script>
 <defs>
