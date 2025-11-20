@@ -39,8 +39,10 @@
     flex-direction: column;
     justify-content: flex-end;
   }
-
+  
   #title h3 {
+    height: 2.2dvh;
+    font-size: 2.2dvh;
     font-weight: 400;
     color: ghostwhite;
     margin: 0 auto;
