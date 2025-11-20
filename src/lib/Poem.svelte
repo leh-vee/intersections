@@ -88,7 +88,8 @@
     <div id='text' class:cursor style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
         <span class='line' bind:this={ lineEls[i] }
-          class:next={ i === nextLineToType && !isTyping } >{ line }</span>
+          class:next={ i === nextLineToType && !isTyping }
+          class:typing={ i === nextLineToType && isTyping } >{ line }</span>
       {/each}
     </div>
   </div>
@@ -137,21 +138,30 @@
     display: block;
     visibility: hidden;
   }
-  
- .cursor .line.next::before {
+
+  .cursor .line.next::before, .cursor .line.typing::after {
     content: '';
     display: inline-block;
-    width: 0.5em;   /* scales with font-size from fitty */
+    width: 0.5em;
     height: 0.5em;
     border-radius: 9999px;
     transform-origin: center;
     background: gold;
+    vertical-align: 0.05em;
+    box-shadow: 0 0 0.2em rgba(255, 215, 0, 0.8);
+  }
+  
+ .cursor .line.next::before {
     animation:
       emenate 3s forwards,
       breathe 3.14s ease-in-out infinite 3s;
-    vertical-align: 0.05em;
-    box-shadow: 0 0 0.2em rgba(255, 215, 0, 0.8);
     visibility: visible;
+  }
+
+  .cursor .line.typing::after {
+    animation: breathe 3.14s ease-in-out infinite;
+    position: relative;
+    left: 3px;
   }
 
   @keyframes emenate {

@@ -41,8 +41,9 @@
   }
   
   #title h3 {
-    height: 2.2dvh;
-    font-size: 2.2dvh;
+    --heading-height: 3dvh;
+    height: var(--heading-height);
+    font-size: var(--heading-height);
     font-weight: 400;
     color: ghostwhite;
     margin: 0 auto;
