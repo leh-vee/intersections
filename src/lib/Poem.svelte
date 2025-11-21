@@ -24,32 +24,34 @@
     if (areLinesFitted && !isTextVisible) {
       fittyLineEls.forEach(el => el.freeze());
       isTextVisible = true;
+      stashNextLineText();
       addOverflowBuffer();
     }
 	});
 
-  let isTyping = $state(false);
   let nextLineToType = $state(0);
+  let lineEl = $derived(lineEls[nextLineToType]);
+
+  let stashedText;
+  function stashNextLineText() {
+    stashedText = lineEl.textContent;
+    lineEl.textContent = '_';
+  }
+
+  let isTyping = $state(false);
+  let isCursorVisible = $state(false);
 
   $effect(() => {
     if (typeNextLine && nextLineToType < nLineEls && !isTyping) typeLine();
   });
 
-
-  function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
   function typeLine() {
     isTyping = true;
-    const lineEl = lineEls[nextLineToType];
-    const elTextContent = lineEl.textContent;
-    const text = elTextContent;
     let nextCharIndex = 1;
     const typeChar = () => {
-      lineEl.textContent = text.slice(0, nextCharIndex);
-      const char = text.slice(nextCharIndex - 1, nextCharIndex);
-      if (nextCharIndex < elTextContent.length) {
+      lineEl.textContent = stashedText.slice(0, nextCharIndex);
+      const char = stashedText.slice(nextCharIndex - 1, nextCharIndex);
+      if (nextCharIndex < stashedText.length) {
         if (nextCharIndex === 1) lineEl.style.visibility = 'visible';
         nextCharIndex += 1;
         let typingDelay = randomInt(100, 200);
@@ -58,6 +60,7 @@
       } else {
         nextLineToType += 1;
         isTyping = false;
+        stashNextLineText();
       }
     }
     typeChar();
@@ -79,13 +82,15 @@
     } 
   }
 
-  let cursor = $state(false);
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ ()=> { cursor = true } } />
+  <Title title={ title } on:titled={ ()=> { isCursorVisible = true } } />
   <div id='poem' bind:this={ poemEl }>
-    <div id='text' class:cursor style:padding-bottom="{ poemOverflowPx }px">
+    <div id='text' class:cursor={ isCursorVisible } style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
         <span class='line' bind:this={ lineEls[i] }
           class:next={ i === nextLineToType && !isTyping }
@@ -118,6 +123,7 @@
   
   #the-text #poem {
     overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
     bottom: 2px;
   }
