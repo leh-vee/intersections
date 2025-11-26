@@ -21,8 +21,8 @@
 
   onMount(async () => {
     await widthPercent.set(80);
-    dispatch('titled');
     await finalCharIndex.set(title.length);
+    dispatch('titled');
   });
 
 </script>
