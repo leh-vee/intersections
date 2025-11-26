@@ -1,6 +1,9 @@
 <script>
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
 
   let { title, lines, overflowY, typeNextLine } = $props();
   
@@ -65,6 +68,9 @@
       } else {
         isTyping = false;
         nextLineToType += 1;
+        if (nextLineToType < nLineEls) {
+          dispatch('line');
+        }
         stashNextLineText();
         nextCharToTypeIndex = 1;
       }
@@ -91,10 +97,15 @@
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  function newLine() {
+    dispatch('line');
+    isCursorVisible = true;
+  }
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ ()=> { isCursorVisible = true } } />
+  <Title title={ title } on:titled={ newLine } />
   <div id='poem' bind:this={ poemEl }>
     <div id='text' class:cursor={ isCursorVisible } style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
@@ -165,8 +176,8 @@
   
  .cursor .line.next::before {
     animation:
-      emenate 3s forwards,
-      breathe 3.14s ease-in-out infinite 3s;
+      emenate 3.14s forwards,
+      breathe 3.14s ease-in-out infinite 3.14s;
     visibility: visible;
   }
 

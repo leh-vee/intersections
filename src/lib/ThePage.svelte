@@ -52,14 +52,22 @@
   let areCurtainsDrawn = $state(false);
   let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
 
-  let isButtonVisible = $state(false);
+  let gildButton = $state(false);
   let isBtnReady = $state(false);
+
+  function prepareButton() {
+    gildButton = true;
+    setTimeout(() => {
+      isBtnReady = true;
+    }, Math.PI * 1000); 
+  }
 
   let hitMe = $state(false);
 
   function pageClicked(event) {
-    if (isPoemVisible && isBtnClick(event.clientX, event.clientY)) {
+    if (isPoemVisible && isBtnReady && isBtnClick(event.clientX, event.clientY)) {
       hitMe = true;
+      gildButton = false;
       setTimeout(() => {
         hitMe = false;
       }, Math.PI); 
@@ -86,7 +94,7 @@
 <div id='page' onclick={ pageClicked }>
   {#if openSesame}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
-      typeNextLine={ hitMe } />
+      typeNextLine={ hitMe } on:line={ prepareButton } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
@@ -97,7 +105,7 @@
           on:splat={ () => { hasDropped = true }} />
       {/if}
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } lit={ hitMe } animateIn={ openSesame } />
+        id={ sefirahId } animateIn={ openSesame } gild={ gildButton } />
     </svg>
   {/if}
 </div>

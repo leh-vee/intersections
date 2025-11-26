@@ -5,7 +5,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let { x, y, r, id, animateIn, lit = false } = $props();
+  let { x, y, r, id, animateIn, gild } = $props();
 
   const circumference = r * Math.PI;
 
@@ -25,7 +25,7 @@
 
 </script>
 
-<circle cx={x} cy={y} r={ $btnRadius } />
+<circle class:gild cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
 {#if isLabelVisible}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
@@ -34,6 +34,24 @@
   circle {
     stroke: dimgrey;
     stroke-width: 2;
+    transition: stroke 3.14s ease-out;
+  }
+
+  circle.gild {
+    stroke: gold;
+    animation: pulse 3.14s ease-in-out forwards;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   text {
