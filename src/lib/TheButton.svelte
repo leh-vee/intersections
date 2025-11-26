@@ -32,21 +32,8 @@
 
 <style>
   circle {
-    stroke: gold;
-    stroke-width: 1;
-    animation: breathe 3.14s ease-in-out infinite 3.14s;
-  }
-
-  @keyframes breathe {
-    0%   { 
-      stroke-width: 1;
-    }
-    50%  { 
-      stroke-width: 2;
-    }
-    100% { 
-      stroke-width: 1;
-    }
+    stroke: dimgrey;
+    stroke-width: 2;
   }
 
   text {
