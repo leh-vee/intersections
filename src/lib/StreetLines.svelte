@@ -8,18 +8,8 @@
 
   const dispatch = createEventDispatcher();
 
-  let { centreCoordsGcs, zoom = 16, gild = false, centreOnPx, rotationFactor = 0 } = $props();
-  let strokeColour = $derived(gild ? 'gold' : 'dimgrey');
+  let { centreCoordsGcs, zoom = 16, centreOnPx, rotationFactor = 0 } = $props();
   let isMapVisible = $state(false);
-
-  $effect(() => {
-    if (vectorLayer) {
-      vectorLayer.setStyle({
-        'stroke-color': strokeColour,
-        'stroke-width': 1
-      });
-    }
-  });
 
   let rotation = $derived.by(() => {
     const factor = Number(rotationFactor);
@@ -45,7 +35,7 @@
     vectorLayer = new VectorTileLayer({
       source: vectorTileSource,
       style: {
-        'stroke-color': strokeColour,
+        'stroke-color': 'dimgrey',
         'stroke-width': 1
       },
     });

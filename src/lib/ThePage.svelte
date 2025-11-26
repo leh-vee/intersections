@@ -86,7 +86,7 @@
 <svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
 
 <StreetLines centreCoordsGcs={ coords } centreOnPx= { btnPxCoords } 
-  rotationFactor={ sefirahId } gild={ hitMe } on:loaded={ () => { areMapTilesLoaded = true } } />
+  rotationFactor={ sefirahId } on:loaded={ () => { areMapTilesLoaded = true } } />
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
