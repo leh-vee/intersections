@@ -92,7 +92,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
 
 <div id='page' onclick={ pageClicked }>
-  {#if openSesame}
+  {#if isPoemVisible}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
       typeNextLine={ hitMe } on:line={ prepareButton } />
   {/if}

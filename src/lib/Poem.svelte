@@ -98,14 +98,14 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  function newLine() {
+  function showCursor() {
     dispatch('line');
     isCursorVisible = true;
   }
 </script>
 
 <div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ newLine } />
+  <Title title={ title } on:titled={ showCursor } />
   <div id='poem' bind:this={ poemEl }>
     <div id='text' class:cursor={ isCursorVisible } style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}

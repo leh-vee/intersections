@@ -34,12 +34,10 @@
   circle {
     stroke: dimgrey;
     stroke-width: 2;
-    transition: stroke 3.14s ease-out;
   }
 
   circle.gild {
-    stroke: gold;
-    animation: pulse 3.14s ease-in-out forwards;
+    animation: pulse 3.14s ease-in-out infinite 3.14s;
   }
 
   @keyframes pulse {

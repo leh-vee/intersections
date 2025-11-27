@@ -13,7 +13,7 @@
   });
 
   const widthPercent = tweened(0, {
-    duration: Math.PI * 1000,
+    duration: 141,
     easing: sineInOut
   });
 
@@ -45,7 +45,7 @@
     height: var(--heading-height);
     font-size: var(--heading-height);
     font-weight: 400;
-    color: ghostwhite;
+    color: #BEEEFF;
     margin: 0 auto;
     padding: 5px 0;
     border-bottom: 2px solid black;
