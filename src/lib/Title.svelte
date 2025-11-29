@@ -13,7 +13,7 @@
   });
 
   const widthPercent = tweened(0, {
-    duration: 2000,
+    duration: Math.PI * 1000,
     easing: quadOut
   });
 
@@ -48,7 +48,17 @@
     color: var(--moon-glow-fill);
     margin: 0 auto;
     padding: 5px 0;
-    border-bottom: 1px solid var(--moon-glow-stroke);
+    border-bottom: 1px solid var(--moon-glow-fill);
+    animation: cool 3.14s ease-out forwards;
+  }
+
+  @keyframes cool {
+    0%   { 
+      border-color: var(--moon-glow-fill);
+    }
+    100% { 
+      border-color: var(--moon-glow-stroke); 
+    }
   }
 
 </style>

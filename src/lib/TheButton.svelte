@@ -10,6 +10,7 @@
   const circumference = r * Math.PI;
 
   let isLabelVisible = $state(false);
+  let cooler = $state(false);
 
   const btnRadius = tweened(0, {
     duration: Math.PI * 1000,
@@ -18,6 +19,7 @@
 
   $effect(async () => {
     if (animateIn) {
+      cooler = true;
       await btnRadius.set(r);
       isLabelVisible = true;
     }
@@ -25,16 +27,22 @@
 
 </script>
 
-<circle cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
+<circle class:cooler cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
 {#if isLabelVisible}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
 
 <style>
   circle {
-    stroke: var(--moon-glow-stroke);
     stroke-width: 1;
+    stroke: var(--moon-glow-fill);
+    transition: stroke 3.14s ease-out;
   }
+  
+  circle.cooler {
+    stroke: var(--moon-glow-stroke);
+  }
+
 
   text {
     text-anchor: middle;

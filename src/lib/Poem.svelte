@@ -142,7 +142,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     position: relative;
-    bottom: 2px;
+    bottom: 1px;
   }
 
   #the-text #spacer {

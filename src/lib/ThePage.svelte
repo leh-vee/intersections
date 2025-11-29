@@ -50,7 +50,6 @@
   let openSesame = $derived(areMapTilesLoaded && hasDropped);
   
   let areCurtainsDrawn = $state(false);
-  let isPoemVisible = $derived(arePoemLinesFetched && areCurtainsDrawn);
 
   let isBtnReady = $state(false);
 
@@ -63,7 +62,7 @@
   let hitMe = $state(false);
 
   function pageClicked(event) {
-    if (isPoemVisible && isBtnReady && isBtnClick(event.clientX, event.clientY)) {
+    if (isBtnReady && isBtnClick(event.clientX, event.clientY)) {
       hitMe = true;
       setTimeout(() => {
         hitMe = false;
@@ -89,7 +88,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
 
 <div id='page' onclick={ pageClicked }>
-  {#if isPoemVisible}
+  {#if openSesame}
     <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
       typeNextLine={ hitMe } on:line={ prepareButton } />
   {/if}
