@@ -6,3 +6,8 @@ html, body {
 body {
   background-color: black;
 }
+
+:root {
+  --moon-glow-fill: #BEEEFF;
+  --moon-glow-stroke: #DFF4FF;
+}

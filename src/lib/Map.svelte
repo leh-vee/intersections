@@ -82,7 +82,7 @@
       animateMarker(marker, 2, randomDuration, () => {
           nMarkersFadedIn++;
           if (nMarkersFadedIn === markerFeatures.length) {
-            markerLayer.setStyle(getMarkerStyle(2, 0));
+            markerLayer.setStyle(getMarkerStyle(2, 1));
             markerFeatures.forEach(m => m.setStyle(null));
             areMarkersFadedIn = true;
           }
@@ -177,7 +177,7 @@
       duration,
       onUpdate: (t) => {
         const radius = endRadius * t;
-        marker.setStyle(getMarkerStyle(radius, 0));
+        marker.setStyle(getMarkerStyle(radius, 1));
       },
       onDone
     });
@@ -217,8 +217,8 @@
     return new Style({
       image: new Circle({
         radius,
-        fill: new Fill({ color: 'gold' }),
-        stroke: new Stroke({ color: 'dimgrey', width: strokeWidth })
+        fill: new Fill({ color: '#BEEEFF' }),
+        stroke: new Stroke({ color: '#DFF4FF', width: strokeWidth })
       })
     })
   }

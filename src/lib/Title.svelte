@@ -1,5 +1,5 @@
 <script>
-  import { quadInOut, sineInOut } from 'svelte/easing';
+  import { quadInOut, quadOut } from 'svelte/easing';
   import { tweened } from 'svelte/motion';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -13,8 +13,8 @@
   });
 
   const widthPercent = tweened(0, {
-    duration: 141,
-    easing: sineInOut
+    duration: 2000,
+    easing: quadOut
   });
 
   let typedTitle = $derived(title.slice(0, $finalCharIndex));
@@ -45,10 +45,10 @@
     height: var(--heading-height);
     font-size: var(--heading-height);
     font-weight: 400;
-    color: #BEEEFF;
+    color: var(--moon-glow-fill);
     margin: 0 auto;
     padding: 5px 0;
-    border-bottom: 2px solid black;
+    border-bottom: 1px solid var(--moon-glow-stroke);
   }
 
 </style>

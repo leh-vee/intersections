@@ -169,9 +169,9 @@
     height: 0.5em;
     border-radius: 9999px;
     transform-origin: center;
-    background: gold;
     vertical-align: 0.05em;
-    box-shadow: 0 0 0.2em rgba(255, 215, 0, 0.8);
+    background: var(--moon-glow-fill);
+    box-shadow: 0 0 0.5em var(--moon-glow-stroke);
   }
   
  .cursor .line.next::before {
@@ -185,6 +185,8 @@
     animation: breathe 3.14s ease-in-out infinite;
     position: relative;
     left: 3px;
+    background: gold;
+    box-shadow: 0 0 0.5em gold;
   }
 
   @keyframes emenate {

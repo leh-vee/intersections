@@ -32,8 +32,8 @@
 
 <style>
   circle {
-    stroke: dimgrey;
-    stroke-width: 2;
+    stroke: var(--moon-glow-stroke);
+    stroke-width: 1;
   }
 
   circle.gild {
@@ -55,7 +55,7 @@
   text {
     text-anchor: middle;
     alignment-baseline: middle;
-    fill: #BEEEFF;
+    fill: var(--moon-glow-fill);
     font-family: "Rubik", sans-serif;
     font-size: 45px;
     z-index: 2;
