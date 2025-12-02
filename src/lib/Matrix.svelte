@@ -146,7 +146,7 @@
   }
 
   span.digit .marked {
-    color: #BEEEFF;
+    color: gold;
     font-weight: 400;
     font-size: 150%;
   }

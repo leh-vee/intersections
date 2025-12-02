@@ -34,20 +34,20 @@
 
 <style>
   circle {
-    stroke-width: 1;
-    stroke: var(--moon-glow-fill);
+    stroke-width: 2;
+    stroke: gold;
     transition: stroke 3.14s ease-out;
   }
   
   circle.cooler {
-    stroke: var(--moon-glow-stroke);
+    stroke: grey;
   }
 
 
   text {
     text-anchor: middle;
     alignment-baseline: middle;
-    fill: var(--moon-glow-fill);
+    fill: gold;
     font-family: "Rubik", sans-serif;
     font-size: 45px;
     z-index: 2;

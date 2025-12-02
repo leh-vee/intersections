@@ -48,16 +48,16 @@
     color: var(--moon-glow-fill);
     margin: 0 auto;
     padding: 5px 0;
-    border-bottom: 1px solid var(--moon-glow-fill);
-    animation: cool 3.14s ease-out forwards;
+    border-bottom: 2px solid skyblue;
+    /* animation: cool 3.14s ease-out forwards; */
   }
 
   @keyframes cool {
     0%   { 
-      border-color: var(--moon-glow-fill);
+      border-color: black;
     }
     100% { 
-      border-color: var(--moon-glow-stroke); 
+      border-color: skyblue; 
     }
   }
 

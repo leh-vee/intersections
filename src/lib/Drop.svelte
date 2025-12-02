@@ -25,7 +25,7 @@
   <linearGradient id="tail-gradient" gradientUnits="userSpaceOnUse"
     x1={ xCentrePx } x2={ xCentrePx } y1={ $yTailPx } y2={ $yHeadPx }>
     <stop offset="0%" stop-color="black"/>
-    <stop offset="100%" stop-color="#BEEEFF"/>
+    <stop offset="100%" stop-color="gold"/>
   </linearGradient>
 </defs>
 <line

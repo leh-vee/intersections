@@ -217,8 +217,8 @@
     return new Style({
       image: new Circle({
         radius,
-        fill: new Fill({ color: '#BEEEFF' }),
-        stroke: new Stroke({ color: '#DFF4FF', width: strokeWidth })
+        fill: new Fill({ color: 'gold' }),
+        stroke: new Stroke({ color: 'dimgrey', width: strokeWidth })
       })
     })
   }
