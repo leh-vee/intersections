@@ -135,7 +135,7 @@
   #question-mark {
     font-family: "Rubik", sans-serif;
     font-size: 40px;
-    color: gold;
+    color: var(--moon-glow-stroke);
   }
   
   span.digit {
@@ -146,7 +146,7 @@
   }
 
   span.digit .marked {
-    color: gold;
+    color: var(--moon-glow-fill);
     font-weight: 400;
     font-size: 150%;
   }

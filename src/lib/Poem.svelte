@@ -178,7 +178,7 @@
     animation:
       emenate 3.14s forwards,
       breathe 3.14s ease-in-out infinite 3.14s;
-    /* visibility: visible; */
+    visibility: visible;
   }
 
   .cursor .line.typing::after {

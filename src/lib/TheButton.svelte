@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { circOut } from 'svelte/easing';
+  import { circOut, elasticOut } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -19,7 +19,7 @@
 
   const glowRadius = tweened(0, {
     duration: Math.PI * 1000,
-    easing: circOut
+    easing: elasticOut
   });
 
   $effect(async () => {
@@ -27,7 +27,7 @@
       cooler = true;
       await Promise.all([
         btnRadius.set(r),
-        glowRadius.set(r * 1.5)
+        glowRadius.set(r)
       ]);
       isLabelVisible = true;
     }
@@ -56,25 +56,23 @@
   }
 
   circle {
-    stroke-width: 2;
-    stroke: dimgrey;
+    stroke-width: 1;
+    stroke: gold;
     transition: stroke 3.14s ease-out;
   }
   
   circle.cooler {
-    stroke: dimgrey;
+    stroke: var(--moon-glow-stroke);
   }
 
 
   text {
     text-anchor: middle;
     alignment-baseline: middle;
-    fill: gold;
+    fill: var(--moon-glow-fill);
     font-family: "Rubik", sans-serif;
     font-size: 45px;
     z-index: 2;
     pointer-events: none;
-    stroke: dimgray;
-    stroke-width: 1;
   }
 </style>
