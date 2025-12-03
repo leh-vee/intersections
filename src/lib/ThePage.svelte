@@ -101,7 +101,7 @@
           on:splat={ () => { hasDropped = true }} />
       {/if}
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } animateIn={ openSesame } />
+        id={ sefirahId } animateIn={ openSesame } clicked={ hitMe } />
     </svg>
   {/if}
 </div>

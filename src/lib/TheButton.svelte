@@ -1,11 +1,11 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { circOut, elasticOut } from 'svelte/easing';
+  import { circOut, elasticOut, cubicInOut } from 'svelte/easing';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
-  let { x, y, r, id, animateIn } = $props();
+  let { x, y, r, id, animateIn, clicked } = $props();
 
   const circumference = r * Math.PI;
 
@@ -33,6 +33,15 @@
     }
   });
 
+  $effect(async () => {
+    if (clicked) {
+      cooler = false;
+      await glowRadius.set(r * 1.5, { easing: cubicInOut });
+      cooler = true;
+      await glowRadius.set(r, { easing: cubicInOut } );
+    }
+  });
+
 </script>
 
 <defs>
@@ -44,7 +53,7 @@
 </defs>
 
 <circle class="glow" cx={x} cy={y} r={ $glowRadius } fill="url(#glow-grad-{id})" />
-<circle class:cooler cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
+<circle class:cooler class:clicked cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
 {#if isLabelVisible}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
@@ -56,7 +65,7 @@
   }
 
   circle {
-    stroke-width: 1;
+    stroke-width: 2;
     stroke: gold;
     transition: stroke 3.14s ease-out;
   }

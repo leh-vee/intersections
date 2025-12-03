@@ -48,7 +48,7 @@
     color: var(--moon-glow-fill);
     margin: 0 auto;
     padding: 5px 0;
-    border-bottom: 1px solid gold;
+    border-bottom: 2px solid gold;
     animation: cool 3.14s ease-out forwards;
   }
 
