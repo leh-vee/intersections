@@ -1,11 +1,9 @@
 <script>
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
-  import { createEventDispatcher } from 'svelte';
+  import { cursorState, isCursorMooning, isCursorTyping, isTheButtonDepressed } from '$lib/store.js';
 
-  const dispatch = createEventDispatcher();
-
-  let { title, lines, overflowY, typeNextLine } = $props();
+  let { title, lines, overflowY } = $props();
   
   let nLines = $derived(lines.length);
   let lineEls = $state([]);
@@ -15,20 +13,20 @@
   let isTextVisible = $state(false);
 
   let fittyLineEls;
+  let isNewLine = $state(false);
 
   $effect(() => {
     if (nLines === nLineEls) {
       lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++));
-      fittyLineEls = fitty('#poem #text .line', { minSize: 8, maxSize: 2000 });
+      fittyLineEls = fitty('.line', { minSize: 8, maxSize: 2000 });
     }
   });
 
   $effect(() => {
     if (areLinesFitted && !isTextVisible) {
       fittyLineEls.forEach(el => el.freeze());
-      isTextVisible = true;
-      stashNextLineText();
       addOverflowBuffer();
+      isTextVisible = true;
     }
 	});
 
@@ -43,19 +41,14 @@
     }
   }
 
-  let isTyping = $state(false);
-  let isCursorVisible = $state(false);
-
   $effect(() => {
-    if (typeNextLine && nextLineToType < nLineEls && !isTyping) typeLine();
+    if ($isCursorMooning && $isTheButtonDepressed && nextLineToType < nLineEls) typeLine();
   });
 
-  let nextCharToTypeIndex = $state(1);
-  let percentOfLineTyped = $derived(nextCharToTypeIndex / stashedText.length);
-  let isLastLetterTyped = $derived(percentOfLineTyped >= 1);
-
   function typeLine() {
-    isTyping = true;
+    isNewLine = false;
+    $cursorState = 'typing';
+    let nextCharToTypeIndex = 1;
     const typeChar = () => {
       lineEl.textContent = stashedText.slice(0, nextCharToTypeIndex);
       const char = stashedText.slice(nextCharToTypeIndex - 1, nextCharToTypeIndex);
@@ -66,16 +59,20 @@
         if (/[.,;:!?[\]{}\–—]/.test(char)) typingDelay = randomInt(1000, Math.PI * 1000);
         setTimeout(typeChar, typingDelay);
       } else {
-        isTyping = false;
-        nextLineToType += 1;
-        if (nextLineToType < nLineEls) {
-          dispatch('line');
-        }
-        stashNextLineText();
-        nextCharToTypeIndex = 1;
+        $cursorState = false;
+        $isTheButtonDepressed = false;
+        setTimeout(() => {
+          nextLineToType += 1;
+          if (nextLineToType < nLineEls) newLineSetup();
+        }, Math.PI * 1000);
       }
     }
     typeChar();
+  }
+
+  function newLineSetup() {
+    stashNextLineText();
+    isNewLine = true;
   }
 
   let poemEl;
@@ -98,20 +95,21 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  function showCursor() {
-    dispatch('line');
-    isCursorVisible = true;
+  function postLineAnime(event) {
+    const animeName = event.animationName.split('-').pop();
+    if (animeName === 'emanate') $cursorState = 'mooning';
   }
+
 </script>
 
-<div id='the-text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ showCursor } />
+<div id='text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
+  <Title title={ title } on:titled={ newLineSetup } />
   <div id='poem' bind:this={ poemEl }>
-    <div id='text' class:cursor={ isCursorVisible } style:padding-bottom="{ poemOverflowPx }px">
+    <div id='body' class:cursor={ isTextVisible } class:new={ isNewLine } class:typing={ $isCursorTyping } 
+      style:padding-bottom="{ poemOverflowPx }px">
       {#each lines as line, i}
-        <span class='line' bind:this={ lineEls[i] }
-          class:next={ i === nextLineToType && !isTyping }
-          class:typing={ i === nextLineToType && isTyping && !isLastLetterTyped } >{ line }</span>
+        <span class='line' bind:this={ lineEls[i] } onanimationend={ postLineAnime }
+          class:current={ i === nextLineToType }>{ line }</span>
       {/each}
     </div>
   </div>
@@ -119,7 +117,7 @@
 </div>
 
 <style>
-  #the-text {
+  #text {
     position: absolute;
     top: 0;
     left: 0;
@@ -133,23 +131,23 @@
     overflow: hidden;
   }
   
-  #the-text > div {
+  #text > div {
     padding: 0;
     width: 100%;
   }
   
-  #the-text #poem {
+  #text #poem {
     overflow-y: scroll;
     overflow-x: hidden;
     position: relative;
     bottom: 1px;
   }
 
-  #the-text #spacer {
+  #text #spacer {
     flex: 1;
   }
   
-  #poem #text {
+  #poem #body {
     width: 80%;
     margin: 0 auto;
     font-weight: 200;
@@ -162,7 +160,7 @@
     visibility: hidden;
   }
 
-  .cursor .line.next::before, .cursor .line.typing::after {
+  #body.cursor.new .current.line::before, #body.cursor.typing .current.line::after {
     content: '';
     display: inline-block;
     width: 0.5em;
@@ -170,18 +168,18 @@
     border-radius: 9999px;
     transform-origin: center;
     vertical-align: 0.05em;
-    background: var(--moon-glow-fill);
-    box-shadow: 0 0 0.5em var(--moon-glow-stroke);
   }
   
- .cursor .line.next::before {
+  #body.cursor.new .current.line::before {
+    background: var(--moon-glow-fill);
+    box-shadow: 0 0 0.5em var(--moon-glow-stroke);
     animation:
-      emenate 3.14s forwards,
+      emanate 3.14s forwards,
       breathe 3.14s ease-in-out infinite 3.14s;
     visibility: visible;
   }
 
-  .cursor .line.typing::after {
+  #body.cursor.typing .current.line::after {
     animation: breathe 3.14s ease-in-out infinite;
     position: relative;
     left: 3px;
@@ -189,7 +187,7 @@
     box-shadow: 0 0 0.5em gold;
   }
 
-  @keyframes emenate {
+  @keyframes emanate {
     0%   { 
       transform: scale(0); 
       opacity: 0; 

@@ -5,7 +5,7 @@
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
-  import { poemIndex } from '$lib/store.js';
+  import { poemIndex, isCursorMooning, isTheButtonDepressed } from '$lib/store.js';
 
   let { id } = $props();
 
@@ -51,22 +51,9 @@
   
   let areCurtainsDrawn = $state(false);
 
-  let isBtnReady = $state(false);
-
-  function prepareButton() {
-    setTimeout(() => {
-      isBtnReady = true;
-    }, Math.PI * 1000); 
-  }
-
-  let hitMe = $state(false);
-
   function pageClicked(event) {
-    if (isBtnReady && isBtnClick(event.clientX, event.clientY)) {
-      hitMe = true;
-      setTimeout(() => {
-        hitMe = false;
-      }, Math.PI); 
+    if ($isCursorMooning && isBtnClick(event.clientX, event.clientY)) {
+      $isTheButtonDepressed = true;
     }
   }
 
@@ -89,8 +76,7 @@
 
 <div id='page' onclick={ pageClicked }>
   {#if openSesame}
-    <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY }
-      typeNextLine={ hitMe } on:line={ prepareButton } />
+    <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
@@ -101,7 +87,7 @@
           on:splat={ () => { hasDropped = true }} />
       {/if}
       <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } animateIn={ openSesame } clicked={ hitMe } />
+        id={ sefirahId } animateIn={ openSesame } />
     </svg>
   {/if}
 </div>

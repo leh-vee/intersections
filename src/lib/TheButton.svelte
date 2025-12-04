@@ -1,16 +1,13 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { circOut, elasticOut, cubicInOut } from 'svelte/easing';
-  import { createEventDispatcher } from 'svelte';
+  import { isTheButtonDepressed } from '$lib/store.js';
 
-  const dispatch = createEventDispatcher();
-
-  let { x, y, r, id, animateIn, clicked } = $props();
+  let { x, y, r, id, animateIn } = $props();
 
   const circumference = r * Math.PI;
 
   let isLabelVisible = $state(false);
-  let cooler = $state(false);
 
   const btnRadius = tweened(0, {
     duration: Math.PI * 1000,
@@ -24,7 +21,7 @@
 
   $effect(async () => {
     if (animateIn) {
-      cooler = true;
+      $isTheButtonDepressed = false;
       await Promise.all([
         btnRadius.set(r),
         glowRadius.set(r)
@@ -34,11 +31,12 @@
   });
 
   $effect(async () => {
-    if (clicked) {
-      cooler = false;
-      await glowRadius.set(r * 1.5, { easing: cubicInOut });
-      cooler = true;
-      await glowRadius.set(r, { easing: cubicInOut } );
+    if (isLabelVisible && $isTheButtonDepressed) {
+      glowRadius.set(r * 1.5, { duration: 1000, easing: elasticOut });
+    }
+    
+    if (isLabelVisible && !$isTheButtonDepressed) {
+      glowRadius.set(r, { easing: cubicInOut } );
     }
   });
 
@@ -53,7 +51,8 @@
 </defs>
 
 <circle class="glow" cx={x} cy={y} r={ $glowRadius } fill="url(#glow-grad-{id})" />
-<circle class:cooler class:clicked cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } />
+<circle cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } 
+  class:cool={ !$isTheButtonDepressed } />
 {#if isLabelVisible}
   <text x={x} y={y + 2}>{id}</text>
 {/if}
@@ -67,11 +66,19 @@
   circle {
     stroke-width: 2;
     stroke: gold;
-    transition: stroke 3.14s ease-out;
   }
   
-  circle.cooler {
-    stroke: var(--moon-glow-stroke);
+  circle.cool {
+    animation: coolDown 3.14s ease-out forwards;
+  }
+
+  @keyframes coolDown {
+    0%   { 
+      stroke: gold; 
+    }
+    100% { 
+      stroke: var(--moon-glow-stroke);
+    }
   }
 
 
