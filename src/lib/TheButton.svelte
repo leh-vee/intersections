@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { circOut, elasticOut, cubicInOut } from 'svelte/easing';
+  import { circOut, elasticOut, elasticIn, elasticInOut } from 'svelte/easing';
   import { isTheButtonDepressed } from '$lib/store.js';
 
   let { x, y, r, id, animateIn } = $props();
@@ -31,14 +31,18 @@
   });
 
   $effect(async () => {
-    if (isLabelVisible && $isTheButtonDepressed) {
-      glowRadius.set(r * 1.5, { duration: 1000, easing: elasticOut });
-    }
-    
-    if (isLabelVisible && !$isTheButtonDepressed) {
-      glowRadius.set(r, { easing: cubicInOut } );
-    }
+    if (isLabelVisible && $isTheButtonDepressed) elasticGlow();
   });
+
+  async function elasticGlow() {
+    if ($isTheButtonDepressed) {
+      await glowRadius.set(r * 1.5, { duration: 1570, easing: elasticOut });
+      await glowRadius.set(r * 1.3, { duration: 1570, easing: elasticIn });
+      elasticGlow();
+    } else {
+      glowRadius.set(r, { easing: elasticInOut } );
+    }
+  }
 
 </script>
 
