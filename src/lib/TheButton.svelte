@@ -55,7 +55,7 @@
 </defs>
 
 <circle class="glow" cx={x} cy={y} r={ $glowRadius } fill="url(#glow-grad-{id})" />
-<circle cx={x} cy={y} r={ $btnRadius } transform-origin={ `${x}px ${y}px` } 
+<circle cx={x} cy={y} r={ $btnRadius } transform-origin="{x}px {y}px"
   class:cool={ !$isTheButtonDepressed } />
 {#if isLabelVisible}
   <text x={x} y={y + 2}>{id}</text>
