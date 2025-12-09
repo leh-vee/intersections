@@ -56,7 +56,11 @@
         if (nextCharToTypeIndex === 1) lineEl.style.visibility = 'visible';
         nextCharToTypeIndex += 1;
         let typingDelay = randomInt(100, 200);
-        if (/[.,;:!?[\]{}\–—]/.test(char)) typingDelay = randomInt(1000, Math.PI * 1000);
+        if (nextCharToTypeIndex === stashedText.length) {
+          typingDelay = 0;
+        } else if (/[.,;:!?[\]{}\–—]/.test(char)) {
+          typingDelay = randomInt(1000, Math.PI * 1000);
+        }
         setTimeout(typeChar, typingDelay);
       } else {
         $cursorState = false;
