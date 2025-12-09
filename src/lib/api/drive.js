@@ -53,6 +53,5 @@ export async function fetchPoemLines(docId) {
     .map(line => line.trim())
     .filter(line => line !== "")
 
-  console.log(lines);
   return lines;
 }

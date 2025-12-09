@@ -52,26 +52,28 @@
     const typeChar = () => {
       lineEl.textContent = stashedText.slice(0, nextCharToTypeIndex);
       const char = stashedText.slice(nextCharToTypeIndex - 1, nextCharToTypeIndex);
-      if (nextCharToTypeIndex < stashedText.length) {
-        if (nextCharToTypeIndex === 1) lineEl.style.visibility = 'visible';
-        nextCharToTypeIndex += 1;
-        let typingDelay = randomInt(100, 200);
-        if (nextCharToTypeIndex === stashedText.length) {
-          typingDelay = 0;
-        } else if (/[.,;:!?[\]{}\–—]/.test(char)) {
-          typingDelay = randomInt(1000, Math.PI * 1000);
-        }
-        setTimeout(typeChar, typingDelay);
-      } else {
+      if (nextCharToTypeIndex === 1) lineEl.style.visibility = 'visible';
+      let typingDelay = randomInt(100, 200);
+      if (/[.,;:!?[\]{}\–—]/.test(char)) typingDelay = randomInt(1000, Math.PI * 1000);
+      if (nextCharToTypeIndex === stashedText.length) {
         $cursorState = false;
-        $isTheButtonDepressed = false;
-        setTimeout(() => {
-          nextLineToType += 1;
-          if (nextLineToType < nLineEls) newLineSetup();
-        }, Math.PI * 1000);
+        setTimeout(endOfLine, typingDelay);
+      } else {
+        let typingDelay = randomInt(100, 200);
+        if (/[.,;:!?[\]{}\–—]/.test(char)) typingDelay = randomInt(1000, Math.PI * 1000);
+        nextCharToTypeIndex += 1;
+        setTimeout(typeChar, typingDelay);
       }
     }
     typeChar();
+  }
+
+  function endOfLine() {
+    $isTheButtonDepressed = false;
+    setTimeout(() => {
+      nextLineToType += 1;
+      if (nextLineToType < nLineEls) newLineSetup();
+    }, Math.PI * 1000);
   }
 
   function newLineSetup() {
