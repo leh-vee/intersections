@@ -47,7 +47,12 @@ export async function fetchPoemLines(docId) {
   }
 
   const text = await response.text();
-  const lines = text.split('\n').filter(line => line.trim() !== '');
+  const lines = text
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line !== "")
 
+  console.log(lines);
   return lines;
 }
