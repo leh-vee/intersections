@@ -91,7 +91,7 @@
     alignment-baseline: middle;
     fill: var(--moon-glow-fill);
     font-family: "Rubik", sans-serif;
-    font-size: 45px;
+    font-size: 6dvh;
     z-index: 2;
     pointer-events: none;
   }
