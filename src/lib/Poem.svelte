@@ -17,8 +17,9 @@
 
   $effect(() => {
     if (nLines === nLineEls) {
+      const maxSize = Math.round(window.innerHeight / 2);
       lineEls.forEach((el, i) => el.addEventListener('fit', () => nLineFitEventCalls++));
-      fittyLineEls = fitty('.line', { minSize: 8, maxSize: 2000 });
+      fittyLineEls = fitty('.line', { minSize: 8, maxSize: maxSize });
     }
   });
 
@@ -174,6 +175,10 @@
     white-space: nowrap;
     display: block;
     visibility: hidden;
+  }
+
+  #body.cursor .line {
+    width: 100%;
   }
 
   #body.cursor.new .current.line::before, #body.cursor.typing .current.line::after {
