@@ -4,4 +4,6 @@
   let { data } = $props();
 </script>
 
-<ThePage id={ data.slug } />
+{#key data.slug}
+  <ThePage id={ data.slug } />
+{/key}
