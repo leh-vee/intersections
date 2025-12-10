@@ -5,11 +5,30 @@
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
   import { createEventDispatcher } from 'svelte';
+  import { isTheButtonDepressed } from '$lib/store.js';
+
 
   const dispatch = createEventDispatcher();
 
   let { centreCoordsGcs, zoom = 16, centreOnPx, rotationFactor = 0 } = $props();
   let isMapVisible = $state(false);
+
+  $effect(() => {
+    if ($isTheButtonDepressed) electrocute();
+  });
+
+  function electrocute(turnOn = true) {
+    const colour = turnOn ? 'gold' : 'dimgrey'; 
+    vectorLayer.setStyle({
+      'stroke-color': colour,
+      'stroke-width': 1
+    });
+    if (turnOn) {
+      setTimeout(() => {
+        electrocute(false);
+      }, 50);
+    }
+  }
 
   let rotation = $derived.by(() => {
     const factor = Number(rotationFactor);
