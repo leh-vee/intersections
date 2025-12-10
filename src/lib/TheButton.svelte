@@ -23,6 +23,7 @@
 
   $effect(async () => {
     if (animateIn) {
+      isGreyedOut = false;
       $isPoemRevealed = false;
       $isTheButtonDepressed = false;
       await Promise.all([
@@ -60,7 +61,7 @@
 
   async function animateOut() {
     isAnimateOut = true;
-    await glowRadius.set(maxDiagonal * 10, { duration: 70, easing: quartIn });
+    await glowRadius.set(maxDiagonal * 5, { duration: 70, easing: quartIn });
     await btnRadius.set(maxDiagonal, { duration: 90, easing: quartIn });
     goto('/');
   }
