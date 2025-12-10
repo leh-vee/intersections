@@ -26,7 +26,7 @@
     if (turnOn) {
       setTimeout(() => {
         electrocute(false);
-      }, 50);
+      }, 10);
     }
   }
 
