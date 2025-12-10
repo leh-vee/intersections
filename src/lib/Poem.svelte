@@ -1,7 +1,8 @@
 <script>
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
-  import { cursorState, isCursorMooning, isCursorTyping, isTheButtonDepressed } from '$lib/store.js';
+  import { cursorState, isCursorMooning, isCursorTyping, 
+    isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
 
   let { title, lines, overflowY } = $props();
   
@@ -73,7 +74,11 @@
     $isTheButtonDepressed = false;
     setTimeout(() => {
       nextLineToType += 1;
-      if (nextLineToType < nLineEls) newLineSetup();
+      if (nextLineToType < nLineEls) {
+        newLineSetup();
+      } else {
+        $isPoemRevealed = true;
+      }
     }, Math.PI * 1000);
   }
 

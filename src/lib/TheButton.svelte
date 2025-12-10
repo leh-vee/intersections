@@ -1,7 +1,7 @@
 <script>
   import { tweened } from 'svelte/motion';
   import { circOut, elasticOut, elasticIn, elasticInOut } from 'svelte/easing';
-  import { isTheButtonDepressed } from '$lib/store.js';
+  import { isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
 
   let { x, y, r, id, animateIn } = $props();
 
@@ -22,6 +22,7 @@
   $effect(async () => {
     if (animateIn) {
       $isTheButtonDepressed = false;
+      $isPoemRevealed = false;
       await Promise.all([
         btnRadius.set(r),
         glowRadius.set(r)
@@ -54,12 +55,14 @@
   </radialGradient>
 </defs>
 
-<circle class="glow" cx={x} cy={y} r={ $glowRadius } fill="url(#glow-grad-{id})" />
-<circle cx={x} cy={y} r={ $btnRadius } transform-origin="{x}px {y}px"
-  class:cool={ !$isTheButtonDepressed } />
-{#if isLabelVisible}
-  <text x={x} y={y + 2}>{id}</text>
-{/if}
+<g class:period={$isPoemRevealed}>
+  <circle class="glow" cx={x} cy={y} r={ $glowRadius } fill="url(#glow-grad-{id})" />
+  <circle cx={x} cy={y} r={ $btnRadius } transform-origin="{x}px {y}px"
+    class:cool={ !$isTheButtonDepressed } />
+  {#if isLabelVisible}
+    <text x={x} y={y + 2}>{id}</text>
+  {/if}
+</g>
 
 <style>
   circle.glow {
@@ -85,6 +88,21 @@
     }
   }
 
+  .period circle.cool {
+    animation: gris 3.14s ease-out forwards;
+  }
+
+  @keyframes gris {
+    0% { 
+      stroke-width: 2;
+      stroke: var(--moon-glow-stroke);
+    }
+    100% { 
+      stroke-width: 1;
+      stroke: grey;
+    }
+  }
+
 
   text {
     text-anchor: middle;
@@ -94,5 +112,10 @@
     font-size: 6dvh;
     z-index: 2;
     pointer-events: none;
+    transition: fill 3.14s ease-out;
+  }
+
+  .period text {
+    fill: black;
   }
 </style>
