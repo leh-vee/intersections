@@ -5,7 +5,7 @@
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
-  import { poemIndex, isCursorMooning, isTheButtonDepressed } from '$lib/store.js';
+  import { poemIndex, isCursorMooning, isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
 
   let { id } = $props();
 
@@ -52,7 +52,8 @@
   let areCurtainsDrawn = $state(false);
 
   function pageClicked(event) {
-    if ($isCursorMooning && isBtnClick(event.clientX, event.clientY)) {
+    if (($isCursorMooning || $isPoemRevealed) && 
+        isBtnClick(event.clientX, event.clientY)) {
       $isTheButtonDepressed = true;
     }
   }
@@ -60,7 +61,6 @@
   function isBtnClick(x, y) {
     const dx = x - btnPxCoords[0];
     const dy = y - btnPxCoords[1];
-
     return (dx * dx + dy * dy) <= (btnRadius * btnRadius);
   }
 
