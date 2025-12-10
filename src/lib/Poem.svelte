@@ -78,15 +78,25 @@
 
   function newLineSetup() {
     stashNextLineText();
+    if (isPoemOverflowing) {
+      const newLineRect = lineEl.getBoundingClientRect();
+      const newLineBottomDelta = newLineRect.bottom; 
+      const newLineOverMarginByPx = newLineBottomDelta - bottomMarginY;
+      if (newLineOverMarginByPx > 0) {
+        poemEl.scrollTo({ top: poemEl.scrollTop + newLineOverMarginByPx, behavior: "smooth" })
+      }
+    }
     isNewLine = true;
   }
 
   let poemEl;
   let poemOverflowPx = $state(0);
+  let isPoemOverflowing = $derived(poemOverflowPx > 0);
+  let bottomMarginY = $derived(window.innerHeight - poemOverflowPx)
 
   function addOverflowBuffer() {
     const poemRect = poemEl.getBoundingClientRect();
-    const poemBtmPx = poemRect.bottom 
+    const poemBtmPx = poemRect.bottom; 
     const windowHeight = window.innerHeight;
     if (poemBtmPx > overflowY) {
       // text overflows a) button only b) full screen 
