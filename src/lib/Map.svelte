@@ -12,7 +12,6 @@
   import { poemIndex } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
-  import { animate } from '$lib/util.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut } from 'svelte/easing'
 
@@ -91,14 +90,10 @@
 
     map.getView().on('change:resolution', () => {
       const currentZoom = map.getView().getZoom();
-      const { radius: newRadius, width: newWidth } = setMarkerRadius(currentZoom);
-
-      // Get current style radius/width
-      const currentStyle = markerLayer.getStyle();
-      const currentRadius = currentStyle?.getImage()?.getRadius() || newRadius;
-      const currentWidth = currentStyle?.getImage()?.getStroke()?.getWidth() || newWidth;
-
-      animateMarkers(markerLayer, currentRadius, newRadius, currentWidth, newWidth);
+      const radius = setMarkerRadius(currentZoom);
+      markerLayer.setStyle((feature) => {
+        return feature.get('visible') ? newMarkerStyle(radius) : null;
+      });
     });
 
     map.on('click', (event) => {
@@ -174,56 +169,24 @@
     return closestFeature;
   }
 
-  function animateMarkers(markerLayer, startRadius, endRadius, startStrokeWidth, endStrokeWidth, duration = 1000) {
-    animate({
-      duration,
-      onUpdate: (t) => {
-        const radius = startRadius + (endRadius - startRadius) * t;
-        const strokeWidth = startStrokeWidth + (endStrokeWidth - startStrokeWidth) * t;
-        markerLayer.setStyle(newMarkerStyle(radius, strokeWidth));
-      }
-    });
-  }
-
-  function animateMarker(marker, endRadius, duration = 1000, onDone) {
-    animate({
-      duration,
-      onUpdate: (t) => {
-        const radius = endRadius * t;
-        marker.setStyle(newMarkerStyle(radius, 1));
-      },
-      onDone
-    });
-  }
-
   function setMarkerRadius(zoom) {
-    let radius, width;
-    if (zoom >= 12 && zoom < 13) {
-      radius = 2;
-      width = 0;
-    } else if (zoom >= 13 && zoom < 13.5) {
-      radius = 2;
-      width = 0;
-    } else if (zoom >= 13.5 && zoom < 14) {
+    let radius;
+    if (zoom >= 12 && zoom < 13.5) {
       radius = 3;
-      width = 1;
-    } else if (zoom >= 14 && zoom < 14.5) {
+    } else if (zoom >= 13.5 && zoom < 14) {
       radius = 4;
-      width = 1;
-    } else if (zoom >= 14.5 && zoom < 15) {
+    } else if (zoom >= 14 && zoom < 14.5) {
       radius = 5;
-      width = 1.5;
+    } else if (zoom >= 14.5 && zoom < 15) {
+      radius = 6;
     } else if (zoom >= 15 && zoom < 15.5) {
-      radius = 6;
-      width = 1.5;
+      radius = 8;
     } else if (zoom >= 15.5 && zoom < 16) {
-      radius = 6;
-      width = 2;
+      radius = 9;
     } else if (zoom >= 16) {
-      radius = 7;
-      width = 2;
+      radius = 10;
     }
-    return { radius, width };
+    return radius;
   }
 
   function newMarkerStyle(radius) {
