@@ -13,6 +13,8 @@
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { animate } from '$lib/util.js';
+  import { tweened } from 'svelte/motion';
+  import { quartInOut } from 'svelte/easing'
 
   const dispatch = createEventDispatcher();
 
@@ -24,12 +26,19 @@
     format: new MVT(), url: tileUrl 
   });
 
-  let mapEl, map, tileLayer;
+  let mapEl, map, tileLayer, markerFeatures;
   const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
   const viewExtent = [
     ...fromLonLat([cityExtentCoords[0], cityExtentCoords[1]]),
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
+
+  const slugs = Object.keys($poemIndex);
+  const nMarkers = slugs.length;
+  const randoMarkerIndexOrder = Array.from({ length: nMarkers }, (_, i) => i).sort(() => Math.random() - 0.5);
+  const centreCoords = $poemIndex[slugs[randoMarkerIndexOrder[0]]].coordinates;
+
+  let lit = $state(false);
 
   function initializeMap(node) {    
     tileLayer = new VectorTileLayer({
@@ -40,22 +49,20 @@
       },
     });
 
-    onAllTilesLoaded(() => { areTilesLoaded = true });
-
-    const slugs = Object.keys($poemIndex);
-    const initialCtrCoords = [-79.55, 43.675];
-
-    const markerFeatures = slugs.map(slug => {
+    markerFeatures = slugs.map(slug => {
       const p = $poemIndex[slug];
       return new Feature({ 
         geometry: new Point(fromLonLat(p.coordinates)),
-        id: slug
+        id: slug,
+        visible: false
       });  
     }); 
 
     const markerLayer = new VectorLayer({
       source: new VectorSource({ features: markerFeatures }), 
-      style: getMarkerStyle(0, 0)
+      style: (feature) => {
+        return feature.get('visible') ? newMarkerStyle(3) : null;
+      }
     });
 
     map = new Map({
@@ -67,7 +74,7 @@
       }),
       layers: [tileLayer, markerLayer],
       view: new View({
-        center: fromLonLat(initialCtrCoords),
+        center: fromLonLat(centreCoords),
         zoom: 12,
         minZoom: 12,
         maxZoom: 16,
@@ -76,18 +83,10 @@
       })
     });
 
-    let nMarkersFadedIn = 0;
-    markerFeatures.forEach((marker, i) => {
-      const randomDuration = 1000 + Math.random() * (Math.PI * 1000 - 1000); // 1s to π s
-      animateMarker(marker, 2, randomDuration, () => {
-          nMarkersFadedIn++;
-          if (nMarkersFadedIn === markerFeatures.length) {
-            markerLayer.setStyle(getMarkerStyle(2, 1));
-            markerFeatures.forEach(m => m.setStyle(null));
-            areMarkersFadedIn = true;
-          }
-        }
-      );
+    onAllTilesLoaded(async () => { 
+      console.log('tiles loaded...');
+      lit = true;
+      await nMarkersTween.set(nMarkers);
     });
 
     map.getView().on('change:resolution', () => {
@@ -108,7 +107,7 @@
         selectedMarkerId = marker.get('id');
         dispatch('markerSelected', selectedMarkerId);
       }
-  });
+    });
 
     return {
       destroy() {
@@ -119,6 +118,20 @@
       }
     }
   }
+
+  const nMarkersTween = tweened(0, {
+    duration: 10000,
+    easing: quartInOut
+  });
+  let nVisibleMarkers = $derived(Math.round($nMarkersTween));
+
+  $effect(() => {
+    if (nVisibleMarkers > 0) {
+      const index = randoMarkerIndexOrder[nVisibleMarkers - 1];
+      const marker = markerFeatures[index];
+      marker.set('visible', true);
+    }
+  });
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
     const coordinate = map.getCoordinateFromPixel(pixel);
@@ -167,7 +180,7 @@
       onUpdate: (t) => {
         const radius = startRadius + (endRadius - startRadius) * t;
         const strokeWidth = startStrokeWidth + (endStrokeWidth - startStrokeWidth) * t;
-        markerLayer.setStyle(getMarkerStyle(radius, strokeWidth));
+        markerLayer.setStyle(newMarkerStyle(radius, strokeWidth));
       }
     });
   }
@@ -177,7 +190,7 @@
       duration,
       onUpdate: (t) => {
         const radius = endRadius * t;
-        marker.setStyle(getMarkerStyle(radius, 1));
+        marker.setStyle(newMarkerStyle(radius, 1));
       },
       onDone
     });
@@ -213,12 +226,11 @@
     return { radius, width };
   }
 
-  function getMarkerStyle(radius = 2, strokeWidth = 0) {
+  function newMarkerStyle(radius) {
     return new Style({
       image: new Circle({
-        radius,
-        fill: new Fill({ color: 'gold' }),
-        stroke: new Stroke({ color: 'dimgrey', width: strokeWidth })
+        radius: radius,
+        fill: new Fill({ color: 'gold' })
       })
     })
   }
@@ -236,62 +248,11 @@
     });
   }
 
-  let areTilesLoaded = $state(false);
-  let areMarkersFadedIn = $state(false);
-
-  $effect(() => {
-    if (areTilesLoaded && areMarkersFadedIn) {
-      fadeStreetLinesIn();
-    }
-  });
-
-  function fadeStreetLinesIn(duration = (Math.PI * 1000)) {
-    const startColor = [0, 0, 0]; // black
-    const endColor = [105, 105, 105]; // dimgrey
-
-    function lerp(a, b, t) {
-      return a + (b - a) * t;
-    }
-    function clamp(x, min, max) {
-      return Math.max(min, Math.min(max, x));
-    }
-    function rgbToHex([r, g, b]) {
-      return (
-        '#' +
-        [r, g, b]
-          .map((x) => {
-            const hex = Math.round(clamp(x, 0, 255)).toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-          })
-          .join('')
-      );
-    }
-
-    animate({
-      duration,
-      onUpdate: (t) => {
-        const color = [
-          lerp(startColor[0], endColor[0], t),
-          lerp(startColor[1], endColor[1], t),
-          lerp(startColor[2], endColor[2], t),
-        ];
-        tileLayer.setStyle({
-          'stroke-color': rgbToHex(color),
-          'stroke-width': 1,
-        });
-      },
-      onDone: () => {
-        areStreetsVisibile = true;
-      }
-    });
-  }
-
-  let areStreetsVisibile = $state(false);
   let selectedMarkerId = null;
 
 </script>
 
-<div id='content-map' use:initializeMap bind:this={ mapEl }></div>
+<div id='content-map' class:lit use:initializeMap bind:this={ mapEl }></div>
 
 <style>
   #content-map {
@@ -299,5 +260,11 @@
     top: 0;
     width: 100%;
     height: 100%;
+    background-color: black;
+    transition: background-color 10s ease-in;
+  }
+
+  #content-map.lit {
+    background-color: #303030;
   }
 </style>
