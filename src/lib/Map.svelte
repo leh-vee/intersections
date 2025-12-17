@@ -13,7 +13,7 @@
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { tweened } from 'svelte/motion';
-  import { quartInOut } from 'svelte/easing'
+  import { linear, quartInOut } from 'svelte/easing'
 
   const dispatch = createEventDispatcher();
 
@@ -43,6 +43,7 @@
   let centreCoords = $derived($poemIndex[slugsRandomlyOrdered[0]].coordinates);
 
   let lit = $state(false);
+  let dim = $state(false);
 
   function initializeMap(node) {    
     tileLayer = new VectorTileLayer({
@@ -103,10 +104,10 @@
     map.on('click', async (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
-        lit = false;
+        dim = true;
         selectedMarkerId = marker.get('id');
         $lastSelectedPoemId = selectedMarkerId;
-        await nMarkersTween.set(1);
+        await nMarkersTween.set(0, { duration: 1000, easing: linear });
         dispatch('markerSelected', selectedMarkerId);
       }
     });
@@ -122,7 +123,7 @@
   }
 
   const nMarkersTween = tweened(0, {
-    duration: 10000,
+    duration: 5000,
     easing: quartInOut
   });
   let nVisibleMarkers = $derived(Math.round($nMarkersTween));
@@ -231,7 +232,7 @@
 
 </script>
 
-<div id='content-map' class:lit use:initializeMap bind:this={ mapEl }></div>
+<div id='content-map' class:lit class:dim use:initializeMap bind:this={ mapEl }></div>
 
 <style>
   #content-map {
@@ -240,10 +241,15 @@
     width: 100%;
     height: 100%;
     background-color: black;
-    transition: background-color 10s ease-in;
   }
-
+  
   #content-map.lit {
+    transition: background-color 5s ease-in-out;
     background-color: #303030;
+  }
+  
+  #content-map.lit.dim {
+    transition: background-color 1s linear;
+    background-color: #101010;
   }
 </style>
