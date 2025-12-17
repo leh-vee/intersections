@@ -32,10 +32,9 @@
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
 
-  const slugs = Object.keys($poemIndex);
-  const nMarkers = slugs.length;
-  const randoMarkerIndexOrder = Array.from({ length: nMarkers }, (_, i) => i).sort(() => Math.random() - 0.5);
-  const centreCoords = $poemIndex[slugs[randoMarkerIndexOrder[0]]].coordinates;
+  const slugsRandomlyOrdered = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
+  const nMarkers = slugsRandomlyOrdered.length;
+  const centreCoords = $poemIndex[slugsRandomlyOrdered[0]].coordinates;
 
   let lit = $state(false);
 
@@ -48,7 +47,7 @@
       },
     });
 
-    markerFeatures = slugs.map(slug => {
+    markerFeatures = slugsRandomlyOrdered.map(slug => {
       const p = $poemIndex[slug];
       return new Feature({ 
         geometry: new Point(fromLonLat(p.coordinates)),
@@ -99,6 +98,7 @@
     map.on('click', (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
+        lit = false;
         selectedMarkerId = marker.get('id');
         dispatch('markerSelected', selectedMarkerId);
       }
@@ -122,8 +122,8 @@
 
   $effect(() => {
     if (nVisibleMarkers > 0) {
-      const index = randoMarkerIndexOrder[nVisibleMarkers - 1];
-      const marker = markerFeatures[index];
+      const slug = slugsRandomlyOrdered[nVisibleMarkers - 1];
+      const marker = markerFeatures.find(f => f.get('id') === slug);
       marker.set('visible', true);
     }
   });
