@@ -106,7 +106,7 @@
         lit = false;
         selectedMarkerId = marker.get('id');
         $lastSelectedPoemId = selectedMarkerId;
-        await nMarkersTween.set(2);
+        await nMarkersTween.set(1);
         dispatch('markerSelected', selectedMarkerId);
       }
     });
@@ -126,14 +126,23 @@
     easing: quartInOut
   });
   let nVisibleMarkers = $derived(Math.round($nMarkersTween));
+  let nVisibleMarkersPrev = 0;
 
   $effect(() => {
     if (nVisibleMarkers > 0) {
-      const slug = slugsRandomlyOrdered[nVisibleMarkers - 1];
-      const marker = markerFeatures.find(f => f.get('id') === slug);
-      marker.set('visible', !marker.get('visible'));
+      showHideMarker(nVisibleMarkers, nVisibleMarkersPrev);
+      nVisibleMarkersPrev = nVisibleMarkers;
     }
   });
+
+  function showHideMarker(nVisible, nVisiblePrev) {
+    if (nVisible === nVisiblePrev) return null;
+    const isShow = nVisible > nVisiblePrev;
+    const slugIndex = isShow ? nVisible - 1 : nVisible;
+    const slug = slugsRandomlyOrdered[slugIndex];
+    const marker = markerFeatures.find(f => f.get('id') === slug);
+    marker.set('visible', isShow);
+  }
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
     const coordinate = map.getCoordinateFromPixel(pixel);
