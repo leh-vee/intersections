@@ -15,3 +15,5 @@ export const isCursor = derived(cursorState, ($cursorState) => $cursorState != f
 export const isTheButtonDepressed = writable(true);
 
 export const isPoemRevealed = writable(false);
+
+export const lastSelectedPoemId = writable(null);

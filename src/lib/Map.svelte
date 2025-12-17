@@ -9,7 +9,7 @@
   import MVT from 'ol/format/MVT.js';
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
-  import { poemIndex } from '$lib/store.js';
+  import { poemIndex, lastSelectedPoemId } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { tweened } from 'svelte/motion';
@@ -32,9 +32,15 @@
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
 
-  const slugsRandomlyOrdered = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
-  const nMarkers = slugsRandomlyOrdered.length;
-  const centreCoords = $poemIndex[slugsRandomlyOrdered[0]].coordinates;
+  let slugsRandomlyOrdered = $derived.by(() => {
+    let slugs = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
+    if ($lastSelectedPoemId !== null) {
+      slugs = slugs.filter(slug => slug !== $lastSelectedPoemId);
+      slugs.unshift($lastSelectedPoemId);
+    }
+    return slugs;
+  });
+  let centreCoords = $derived($poemIndex[slugsRandomlyOrdered[0]].coordinates);
 
   let lit = $state(false);
 
@@ -82,9 +88,8 @@
     });
 
     onAllTilesLoaded(async () => { 
-      console.log('tiles loaded...');
       lit = true;
-      await nMarkersTween.set(nMarkers);
+      await nMarkersTween.set(slugsRandomlyOrdered.length);
     });
 
     map.getView().on('change:resolution', () => {
@@ -95,11 +100,13 @@
       });
     });
 
-    map.on('click', (event) => {
+    map.on('click', async (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
         lit = false;
         selectedMarkerId = marker.get('id');
+        $lastSelectedPoemId = selectedMarkerId;
+        await nMarkersTween.set(2);
         dispatch('markerSelected', selectedMarkerId);
       }
     });
@@ -124,7 +131,7 @@
     if (nVisibleMarkers > 0) {
       const slug = slugsRandomlyOrdered[nVisibleMarkers - 1];
       const marker = markerFeatures.find(f => f.get('id') === slug);
-      marker.set('visible', true);
+      marker.set('visible', !marker.get('visible'));
     }
   });
 
