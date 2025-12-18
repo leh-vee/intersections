@@ -73,7 +73,8 @@
       <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
     {/if}
     {#each visibleTail as digit, i}
-      <span class='digit cell' style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
+      <span class='digit cell' class:odd={ i & 1 } class:even={ !(i & 1) }
+        style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
       {#if metaAt(i + firstVisibleCellIndex) === undefined}
         <span class='y-drift'>
           {digit}
@@ -155,8 +156,24 @@
     animation: xDrift var(--duration) linear infinite alternate;
   }
 
+  .even .x-drift {
+    transform: translateX(var(--distance));
+  }
+  
+  .odd .x-drift {
+    transform: translateX(var(--distance) * -1);
+  }
+
   .y-drift {
     animation: yDrift var(--duration) linear infinite alternate;
+  }
+  
+  .even .y-drift {
+    transform: translateY(calc(var(--distance) * -1));
+  }
+  
+  .odd .y-drift {
+    transform: translateY(calc(var(--distance)));
   }
 
   @keyframes xDrift {
