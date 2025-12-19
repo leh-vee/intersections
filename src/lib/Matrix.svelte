@@ -1,7 +1,9 @@
 <script>
   import { piTail, poemTailIndexMap, extraTailEnd, lastSelectedPoemId,
     isEmForMatrix } from '$lib/store.js';
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { tweened } from 'svelte/motion';
+  import { quartInOut } from 'svelte/easing'
+  import { createEventDispatcher, tick } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -60,12 +62,38 @@
   let lastSelectedCellIndex = $derived($poemTailIndexMap.indexOf(lastSelectedSlug) + 1);
   let lastSelectedRowIndex = $derived(Math.floor(lastSelectedCellIndex / cellsPerRow));
 
-  onMount(() => {
-    if ($isEmForMatrix) {
+  let sefirahEls = $state({}); 
+  let sefirahSlugs = $derived.by(() => {
+    let slugs = Object.keys(sefirahEls);
+    slugs = slugs.filter(slug => slug !== lastSelectedSlug);
+    slugs.unshift(lastSelectedSlug);
+    return slugs;
+  }); 
+  let areSefirahElsVisible = $state(false);
+
+  const nSefirahsTween = tweened(0, {
+    duration: 5000,
+    easing: quartInOut
+  });
+  let nVisibleSefirahs = $derived(Math.round($nSefirahsTween));
+
+  $effect(() => {
+    if (nVisibleSefirahs > 0) {
+      const slug = sefirahSlugs[nVisibleSefirahs - 1];
+      sefirahEls[slug]?.classList.add('visible');
+    }
+  });
+
+  let isMoonLit = $state(false);
+
+  $effect(async () => {
+    if ($isEmForMatrix && lastSelectedRowIndex) {
       scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
-      setTimeout(() => {
-        matrixEl.scrollTop = scrollY;
-      }, 0);
+      await tick();
+      matrixEl.scrollTop = scrollY;
+      isMoonLit = true;
+      await nSefirahsTween.set(sefirahSlugs.length);
+      areSefirahElsVisible = true;
     }
   });
 
@@ -91,7 +119,8 @@
 
 <svelte:window bind:innerHeight={ browserHeight } />
 
-<div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={ matrixScrolled } bind:this={matrixEl}>
+<div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={ matrixScrolled } 
+  class:lit={ isMoonLit } bind:this={ matrixEl }>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
       <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
@@ -108,7 +137,8 @@
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span onclick={ () => clickedAtIndex(index) } class='marked x-drift' id={ slug } class:selected={ slug === lastSelectedSlug } >
+        <span id={ slug } class='marked x-drift' class:selected={ slug === lastSelectedSlug } 
+          onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[slug] } >
           {digit}
         </span>
       {/if}
@@ -128,6 +158,12 @@
     width: 100%;
     height: 100%;
     overflow-y: scroll;
+    background-color: black;
+  }
+
+  #matrix.lit {
+    transition: background-color 5s ease-in-out;
+    background-color: #303030;
   }
 
   #visible-segment {
@@ -141,7 +177,7 @@
   }
 
   span.cell {
-    color: dimgrey;
+    color: black;
     display: flex;
     width: var(--cell-size);
     height: var(--cell-size);
@@ -162,7 +198,7 @@
   #question-mark {
     font-family: "Rubik", sans-serif;
     font-size: 40px;
-    color: var(--moon-glow-stroke);
+    color: gold;
   }
   
   span.digit {
@@ -176,10 +212,15 @@
     color: var(--moon-glow-fill);
     font-weight: 400;
     font-size: 150%;
+    visibility: hidden;
+  }
+
+  span.digit .marked.visible {
+    visibility: visible;
   }
 
   span.digit .marked.selected {
-  color: var(--moon-glow-stroke);
+   color: var(--moon-glow-stroke);
   }
 
   .x-drift {
