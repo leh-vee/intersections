@@ -1,6 +1,8 @@
 <script>
-  import { poemIndex, piTail, poemTailIndexMap, extraTailEnd } from '$lib/store.js';
-  import { createEventDispatcher } from 'svelte';
+  import { piTail, poemTailIndexMap, extraTailEnd, lastSelectedPoemId,
+    isEmForMatrix } from '$lib/store.js';
+  import { createEventDispatcher, onMount } from 'svelte';
+
   const dispatch = createEventDispatcher();
 
   const matrixCellPx = 60;
@@ -47,7 +49,27 @@
   
   let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
-  function metaAt(index) {
+  let slugs = $derived($poemTailIndexMap.filter(x => x !== undefined));
+
+  let lastSelectedSlug = $derived.by(() => {
+    let slug = $lastSelectedPoemId;
+    if (slug === null) slug = slugs[Math.floor(Math.random() * slugs.length)];
+    return slug;
+  });
+
+  let lastSelectedCellIndex = $derived($poemTailIndexMap.indexOf(lastSelectedSlug) + 1);
+  let lastSelectedRowIndex = $derived(Math.floor(lastSelectedCellIndex / cellsPerRow));
+
+  onMount(() => {
+    if ($isEmForMatrix) {
+      scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
+      setTimeout(() => {
+        matrixEl.scrollTop = scrollY;
+      }, 0);
+    }
+  });
+
+  function slugAt(index) {
     return $poemTailIndexMap[index];
   }
 
@@ -56,7 +78,9 @@
   }
 
   function clickedAtIndex(i) {
-    dispatch('piSliceSelected', $poemTailIndexMap[i]);
+    const poemSlug = $poemTailIndexMap[i];
+    $lastSelectedPoemId = poemSlug;
+    dispatch('piSliceSelected', poemSlug);
   }
 
   function matrixScrolled() {
@@ -67,22 +91,24 @@
 
 <svelte:window bind:innerHeight={ browserHeight } />
 
-<div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={matrixScrolled} bind:this={matrixEl}>
+<div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={ matrixScrolled } bind:this={matrixEl}>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
       <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
     {/if}
     {#each visibleTail as digit, i}
+      {@const index = i + firstVisibleCellIndex}
+      {@const slug = slugAt(index)}
       <span class='digit cell' class:odd={ i & 1 } class:even={ !(i & 1) }
         style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
-      {#if metaAt(i + firstVisibleCellIndex) === undefined}
+      {#if slug === undefined}
         <span class='y-drift'>
           {digit}
         </span>
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span onclick={ () => clickedAtIndex(i + firstVisibleCellIndex) } class='marked x-drift'>
+        <span onclick={ () => clickedAtIndex(index) } class='marked x-drift' id={ slug } class:selected={ slug === lastSelectedSlug } >
           {digit}
         </span>
       {/if}
@@ -150,6 +176,10 @@
     color: var(--moon-glow-fill);
     font-weight: 400;
     font-size: 150%;
+  }
+
+  span.digit .marked.selected {
+  color: var(--moon-glow-stroke);
   }
 
   .x-drift {
