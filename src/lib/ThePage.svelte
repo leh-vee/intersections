@@ -5,7 +5,8 @@
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
-  import { poemIndex, isCursorMooning, isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
+  import { poemIndex, isCursorMooning, isTheButtonDepressed, 
+    isPoemRevealed, lastSelectedPoemId } from '$lib/store.js';
 
   let { id } = $props();
 
@@ -15,6 +16,10 @@
   let coords = $derived(poemMetaData.coordinates);
   let poemLines = $state([]);
   let arePoemLinesFetched = $derived(poemLines.length > 0);
+
+  $effect(() => {
+    if ($lastSelectedPoemId === null) $lastSelectedPoemId = id;
+  });
 
   $effect(() => {
     if (!arePoemLinesFetched) {
