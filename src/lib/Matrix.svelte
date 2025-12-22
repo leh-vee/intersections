@@ -122,7 +122,9 @@
   class:lit={ isMoonLit } bind:this={ matrixEl }>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
-      <span id='ellipsis' class='cell'><a href="https://here-i-am.me/" target="_blank">&hellip;</a></span>
+      <span id='ellipsis' class='cell' class:visible={ areSefirahElsVisible } >
+        <a href="https://here-i-am.me/" target="_blank">&hellip;</a>
+      </span>
     {/if}
     {#each visibleTail as digit, i}
       {@const index = i + firstVisibleCellIndex}
@@ -145,7 +147,9 @@
     {/each}
     {#if lastVisibleCellIndex === tail.length}
       <!-- svelte-ignore a11y_missing_attribute -->
-      <span id='question-mark' class='cell'><a>?</a></span>
+      <span id='question-mark' class='cell' class:visible={ areSefirahElsVisible }>
+        <a>?</a>
+      </span>
     {/if}
   </div>
 </div>
@@ -194,10 +198,25 @@
     color: gold;
   }
 
+  span#ellipsis {
+    opacity: 0;
+    transition: opacity 314ms linear;
+  }
+
+  span#ellipsis.visible {
+    opacity: 1;
+  }
+
   #question-mark {
     font-family: "Rubik", sans-serif;
     font-size: 40px;
     color: gold;
+    opacity: 0;
+    transition: opacity 314ms linear;
+  }
+
+  #question-mark.visible {
+    opacity: 1;
   }
   
   span.digit {
