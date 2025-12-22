@@ -51,22 +51,21 @@
   
   let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
-  let slugs = $derived($poemTailIndexMap.filter(x => x !== undefined));
-
-  let lastSelectedSlug = $derived.by(() => {
-    let slug = $lastSelectedPoemId;
-    if (slug === null) slug = slugs[Math.floor(Math.random() * slugs.length)];
-    return slug;
+  let lastSelectedRowIndex = 0;
+  $effect(() => {
+    if ($lastSelectedPoemId !== null) {
+      const lastSelectedCellIndex = $poemTailIndexMap.indexOf($lastSelectedPoemId) + 1;
+      lastSelectedRowIndex = Math.floor(lastSelectedCellIndex / cellsPerRow);
+    }
   });
-
-  let lastSelectedCellIndex = $derived($poemTailIndexMap.indexOf(lastSelectedSlug) + 1);
-  let lastSelectedRowIndex = $derived(Math.floor(lastSelectedCellIndex / cellsPerRow));
 
   let sefirahEls = $state({}); 
   let sefirahSlugs = $derived.by(() => {
     let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
-    slugs = slugs.filter(slug => slug !== lastSelectedSlug);
-    slugs.unshift(lastSelectedSlug);
+    if ($lastSelectedPoemId !== null) {
+      slugs = slugs.filter(slug => slug !== $lastSelectedPoemId);
+      slugs.unshift($lastSelectedPoemId);
+    }
     return slugs;
   }); 
   let areSefirahElsVisible = $state(false);
@@ -87,7 +86,7 @@
   let isMoonLit = $state(false);
 
   $effect(async () => {
-    if ($isEmForMatrix && lastSelectedRowIndex) {
+    if (sefirahSlugs.length > 0) {
       scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
       await tick();
       matrixEl.scrollTop = scrollY;
@@ -107,7 +106,7 @@
 
   function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
-    // $lastSelectedPoemId = poemSlug;
+    $lastSelectedPoemId = poemSlug;
     dispatch('piSliceSelected', poemSlug);
   }
 
@@ -137,7 +136,7 @@
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span id={ slug } class='marked x-drift' class:selected={ slug === lastSelectedSlug } 
+        <span id={ slug } class='marked x-drift' class:selected={ slug === sefirahSlugs[0] } 
           onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[slug] } >
           {digit}
         </span>
