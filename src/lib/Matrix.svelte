@@ -64,7 +64,7 @@
 
   let sefirahEls = $state({}); 
   let sefirahSlugs = $derived.by(() => {
-    let slugs = Object.keys(sefirahEls);
+    let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
     slugs = slugs.filter(slug => slug !== lastSelectedSlug);
     slugs.unshift(lastSelectedSlug);
     return slugs;
@@ -107,7 +107,7 @@
 
   function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
-    $lastSelectedPoemId = poemSlug;
+    // $lastSelectedPoemId = poemSlug;
     dispatch('piSliceSelected', poemSlug);
   }
 
