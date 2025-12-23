@@ -51,7 +51,7 @@
   
   let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
-  let lastSelectedRowIndex = 0;
+  let lastSelectedRowIndex = $state(0);
   $effect(() => {
     if ($lastSelectedPoemId !== null) {
       const lastSelectedCellIndex = $poemTailIndexMap.indexOf($lastSelectedPoemId) + 1;
@@ -86,13 +86,15 @@
   let isMoonLit = $state(false);
 
   $effect(async () => {
-    if (sefirahSlugs.length > 0) {
+    if (lastSelectedRowIndex >= 0) {
       scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
       await tick();
       matrixEl.scrollTop = scrollY;
-      isMoonLit = true;
-      await nSefirahsTween.set(sefirahSlugs.length);
-      areSefirahElsVisible = true;
+      if (!isMoonLit) {
+        isMoonLit = true;
+        await nSefirahsTween.set(sefirahSlugs.length);
+        areSefirahElsVisible = true;
+      }
     }
   });
 
