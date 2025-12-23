@@ -2,7 +2,7 @@
   import { piTail, poemTailIndexMap, extraTailEnd, lastSelectedPoemId,
     isEmForMatrix } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
-  import { quartInOut } from 'svelte/easing'
+  import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -60,7 +60,7 @@
   });
 
   let sefirahEls = $state({}); 
-  let sefirahSlugs = $derived.by(() => {
+  let sefirahSlugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
     if ($lastSelectedPoemId !== null) {
       slugs = slugs.filter(slug => slug !== $lastSelectedPoemId);
@@ -74,25 +74,27 @@
     duration: 5000,
     easing: quartInOut
   });
+
   let nVisibleSefirahs = $derived(Math.round($nSefirahsTween));
 
   $effect(() => {
     if (nVisibleSefirahs > 0) {
-      const slug = sefirahSlugs[nVisibleSefirahs - 1];
+      const slug = sefirahSlugsRandomlyOrdered[nVisibleSefirahs - 1];
       sefirahEls[slug]?.classList.add('visible');
     }
   });
 
   let isMoonLit = $state(false);
+  let dim = $state(false);
 
   $effect(async () => {
-    if (lastSelectedRowIndex >= 0) {
+    if (lastSelectedRowIndex >= 0 && !dim) {
       scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
       await tick();
       matrixEl.scrollTop = scrollY;
       if (!isMoonLit) {
         isMoonLit = true;
-        await nSefirahsTween.set(sefirahSlugs.length);
+        await nSefirahsTween.set(sefirahSlugsRandomlyOrdered.length);
         areSefirahElsVisible = true;
       }
     }
@@ -106,8 +108,9 @@
     return Math.floor(Math.random() * (high - low + 1)) + low;
   }
 
-  function clickedAtIndex(i) {
+  async function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
+    dim = true;
     $lastSelectedPoemId = poemSlug;
     dispatch('piSliceSelected', poemSlug);
   }
@@ -121,7 +124,7 @@
 <svelte:window bind:innerHeight={ browserHeight } />
 
 <div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={ matrixScrolled } 
-  class:lit={ isMoonLit } bind:this={ matrixEl }>
+  class:lit={ isMoonLit } class:dim bind:this={ matrixEl }>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
       <span id='ellipsis' class='cell' class:visible={ areSefirahElsVisible } >
@@ -140,7 +143,7 @@
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span id={ slug } class='marked x-drift' class:selected={ slug === sefirahSlugs[0] } 
+        <span id={ slug } class='marked x-drift' class:selected={ slug === sefirahSlugsRandomlyOrdered[0] } 
           onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[slug] } >
           {digit}
         </span>
@@ -169,6 +172,11 @@
   #matrix.lit {
     transition: background-color 5s ease-in-out;
     background-color: #303030;
+  }
+
+  #matrix.lit.dim {
+    transition: background-color 1s linear;
+    background-color: #101010;
   }
 
   #visible-segment {
@@ -209,6 +217,10 @@
     opacity: 1;
   }
 
+  .dim span#ellipsis.visible {
+    opacity: 0;
+  }
+
   #question-mark {
     font-family: "Rubik", sans-serif;
     font-size: 40px;
@@ -219,6 +231,10 @@
 
   #question-mark.visible {
     opacity: 1;
+  }
+
+  .dim #question-mark.visible {
+    opacity: 0;
   }
   
   span.digit {
@@ -236,6 +252,14 @@
   }
 
   span.digit .marked.visible {
+    visibility: visible;
+  }
+
+  .dim span.digit .marked.visible {
+    visibility: hidden;
+  }
+
+  .dim span.digit .marked.selected.visible {
     visibility: visible;
   }
 
