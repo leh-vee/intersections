@@ -9,7 +9,7 @@
   let poemId = $state(undefined);
 
   function showPoem(e) {
-    if (poemId) {
+    if (e.propertyName === 'transform' && poemId) {
       goto(`/${poemId}`);
       $isEmForMatrix = !$isEmForMatrix;
     } 
