@@ -112,7 +112,9 @@
     const poemSlug = $poemTailIndexMap[i];
     dim = true;
     $lastSelectedPoemId = poemSlug;
-    dispatch('piSliceSelected', poemSlug);
+    setTimeout(() => {
+      dispatch('piSliceSelected', poemSlug);
+    }, 1000);
   }
 
   function matrixScrolled() {
