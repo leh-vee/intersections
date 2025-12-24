@@ -1,5 +1,5 @@
 <script>
-  import { poemIndex, piTail, extraTailEnd, poemTailIndexMap } from '$lib/store.js';
+  import { poemIndex, piTail, extraTailEnd, poemTailIndexMap, currentPoemId } from '$lib/store.js';
   import IndexCard from '$lib/IndexCard.svelte';
 
   let { data } = $props();
@@ -14,6 +14,7 @@
   const maxIndex = Math.max(...usedTailIndices);
   $piTail = data.longTailOfPi.slice(0, maxIndex + 3);
   $extraTailEnd = data.longTailOfPi.slice($piTail.length + 1, $piTail.length + 21);
+  $currentPoemId = undefined;
 </script>
 
 <IndexCard />
