@@ -16,4 +16,12 @@ export const isTheButtonDepressed = writable(true);
 
 export const isPoemRevealed = writable(false);
 
+export const currentPoemId = writable(undefined);
+export const poemsRead = writable([]);
+export const lastPoemReadId = derived(poemsRead, ($poemsRead) => {
+    let id = undefined;
+    if (poemsRead.length > 0) id = poemsRead[0].id;
+    return id;
+});
+
 export const lastSelectedPoemId = writable(null);

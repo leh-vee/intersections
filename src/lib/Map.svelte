@@ -9,8 +9,8 @@
   import MVT from 'ol/format/MVT.js';
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
-  import { poemIndex, lastSelectedPoemId } from '$lib/store.js';
-  import { createEventDispatcher } from 'svelte';
+  import { poemIndex, currentPoemId, lastPoemReadId } from '$lib/store.js';
+  import { createEventDispatcher, tick } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { tweened } from 'svelte/motion';
   import { linear, quartInOut } from 'svelte/easing'
@@ -32,15 +32,23 @@
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
 
+  let areInitialTilesLoaded = $state(false);
+
+  let isPoemSelected = $derived($currentPoemId !== undefined); 
+
   let slugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
-    if ($lastSelectedPoemId !== null) {
-      slugs = slugs.filter(slug => slug !== $lastSelectedPoemId);
-      slugs.unshift($lastSelectedPoemId);
+    if (isPoemSelected) {
+      slugs = slugs.filter(slug => slug !== $currentPoemId);
+      slugs.unshift($currentPoemId);
+    } else if ($lastPoemReadId !== undefined) {
+      slugs = slugs.filter(slug => slug !== $lastPoemReadId);
+      slugs.unshift($lastPoemReadId);
     }
     return slugs;
   });
-  let centreCoords = $derived($poemIndex[slugsRandomlyOrdered[0]].coordinates);
+
+  let nMarkers = $derived(slugsRandomlyOrdered.length); 
 
   let lit = $state(false);
   let dim = $state(false);
@@ -70,6 +78,8 @@
       }
     });
 
+    const initialCenterCoords = $poemIndex[slugsRandomlyOrdered[0]].coordinates;
+
     map = new Map({
       target: node.id,
       controls: [],
@@ -79,7 +89,7 @@
       }),
       layers: [tileLayer, markerLayer],
       view: new View({
-        center: fromLonLat(centreCoords),
+        center: fromLonLat(initialCenterCoords),
         zoom: 12,
         minZoom: 12,
         maxZoom: 16,
@@ -88,9 +98,11 @@
       })
     });
 
-    onAllTilesLoaded(async () => { 
-      lit = true;
-      await nMarkersTween.set(slugsRandomlyOrdered.length);
+    $effect(async () => { 
+      if (areInitialTilesLoaded) {
+        lit = true;
+        await nMarkersTween.set(nMarkers);
+      }
     });
 
     map.getView().on('change:resolution', () => {
@@ -106,8 +118,10 @@
       if (marker !== null) {
         dim = true;
         selectedMarkerId = marker.get('id');
-        $lastSelectedPoemId = selectedMarkerId;
-        await nMarkersTween.set(0, { duration: 1000, easing: linear });
+        $currentPoemId = selectedMarkerId;
+        await tick();
+        await nMarkersTween.set(1, { duration: 1000, easing: linear });
+        await tick();
         dispatch('markerSelected', selectedMarkerId);
       }
     });
@@ -127,23 +141,16 @@
     easing: quartInOut
   });
   let nVisibleMarkers = $derived(Math.round($nMarkersTween));
-  let nVisibleMarkersPrev = 0;
 
   $effect(() => {
-    if (nVisibleMarkers > 0) {
-      showHideMarker(nVisibleMarkers, nVisibleMarkersPrev);
-      nVisibleMarkersPrev = nVisibleMarkers;
+    if (nVisibleMarkers < nMarkers) {
+      const isShow = !isPoemSelected;
+      const slugIndex = nVisibleMarkers;
+      const slug = slugsRandomlyOrdered[slugIndex];
+      const marker = markerFeatures.find(f => f.get('id') === slug);
+      marker.set('visible', isShow);
     }
   });
-
-  function showHideMarker(nVisible, nVisiblePrev) {
-    if (nVisible === nVisiblePrev) return null;
-    const isShow = nVisible > nVisiblePrev;
-    const slugIndex = isShow ? nVisible - 1 : nVisible;
-    const slug = slugsRandomlyOrdered[slugIndex];
-    const marker = markerFeatures.find(f => f.get('id') === slug);
-    marker.set('visible', isShow);
-  }
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
     const coordinate = map.getCoordinateFromPixel(pixel);
@@ -215,20 +222,18 @@
     })
   }
 
-  function onAllTilesLoaded(callback) {
-    let loading = 0;
-    vectorTileSource.on('tileloadstart', () => {
-      loading++;
-    });
-    vectorTileSource.on(['tileloadend', 'tileloaderror'], () => {
-      loading--;
-      if (loading === 0) {
-        callback();
-      }
-    });
-  }
-
   let selectedMarkerId = null;
+
+  let nTilesLoading = 0;
+  vectorTileSource.on('tileloadstart', () => {
+    nTilesLoading++;
+  });
+  vectorTileSource.on(['tileloadend', 'tileloaderror'], () => {
+    nTilesLoading--;
+    if (nTilesLoading === 0) {
+      if (!areInitialTilesLoaded) areInitialTilesLoaded = true;
+    }
+  });
 
 </script>
 
