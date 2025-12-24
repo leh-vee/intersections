@@ -6,20 +6,14 @@
   import Poem from '$lib/Poem.svelte';
   import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex, isCursorMooning, isTheButtonDepressed, 
-    isPoemRevealed, lastSelectedPoemId } from '$lib/store.js';
+    isPoemRevealed, currentPoemId } from '$lib/store.js';
 
-  let { id } = $props();
-
-  let poemMetaData = $state($poemIndex[id]);
+  let poemMetaData = $state($poemIndex[$currentPoemId]);
   let poemTitle = $derived(poemMetaData.title);
   let sefirahId = $derived(poemMetaData.sefirahId);
   let coords = $derived(poemMetaData.coordinates);
   let poemLines = $state([]);
   let arePoemLinesFetched = $derived(poemLines.length > 0);
-
-  $effect(() => {
-    if ($lastSelectedPoemId === null) $lastSelectedPoemId = id;
-  });
 
   $effect(() => {
     if (!arePoemLinesFetched) {
