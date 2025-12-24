@@ -51,7 +51,6 @@
   let nMarkers = $derived(slugsRandomlyOrdered.length); 
 
   let lit = $state(false);
-  let dim = $state(false);
 
   function initializeMap(node) {    
     tileLayer = new VectorTileLayer({
@@ -116,7 +115,6 @@
     map.on('click', async (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
       if (marker !== null) {
-        dim = true;
         selectedMarkerId = marker.get('id');
         $currentPoemId = selectedMarkerId;
         await tick();
@@ -237,7 +235,7 @@
 
 </script>
 
-<div id='content-map' class:lit class:dim use:initializeMap bind:this={ mapEl }></div>
+<div id='content-map' class:lit class:dim={ isPoemSelected } use:initializeMap bind:this={ mapEl }></div>
 
 <style>
   #content-map {
