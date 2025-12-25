@@ -142,8 +142,7 @@
   $effect(() => {
     if ($nMarkersTween < nMarkers) {
       const isShow = !$isPoemSelected;
-      const slugIndex = $nMarkersTween;
-      const slug = slugsRandomlyOrdered[slugIndex];
+      const slug = slugsRandomlyOrdered[$nMarkersTween];
       const marker = markerFeatures.find(f => f.get('id') === slug);
       marker.set('visible', isShow);
     }

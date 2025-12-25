@@ -3,7 +3,7 @@
     currentPoemId, isPoemSelected, isEmForMatrix } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
-  import { createEventDispatcher, tick } from 'svelte';
+  import { createEventDispatcher, tick, untrack } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -70,7 +70,10 @@
       slugs.unshift($lastPoemReadId);
     }
     return slugs;
-  }); 
+  });
+  
+  let nSefirahElsVisible = $derived(sefirahSlugsRandomlyOrdered.length);
+  let areSefirahElsMounted = $derived(nSefirahElsVisible > 0);
 
   let areSefirahElsVisible = $state(false);
   const nSefirahsTween = tweened(0, {
@@ -83,9 +86,14 @@
   });
 
   $effect(() => {
-    if ($nSefirahsTween > 0) {
-      const slug = sefirahSlugsRandomlyOrdered[$nSefirahsTween - 1];
-      sefirahEls[slug]?.classList.add('visible');
+    if ($nSefirahsTween >= 0 && areSefirahElsMounted) {
+      const slug = untrack(() => sefirahSlugsRandomlyOrdered[$nSefirahsTween]);
+      const sefirahEl = sefirahEls[slug];
+      if (sefirahEl && $isPoemSelected) {
+        sefirahEl.classList.remove('visible');
+      } else if (sefirahEl) {
+        sefirahEl.classList.add('visible');
+      }
     }
   });
 
@@ -98,7 +106,7 @@
       matrixEl.scrollTop = scrollY;
       if (!isMoonLit) {
         isMoonLit = true;
-        await nSefirahsTween.set(sefirahSlugsRandomlyOrdered.length);
+        await nSefirahsTween.set(nSefirahElsVisible);
         areSefirahElsVisible = true;
       }
     }
@@ -114,10 +122,10 @@
 
   async function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
+    nSefirahsTween.set(nSefirahElsVisible, { duration: 0 })
     $currentPoemId = poemSlug;
-    setTimeout(() => {
-      dispatch('piSliceSelected');
-    }, 1000);
+    await nSefirahsTween.set(1, { duration: 1000, easing: linear });
+    dispatch('piSliceSelected');
   }
 
   function matrixScrolled() {
@@ -148,7 +156,7 @@
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span id={ slug } class='marked x-drift' class:selected={ slug === sefirahSlugsRandomlyOrdered[0] } 
+        <span id={ slug } class='marked x-drift' class:selected={ isPoemSelected && slug === sefirahSlugsRandomlyOrdered[0] } 
           onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[slug] } >
           {digit}
         </span>
@@ -257,14 +265,6 @@
   }
 
   span.digit .marked.visible {
-    visibility: visible;
-  }
-
-  .dim span.digit .marked.visible {
-    visibility: hidden;
-  }
-
-  .dim span.digit .marked.selected.visible {
     visibility: visible;
   }
 
