@@ -18,7 +18,7 @@
   const dispatch = createEventDispatcher();
 
   let isPoemSelected = $derived($currentPoemId !== undefined); 
-  let lit = $state(false);
+  let isLampLit = $state(false);
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.streets-of-toronto';
@@ -133,7 +133,7 @@
 
   $effect(async () => { 
     if (areInitialTilesLoaded) {
-      lit = true;
+      isLampLit = true;
       await nMarkersTween.set(nMarkers);
     }
   });
@@ -155,7 +155,7 @@
   });
 
   $effect(() => {
-    if (isPoemSelected && nVisibleMarkers === 1) dispatch('markerSelected', $currentPoemId);
+    if (isPoemSelected && nVisibleMarkers === 1) dispatch('markerSelected');
   });
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
@@ -241,7 +241,8 @@
 
 </script>
 
-<div id='content-map' class:lit class:dim={ isPoemSelected } use:initializeMap bind:this={ mapEl }></div>
+<div id='content-map' class:lit={ isLampLit } class:dim={ isPoemSelected } 
+  use:initializeMap bind:this={ mapEl }></div>
 
 <style>
   #content-map {

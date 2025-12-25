@@ -23,5 +23,3 @@ export const lastPoemReadId = derived(poemsRead, ($poemsRead) => {
     if ($poemsRead.length > 0) id = $poemsRead[0].id;
     return id;
 });
-
-export const lastSelectedPoemId = writable(null);

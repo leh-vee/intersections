@@ -1,6 +1,6 @@
 <script>
-  import { piTail, poemTailIndexMap, extraTailEnd, lastSelectedPoemId,
-    isEmForMatrix } from '$lib/store.js';
+  import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId,
+    currentPoemId, isEmForMatrix } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick } from 'svelte';
@@ -53,8 +53,8 @@
 
   let lastSelectedRowIndex = $state(0);
   $effect(() => {
-    if ($lastSelectedPoemId !== null) {
-      const lastSelectedCellIndex = $poemTailIndexMap.indexOf($lastSelectedPoemId) + 1;
+    if ($lastPoemReadId !== undefined) {
+      const lastSelectedCellIndex = $poemTailIndexMap.indexOf($lastPoemReadId) + 1;
       lastSelectedRowIndex = Math.floor(lastSelectedCellIndex / cellsPerRow);
     }
   });
@@ -62,9 +62,9 @@
   let sefirahEls = $state({}); 
   let sefirahSlugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
-    if ($lastSelectedPoemId !== null) {
-      slugs = slugs.filter(slug => slug !== $lastSelectedPoemId);
-      slugs.unshift($lastSelectedPoemId);
+    if ($lastPoemReadId !== undefined) {
+      slugs = slugs.filter(slug => slug !== $lastPoemReadId);
+      slugs.unshift($lastPoemReadId);
     }
     return slugs;
   }); 
@@ -111,9 +111,9 @@
   async function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
     dim = true;
-    $lastSelectedPoemId = poemSlug;
+    $currentPoemId = poemSlug;
     setTimeout(() => {
-      dispatch('piSliceSelected', poemSlug);
+      dispatch('piSliceSelected');
     }, 1000);
   }
 
