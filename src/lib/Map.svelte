@@ -9,7 +9,7 @@
   import MVT from 'ol/format/MVT.js';
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill, Stroke } from 'ol/style.js';
-  import { poemIndex, currentPoemId, lastPoemReadId } from '$lib/store.js';
+  import { poemIndex, currentPoemId, lastPoemReadId, isPoemSelected } from '$lib/store.js';
   import { createEventDispatcher, tick } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { tweened } from 'svelte/motion';
@@ -17,7 +17,6 @@
 
   const dispatch = createEventDispatcher();
 
-  let isPoemSelected = $derived($currentPoemId !== undefined); 
   let isLampLit = $state(false);
 
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
@@ -39,7 +38,7 @@
 
   let slugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
-    if (isPoemSelected) {
+    if ($isPoemSelected) {
       slugs = slugs.filter(slug => slug !== $currentPoemId);
       slugs.unshift($currentPoemId);
     } else if ($lastPoemReadId !== undefined) {
@@ -142,7 +141,7 @@
 
   $effect(() => {
     if ($nMarkersTween < nMarkers) {
-      const isShow = !isPoemSelected;
+      const isShow = !$isPoemSelected;
       const slugIndex = $nMarkersTween;
       const slug = slugsRandomlyOrdered[slugIndex];
       const marker = markerFeatures.find(f => f.get('id') === slug);
@@ -151,11 +150,11 @@
   });
   
   $effect(() => {
-    if (isPoemSelected) nMarkersTween.set(1, { duration: 1000, easing: linear });
+    if ($isPoemSelected) nMarkersTween.set(1, { duration: 1000, easing: linear });
   });
 
   $effect(() => {
-    if (isPoemSelected && nVisibleMarkers === 1) dispatch('markerSelected');
+    if ($isPoemSelected && nVisibleMarkers === 1) dispatch('markerSelected');
   });
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
@@ -241,7 +240,7 @@
 
 </script>
 
-<div id='content-map' class:lit={ isLampLit } class:dim={ isPoemSelected } 
+<div id='content-map' class:lit={ isLampLit } class:dim={ $isPoemSelected } 
   use:initializeMap bind:this={ mapEl }></div>
 
 <style>

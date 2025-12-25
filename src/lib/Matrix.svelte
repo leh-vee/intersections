@@ -1,6 +1,6 @@
 <script>
   import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId,
-    currentPoemId, isEmForMatrix } from '$lib/store.js';
+    currentPoemId, isPoemSelected, isEmForMatrix } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick } from 'svelte';
@@ -62,33 +62,37 @@
   let sefirahEls = $state({}); 
   let sefirahSlugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
-    if ($lastPoemReadId !== undefined) {
+    if ($isPoemSelected) {
+      slugs = slugs.filter(slug => slug !== $currentPoemId);
+      slugs.unshift($currentPoemId);
+    } else if ($lastPoemReadId !== undefined) {
       slugs = slugs.filter(slug => slug !== $lastPoemReadId);
       slugs.unshift($lastPoemReadId);
     }
     return slugs;
   }); 
-  let areSefirahElsVisible = $state(false);
 
+  let areSefirahElsVisible = $state(false);
   const nSefirahsTween = tweened(0, {
     duration: 5000,
-    easing: quartInOut
+    easing: quartInOut,
+    interpolate: (a, b) => {
+      const d = b - a;
+      return (t) => Math.round(a + d * t);
+    }
   });
 
-  let nVisibleSefirahs = $derived(Math.round($nSefirahsTween));
-
   $effect(() => {
-    if (nVisibleSefirahs > 0) {
-      const slug = sefirahSlugsRandomlyOrdered[nVisibleSefirahs - 1];
+    if ($nSefirahsTween > 0) {
+      const slug = sefirahSlugsRandomlyOrdered[$nSefirahsTween - 1];
       sefirahEls[slug]?.classList.add('visible');
     }
   });
 
   let isMoonLit = $state(false);
-  let dim = $state(false);
 
   $effect(async () => {
-    if (lastSelectedRowIndex >= 0 && !dim) {
+    if (lastSelectedRowIndex >= 0 && !$isPoemSelected) {
       scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
       await tick();
       matrixEl.scrollTop = scrollY;
@@ -110,7 +114,6 @@
 
   async function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
-    dim = true;
     $currentPoemId = poemSlug;
     setTimeout(() => {
       dispatch('piSliceSelected');
@@ -126,7 +129,7 @@
 <svelte:window bind:innerHeight={ browserHeight } />
 
 <div id='matrix' style="--cell-size: {matrixCellPx}px;" onscroll={ matrixScrolled } 
-  class:lit={ isMoonLit } class:dim bind:this={ matrixEl }>
+  class:lit={ isMoonLit } class:dim={ $isPoemSelected } bind:this={ matrixEl }>
   <div id='visible-segment' bind:clientWidth={ matrixWidth } style:top="{renderedSegmentTop}px">
     {#if firstVisibleCellIndex === 0}
       <span id='ellipsis' class='cell' class:visible={ areSefirahElsVisible } >
