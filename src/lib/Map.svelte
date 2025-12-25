@@ -17,6 +17,9 @@
 
   const dispatch = createEventDispatcher();
 
+  let isPoemSelected = $derived($currentPoemId !== undefined); 
+  let lit = $state(false);
+
   const mapBoxApiKey = import.meta.env.VITE_MAPBOX_API_KEY;
   const mvtId = 'le0nl.streets-of-toronto';
   const tileUrl = `https://api.mapbox.com/v4/${mvtId}/` +
@@ -24,17 +27,15 @@
   const vectorTileSource = new VectorTileSource({
     format: new MVT(), url: tileUrl 
   });
-
-  let mapEl, map, tileLayer, markerFeatures;
+  
+  let mapEl, map, tileLayer;
+  let markerFeatures = [];
+  let areInitialTilesLoaded = $state(false);
   const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
   const viewExtent = [
     ...fromLonLat([cityExtentCoords[0], cityExtentCoords[1]]),
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
-
-  let areInitialTilesLoaded = $state(false);
-
-  let isPoemSelected = $derived($currentPoemId !== undefined); 
 
   let slugsRandomlyOrdered = $derived.by(() => {
     let slugs = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
@@ -47,10 +48,7 @@
     }
     return slugs;
   });
-
-  let nMarkers = $derived(slugsRandomlyOrdered.length); 
-
-  let lit = $state(false);
+  let nMarkers = $derived(slugsRandomlyOrdered.length);
 
   function initializeMap(node) {    
     tileLayer = new VectorTileLayer({
@@ -71,10 +69,14 @@
     }); 
 
     const markerLayer = new VectorLayer({
-      source: new VectorSource({ features: markerFeatures }), 
-      style: (feature) => {
-        return feature.get('visible') ? newMarkerStyle(3) : null;
-      }
+      source: (() => {
+        const source = new VectorSource({ features: markerFeatures });
+        source.on('changefeature', () => {
+          nVisibleMarkers = source.getFeatures().filter(f => f.get('visible')).length;
+        });
+        return source;
+      })(),
+      style: (feature) => feature.get('visible') ? newMarkerStyle(3) : null
     });
 
     const initialCenterCoords = $poemIndex[slugsRandomlyOrdered[0]].coordinates;
@@ -97,13 +99,6 @@
       })
     });
 
-    $effect(async () => { 
-      if (areInitialTilesLoaded) {
-        lit = true;
-        await nMarkersTween.set(nMarkers);
-      }
-    });
-
     map.getView().on('change:resolution', () => {
       const currentZoom = map.getView().getZoom();
       const radius = setMarkerRadius(currentZoom);
@@ -114,14 +109,7 @@
 
     map.on('click', async (event) => {
       const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
-      if (marker !== null) {
-        selectedMarkerId = marker.get('id');
-        $currentPoemId = selectedMarkerId;
-        await tick();
-        await nMarkersTween.set(1, { duration: 1000, easing: linear });
-        await tick();
-        dispatch('markerSelected', selectedMarkerId);
-      }
+      if (marker !== null) $currentPoemId = marker.get('id');
     });
 
     return {
@@ -136,18 +124,38 @@
 
   const nMarkersTween = tweened(0, {
     duration: 5000,
-    easing: quartInOut
+    easing: quartInOut,
+    interpolate: (a, b) => {
+      const d = b - a;
+      return (t) => Math.round(a + d * t);
+    }
   });
-  let nVisibleMarkers = $derived(Math.round($nMarkersTween));
+
+  $effect(async () => { 
+    if (areInitialTilesLoaded) {
+      lit = true;
+      await nMarkersTween.set(nMarkers);
+    }
+  });
+
+  let nVisibleMarkers = $state(0);
 
   $effect(() => {
-    if (nVisibleMarkers < nMarkers) {
+    if ($nMarkersTween < nMarkers) {
       const isShow = !isPoemSelected;
-      const slugIndex = nVisibleMarkers;
+      const slugIndex = $nMarkersTween;
       const slug = slugsRandomlyOrdered[slugIndex];
       const marker = markerFeatures.find(f => f.get('id') === slug);
       marker.set('visible', isShow);
     }
+  });
+  
+  $effect(() => {
+    if (isPoemSelected) nMarkersTween.set(1, { duration: 1000, easing: linear });
+  });
+
+  $effect(() => {
+    if (isPoemSelected && nVisibleMarkers === 1) dispatch('markerSelected', $currentPoemId);
   });
 
   function getNearestMarkerWithinClickRadius(map, pixel, pixelRadius, markerLayer) {
@@ -219,8 +227,6 @@
       })
     })
   }
-
-  let selectedMarkerId = null;
 
   let nTilesLoading = 0;
   vectorTileSource.on('tileloadstart', () => {
