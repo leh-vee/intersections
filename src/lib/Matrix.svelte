@@ -51,11 +51,28 @@
   
   let visibleTail = $derived(tail.slice(firstVisibleCellIndex, lastVisibleCellIndex));
 
-  let lastSelectedRowIndex = $state(0);
+  let autoScrollCellIndex = $state(0);
+  let autoScrollRowIndex = $derived(Math.floor(autoScrollCellIndex / cellsPerRow));
+
   $effect(() => {
     if ($lastPoemReadId !== undefined) {
-      const lastSelectedCellIndex = $poemTailIndexMap.indexOf($lastPoemReadId) + 1;
-      lastSelectedRowIndex = Math.floor(lastSelectedCellIndex / cellsPerRow);
+      autoScrollCellIndex = $poemTailIndexMap.indexOf($lastPoemReadId) + 1;
+    } else if ($isPoemSelected && !$isEmForMatrix) { 
+      autoScrollCellIndex = $poemTailIndexMap.indexOf($currentPoemId) + 1;
+    }
+  });
+
+  let isMoonLit = $state(false);
+  $effect(async () => {
+    if (areSefirahElsMounted) {
+      scrollY = (autoScrollRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
+      await tick();
+      matrixEl.scrollTop = scrollY;
+      if (!isMoonLit) {
+        isMoonLit = true;
+        await nSefirahsTween.set(nSefirahElsVisible);
+        areSefirahElsVisible = true;
+      }
     }
   });
 
@@ -97,21 +114,6 @@
     }
   });
 
-  let isMoonLit = $state(false);
-
-  $effect(async () => {
-    if (lastSelectedRowIndex >= 0 && !$isPoemSelected) {
-      scrollY = (lastSelectedRowIndex + 1) * matrixCellPx - Math.round(browserHeight / 2);
-      await tick();
-      matrixEl.scrollTop = scrollY;
-      if (!isMoonLit) {
-        isMoonLit = true;
-        await nSefirahsTween.set(nSefirahElsVisible);
-        areSefirahElsVisible = true;
-      }
-    }
-  });
-
   function slugAt(index) {
     return $poemTailIndexMap[index];
   }
@@ -122,11 +124,16 @@
 
   async function clickedAtIndex(i) {
     const poemSlug = $poemTailIndexMap[i];
-    nSefirahsTween.set(nSefirahElsVisible, { duration: 0 })
     $currentPoemId = poemSlug;
-    await nSefirahsTween.set(1, { duration: 1000, easing: linear });
-    dispatch('piSliceSelected');
   }
+
+  $effect(async () => {
+    if ($isPoemSelected) {
+      nSefirahsTween.set(nSefirahElsVisible, { duration: 0 })
+      await nSefirahsTween.set(1, { duration: 1000, easing: linear });
+      if ($isEmForMatrix) dispatch('piSliceSelected');
+    }
+  });
 
   function matrixScrolled() {
     scrollY = matrixEl.scrollTop;
