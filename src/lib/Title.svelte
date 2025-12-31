@@ -41,13 +41,11 @@
   }
   
   #title h3 {
-    --heading-height: 3dvh;
-    height: var(--heading-height);
-    font-size: var(--heading-height);
+    font-size: 5dvw;
     font-weight: 400;
     color: var(--moon-glow-fill);
     margin: 0 auto;
-    padding: 5px 0;
+    padding: 0;
     border-bottom: 2px solid gold;
     animation: cool 3.14s ease-out forwards;
   }
