@@ -41,11 +41,12 @@
   }
   
   #title h3 {
+    height: 5dvw;
     font-size: 5dvw;
     font-weight: 400;
     color: var(--moon-glow-fill);
     margin: 0 auto;
-    padding: 0;
+    padding: 5px 0;
     border-bottom: 2px solid gold;
     animation: cool 3.14s ease-out forwards;
   }
