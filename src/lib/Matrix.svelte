@@ -225,7 +225,7 @@
 
   span#ellipsis a {
     text-decoration: none;
-    color: gold;
+    color: white;
   }
 
   span#ellipsis {
@@ -244,7 +244,7 @@
   #question-mark {
     font-family: "Rubik", sans-serif;
     font-size: 40px;
-    color: gold;
+    color: white;
     opacity: 0;
     transition: opacity 314ms linear;
   }
