@@ -60,9 +60,10 @@
   }
 
   async function animateOut() {
+    const duration = 314;
     isAnimateOut = true;
-    await glowRadius.set(maxDiagonal * 5, { duration: 70, easing: quartIn });
-    await btnRadius.set(maxDiagonal, { duration: 90, easing: quartIn });
+    glowRadius.set(maxDiagonal * 5, { duration, easing: quartIn });
+    await btnRadius.set(maxDiagonal, { duration, easing: quartIn });
     goto('/');
   }
 
