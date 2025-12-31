@@ -130,10 +130,13 @@
     }
   });
 
+  let areMarkersClickable = $state(false);
+
   $effect(async () => { 
     if (areInitialTilesLoaded) {
       isLampLit = true;
       await nMarkersTween.set(nMarkers);
+      areMarkersClickable = true;
     }
   });
 
@@ -150,6 +153,25 @@
   
   $effect(() => {
     if ($isPoemSelected) nMarkersTween.set(1, { duration: 1000, easing: linear });
+  });
+
+  let wereMarkersSkippedDuringAnimeOut = $derived($nMarkersTween === 1 && nVisibleMarkers > 1);
+
+  $effect(() => {
+    if ($isPoemSelected && wereMarkersSkippedDuringAnimeOut) {
+      const visibleMarkers = markerFeatures.filter(f => f.get('visible') && f.get('id') !== $currentPoemId);
+      visibleMarkers.forEach(marker => marker.set('visible', false));
+    } 
+  });
+
+  $effect(() => {
+    if (areMarkersClickable) {
+      const invisibleMarkers = markerFeatures.filter(f => !f.get('visible'));
+      invisibleMarkers.forEach(marker => {
+        console.log('showing marker skipped during anime in', marker);
+        marker.set('visible', true);
+      });
+    }
   });
 
   $effect(() => {
