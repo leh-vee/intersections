@@ -7,9 +7,9 @@
   let indexCardEl = $state(undefined);
   let isSideFlip = $state(false);
 
-  function showPoem(e) {
+  async function showPoem(e) {
     if (e.propertyName === 'transform' && $currentPoemId !== undefined) {
-      goto(`/${$currentPoemId}`);
+      await goto(`/${$currentPoemId}`);
       $isEmForMatrix = !$isEmForMatrix;
     } 
   }
