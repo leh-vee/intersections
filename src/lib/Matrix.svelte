@@ -74,7 +74,6 @@
       matrixEl.scrollTop = scrollY;
       if (!isMoonLit) {
         isMoonLit = true;
-        console.log('matrix is moonlit');
         await nSefirahsTween.set(nSefirahElsVisible);
         areSefirahElsVisible = true;
       }
@@ -128,8 +127,10 @@
   }
 
   async function clickedAtIndex(i) {
-    const poemSlug = $poemTailIndexMap[i];
-    $currentPoemId = poemSlug;
+    if (areSefirahElsVisible) {
+      const poemSlug = $poemTailIndexMap[i];
+      $currentPoemId = poemSlug;
+    }
   }
 
   $effect(async () => {

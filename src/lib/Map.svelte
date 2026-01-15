@@ -107,8 +107,10 @@
     });
 
     map.on('click', async (event) => {
-      const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
-      if (marker !== null) $currentPoemId = marker.get('id');
+      if (areMarkersClickable) {
+        const marker = getNearestMarkerWithinClickRadius(map, event.pixel, 15, markerLayer);
+        if (marker !== null) $currentPoemId = marker.get('id');
+      }
     });
 
     return {
