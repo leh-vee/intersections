@@ -57,10 +57,14 @@
   $effect(() => {
     if ($lastPoemReadId !== undefined) {
       autoScrollCellIndex = $poemTailIndexMap.indexOf($lastPoemReadId) + 1;
-    } else if ($isPoemSelected && !$isEmForMatrix) { 
-      autoScrollCellIndex = $poemTailIndexMap.indexOf($currentPoemId) + 1;
     }
   });
+
+  $effect(() => {
+    if ($isPoemSelected && !$isEmForMatrix) { 
+      autoScrollCellIndex = $poemTailIndexMap.indexOf($currentPoemId) + 1;
+    }
+  })
 
   let isMoonLit = $state(false);
   $effect(async () => {
@@ -70,6 +74,7 @@
       matrixEl.scrollTop = scrollY;
       if (!isMoonLit) {
         isMoonLit = true;
+        console.log('matrix is moonlit');
         await nSefirahsTween.set(nSefirahElsVisible);
         areSefirahElsVisible = true;
       }
