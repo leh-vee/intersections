@@ -8,7 +8,7 @@
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
   import { defaults as defaultInteractions } from 'ol/interaction.js';
-  import { Style, Circle, Fill, Stroke } from 'ol/style.js';
+  import { Style, Circle, Fill } from 'ol/style.js';
   import { poemIndex, currentPoemId, lastPoemReadId, isPoemSelected, isEmForMatrix } from '$lib/store.js';
   import { createEventDispatcher, tick } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
