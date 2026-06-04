@@ -18,7 +18,7 @@
   $effect(() => {
     if (!arePoemLinesFetched) {
       (async () => {
-        const lines = await fetchPoemLines(poemMetaData.docId);
+        const lines = await fetchPoemLines($currentPoemId);
         poemLines = lines;
       })();
     }

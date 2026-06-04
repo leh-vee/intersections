@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { parse } from 'csv-parse/browser/esm/sync';
-import slugify from 'slugify';
 
 export async function fetchCsvIndex() {
   const sheetId = '1-BjOyI_0_cX46dbSZMrjVo0mF2sXDeFgmT8gScvOVLM';
@@ -27,10 +26,9 @@ export function parseCsvIndex(csv) {
 
   const keyedIndex = {};
   index.forEach(row => {
-    const slug = slugify(row.title, { lower: true, remove: /[*+~.,()'"!:@]/g });
-    const { longitude, latitude, ...summarizedRow } = row;
+    const { longitude, latitude, docId, ...summarizedRow } = row;
     summarizedRow.coordinates = [longitude, latitude]
-    keyedIndex[slug] = summarizedRow;
+    keyedIndex[docId] = summarizedRow;
   });
 
   return keyedIndex;
