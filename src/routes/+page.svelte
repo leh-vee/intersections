@@ -5,10 +5,10 @@
   let { data } = $props();
 
   const usedTailIndices = [];
-  Object.keys($poemIndex).forEach(slug => {
-    const index = Number($poemIndex[slug].piTailIndex);
+  Object.keys($poemIndex).forEach(docId => {
+    const index = Number($poemIndex[docId].piTailIndex);
     usedTailIndices.push(index);
-    $poemTailIndexMap[index] = slug;
+    $poemTailIndexMap[index] = docId;
   });
 
   const maxIndex = Math.max(...usedTailIndices);
