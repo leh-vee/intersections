@@ -81,19 +81,19 @@
   });
 
   let sefirahEls = $state({}); 
-  let sefirahSlugsRandomlyOrdered = $derived.by(() => {
-    let slugs = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
+  let poemIdsRandomlyOrdered = $derived.by(() => {
+    let ids = Object.keys(sefirahEls).sort(() => Math.random() - 0.5);
     if ($isPoemSelected) {
-      slugs = slugs.filter(slug => slug !== $currentPoemId);
-      slugs.unshift($currentPoemId);
+      ids = ids.filter(id => id !== $currentPoemId);
+      ids.unshift($currentPoemId);
     } else if ($lastPoemReadId !== undefined) {
-      slugs = slugs.filter(slug => slug !== $lastPoemReadId);
-      slugs.unshift($lastPoemReadId);
+      ids = ids.filter(id => id !== $lastPoemReadId);
+      ids.unshift($lastPoemReadId);
     }
-    return slugs;
+    return ids;
   });
   
-  let nSefirahElsVisible = $derived(sefirahSlugsRandomlyOrdered.length);
+  let nSefirahElsVisible = $derived(poemIdsRandomlyOrdered.length);
   let areSefirahElsMounted = $derived(nSefirahElsVisible > 0);
 
   let areSefirahElsVisible = $state(false);
@@ -108,8 +108,8 @@
 
   $effect(() => {
     if ($nSefirahsTween >= 0 && areSefirahElsMounted) {
-      const slug = untrack(() => sefirahSlugsRandomlyOrdered[$nSefirahsTween]);
-      const sefirahEl = sefirahEls[slug];
+      const id = untrack(() => poemIdsRandomlyOrdered[$nSefirahsTween]);
+      const sefirahEl = sefirahEls[id];
       if (sefirahEl && $isPoemSelected) {
         sefirahEl.classList.remove('visible');
       } else if (sefirahEl) {
@@ -118,7 +118,7 @@
     }
   });
 
-  function slugAt(index) {
+  function idAt(index) {
     return $poemTailIndexMap[index];
   }
 
@@ -128,8 +128,8 @@
 
   async function clickedAtIndex(i) {
     if (areSefirahElsVisible) {
-      const poemSlug = $poemTailIndexMap[i];
-      $currentPoemId = poemSlug;
+      const poemId = $poemTailIndexMap[i];
+      $currentPoemId = poemId;
     }
   }
 
@@ -159,18 +159,18 @@
     {/if}
     {#each visibleTail as digit, i}
       {@const index = i + firstVisibleCellIndex}
-      {@const slug = slugAt(index)}
+      {@const id = idAt(index)}
       <span class='digit cell' class:odd={ i & 1 } class:even={ !(i & 1) }
         style="--duration: {randomIntBetween(3000, 8000)}ms; --distance: {randomIntBetween(5, 20)}%;">
-      {#if slug === undefined}
+      {#if id === undefined}
         <span class='y-drift'>
           {digit}
         </span>
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span id={ slug } class='marked x-drift' class:selected={ isPoemSelected && slug === sefirahSlugsRandomlyOrdered[0] } 
-          onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[slug] } >
+        <span id={ id } class='marked x-drift' class:selected={ isPoemSelected && id === poemIdsRandomlyOrdered[0] } 
+          onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[id] } >
           {digit}
         </span>
       {/if}

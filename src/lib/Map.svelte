@@ -36,18 +36,18 @@
     ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
   ];
 
-  let slugsRandomlyOrdered = $derived.by(() => {
-    let slugs = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
+  let poemIdsRandomlyOrdered = $derived.by(() => {
+    let ids = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
     if ($isPoemSelected) {
-      slugs = slugs.filter(slug => slug !== $currentPoemId);
-      slugs.unshift($currentPoemId);
+      ids = ids.filter(id => id !== $currentPoemId);
+      ids.unshift($currentPoemId);
     } else if ($lastPoemReadId !== undefined) {
-      slugs = slugs.filter(slug => slug !== $lastPoemReadId);
-      slugs.unshift($lastPoemReadId);
+      ids = ids.filter(id => id !== $lastPoemReadId);
+      ids.unshift($lastPoemReadId);
     }
-    return slugs;
+    return ids;
   });
-  let nMarkers = $derived(slugsRandomlyOrdered.length);
+  let nMarkers = $derived(poemIdsRandomlyOrdered.length);
 
   function initializeMap(node) {    
     tileLayer = new VectorTileLayer({
@@ -58,11 +58,11 @@
       },
     });
 
-    markerFeatures = slugsRandomlyOrdered.map(slug => {
-      const p = $poemIndex[slug];
+    markerFeatures = poemIdsRandomlyOrdered.map(id => {
+      const p = $poemIndex[id];
       return new Feature({ 
         geometry: new Point(fromLonLat(p.coordinates)),
-        id: slug,
+        id,
         visible: false
       });  
     }); 
@@ -78,7 +78,7 @@
       style: (feature) => feature.get('visible') ? newMarkerStyle(3) : null
     });
 
-    const initialCenterCoords = $poemIndex[slugsRandomlyOrdered[0]].coordinates;
+    const initialCenterCoords = $poemIndex[poemIdsRandomlyOrdered[0]].coordinates;
 
     map = new Map({
       target: node.id,
@@ -147,8 +147,8 @@
   $effect(() => {
     if ($nMarkersTween < nMarkers) {
       const isShow = !$isPoemSelected;
-      const slug = slugsRandomlyOrdered[$nMarkersTween];
-      const marker = markerFeatures.find(f => f.get('id') === slug);
+      const id = poemIdsRandomlyOrdered[$nMarkersTween];
+      const marker = markerFeatures.find(f => f.get('id') === id);
       marker.set('visible', isShow);
     }
   });
