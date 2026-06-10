@@ -24,12 +24,15 @@ export function parseCsvIndex(csv) {
     trim: true
   });
 
-  const keyedIndex = {};
-  index.forEach(row => {
-    const { longitude, latitude, docId, ...summarizedRow } = row;
-    summarizedRow.coordinates = [longitude, latitude]
-    keyedIndex[docId] = summarizedRow;
-  });
+  const keyedIndex = Object.fromEntries(
+    index.map(({ docId, longitude, latitude, title, isPoemIntersection, intersectionId, ...rest }) => [
+      docId,
+      {
+        ...rest,
+        coordinates: [longitude, latitude]
+      }
+    ])
+  );
 
   return keyedIndex;
 }
