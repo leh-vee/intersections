@@ -4,7 +4,7 @@
 
   let { data } = $props();
 
-  if ($currentPoemId !== data.slug ) $currentPoemId = data.slug;
+  if ($currentPoemId !== data.docId ) $currentPoemId = data.docId;
   $poemsRead = [{ id: $currentPoemId, dateTime: new Date }, ...$poemsRead];
 </script>
 
