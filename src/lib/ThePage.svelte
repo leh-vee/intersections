@@ -4,7 +4,7 @@
   import Curtains from '$lib/Curtains.svelte';
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
-  import { fetchPoemLines, fetchPoemTitle } from '$lib/api/drive';
+  import { fetchPoemLines, fetchPoemMetadata } from '$lib/api/drive';
   import { poemIndex, isCursorMooning, isTheButtonDepressed, 
     isPoemRevealed, currentPoemId } from '$lib/store.js';
 
@@ -28,8 +28,8 @@
   $effect(() => {
     if (!isPoemTitleFetched) {
       (async () => {
-        const title = await fetchPoemTitle($currentPoemId);
-        poemTitle = title;
+        const metadata = await fetchPoemMetadata($currentPoemId);
+        poemTitle = metadata.title;
       })();
     }
   });

@@ -57,15 +57,16 @@ export async function fetchPoemLines(docId) {
   return lines;
 }
 
-export async function fetchPoemTitle(docId) {
+export async function fetchPoemMetadata(docId) {
   const key = import.meta.env.VITE_GOOGLE_API_KEY;
-  const url = `https://www.googleapis.com/drive/v3/files/${docId}?fields=name&key=${key}`;
+  const url = `https://www.googleapis.com/drive/v3/files/${docId}?fields=name,description&key=${key}`;
 
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Failed to fetch doc title: ${response.status}`);
+    throw new Error(`Failed to fetch doc meta data: ${response.status}`);
   }
 
   const data = await response.json();
-  return data.name;
+  const metadata = { title: data.name, ...JSON.parse(data.description) }
+  return metadata;
 }
