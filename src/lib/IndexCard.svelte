@@ -1,7 +1,6 @@
 <script>
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
-  import { goto } from '$app/navigation';
   import { isEmForMatrix, currentPoemId } from '$lib/store.js';
 
   let indexCardEl = $state(undefined);
@@ -9,7 +8,7 @@
 
   async function showPoem(e) {
     if (e.propertyName === 'transform' && $currentPoemId !== undefined) {
-      await goto(`/${$currentPoemId}`);
+      window.location.assign(`/${$currentPoemId}`);
       $isEmForMatrix = !$isEmForMatrix;
     } 
   }

@@ -17,6 +17,7 @@ export const isTheButtonDepressed = writable(true);
 export const isPoemRevealed = writable(false);
 
 export const currentPoemId = writable(undefined);
+export const poemMetadata = writable(undefined);
 export const isPoemSelected = derived(currentPoemId, ($currentPoemId) => {
     return $currentPoemId !== undefined;
 });

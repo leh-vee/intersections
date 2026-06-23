@@ -121,7 +121,7 @@
 </script>
 
 <div id='text' style="visibility: {isTextVisible ? 'visible' : 'hidden'}">
-  <Title title={ title } on:titled={ newLineSetup } />
+  <Title on:titled={ newLineSetup } />
   <div id='poem' bind:this={ poemEl }>
     <div id='body' class:cursor={ isTextVisible } class:new={ isNewLine } class:typing={ $isCursorTyping } 
       style:padding-bottom="{ poemOverflowPx }px">

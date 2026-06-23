@@ -4,16 +4,14 @@
   import Curtains from '$lib/Curtains.svelte';
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
-  import { fetchPoemLines, fetchPoemMetadata } from '$lib/api/drive';
-  import { poemIndex, isCursorMooning, isTheButtonDepressed, 
+  import { fetchPoemLines } from '$lib/api/drive';
+  import { poemIndex, isCursorMooning, isTheButtonDepressed, poemMetadata,
     isPoemRevealed, currentPoemId } from '$lib/store.js';
 
   let poemMetaData = $state($poemIndex[$currentPoemId]);
-  let poemTitle = $state(undefined);
   let sefirahId = $derived(poemMetaData.sefirahId);
   let coords = $derived(poemMetaData.coordinates);
   let poemLines = $state([]);
-  let isPoemTitleFetched = $derived(poemTitle !== undefined);
   let arePoemLinesFetched = $derived(poemLines.length > 0);
 
   $effect(() => {
@@ -21,15 +19,6 @@
       (async () => {
         const lines = await fetchPoemLines($currentPoemId);
         poemLines = lines;
-      })();
-    }
-  });
-
-  $effect(() => {
-    if (!isPoemTitleFetched) {
-      (async () => {
-        const metadata = await fetchPoemMetadata($currentPoemId);
-        poemTitle = metadata.title;
       })();
     }
   });
@@ -56,7 +45,7 @@
 
   let areMapTilesLoaded = $state(false);
   let hasDropped = $state(false);
-  let openSesame = $derived(areMapTilesLoaded && hasDropped && isPoemTitleFetched);
+  let openSesame = $derived(areMapTilesLoaded && hasDropped);
   
   let areCurtainsDrawn = $state(false);
 
@@ -85,7 +74,7 @@
 
 <div id='page' onclick={ pageClicked }>
   {#if openSesame}
-    <Poem title={ poemTitle } lines={ poemLines } overflowY={ btnTopY } />
+    <Poem lines={ poemLines } overflowY={ btnTopY } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
