@@ -16,12 +16,7 @@ export const isTheButtonDepressed = writable(true);
 export const isPoemRevealed = writable(false);
 
 export const currentPoemId = writable(undefined);
-export const poemMetadata = writable({
-    title: undefined, 
-    epigraph: undefined, 
-    sefirahId: undefined,
-    intersectionId: undefined
-});
+export const poemMetadata = writable({});
 export const poemLines = writable([]);
 
 export const isPoemSelected = derived(currentPoemId, ($currentPoemId) => {
