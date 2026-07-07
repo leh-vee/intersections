@@ -13,11 +13,17 @@ export const isCursorTyping = derived(cursorState, ($cursorState) => $cursorStat
 export const isCursor = derived(cursorState, ($cursorState) => $cursorState != false);
 
 export const isTheButtonDepressed = writable(true);
-
 export const isPoemRevealed = writable(false);
 
 export const currentPoemId = writable(undefined);
-export const poemMetadata = writable(undefined);
+export const poemMetadata = writable({
+    title: undefined, 
+    epigraph: undefined, 
+    sefirahId: undefined,
+    intersectionId: undefined
+});
+export const poemLines = writable([]);
+
 export const isPoemSelected = derived(currentPoemId, ($currentPoemId) => {
     return $currentPoemId !== undefined;
 });

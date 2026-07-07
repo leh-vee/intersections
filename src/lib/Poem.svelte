@@ -1,12 +1,12 @@
 <script>
   import Title from '$lib/Title.svelte';
   import fitty from 'fitty';
-  import { cursorState, isCursorMooning, isCursorTyping, 
+  import { poemLines, cursorState, isCursorMooning, isCursorTyping, 
     isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
 
-  let { title, lines, overflowY } = $props();
+  let { title, overflowY } = $props();
   
-  let nLines = $derived(lines.length);
+  let nLines = $derived($poemLines.length);
   let lineEls = $state([]);
   let nLineEls = $derived(lineEls.length);
   let nLineFitEventCalls = $state(0);
@@ -125,7 +125,7 @@
   <div id='poem' bind:this={ poemEl }>
     <div id='body' class:cursor={ isTextVisible } class:new={ isNewLine } class:typing={ $isCursorTyping } 
       style:padding-bottom="{ poemOverflowPx }px">
-      {#each lines as line, i}
+      {#each $poemLines as line, i}
         <span class='line' bind:this={ lineEls[i] } onanimationend={ postLineAnime }
           class:current={ i === nextLineToType }>{ line }</span>
       {/each}

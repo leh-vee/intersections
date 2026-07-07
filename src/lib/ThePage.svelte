@@ -4,24 +4,12 @@
   import Curtains from '$lib/Curtains.svelte';
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
-  import { fetchPoemLines } from '$lib/api/drive';
   import { poemIndex, isCursorMooning, isTheButtonDepressed, poemMetadata,
     isPoemRevealed, currentPoemId } from '$lib/store.js';
 
   let poemMetaData = $state($poemIndex[$currentPoemId]);
   let sefirahId = $derived(poemMetaData.sefirahId);
   let coords = $derived(poemMetaData.coordinates);
-  let poemLines = $state([]);
-  let arePoemLinesFetched = $derived(poemLines.length > 0);
-
-  $effect(() => {
-    if (!arePoemLinesFetched) {
-      (async () => {
-        const lines = await fetchPoemLines($currentPoemId);
-        poemLines = lines;
-      })();
-    }
-  });
 
   let browserHeight = $state(undefined);
   let browserWidth = $state(undefined);
@@ -74,7 +62,7 @@
 
 <div id='page' onclick={ pageClicked }>
   {#if openSesame}
-    <Poem lines={ poemLines } overflowY={ btnTopY } />
+    <Poem overflowY={ btnTopY } />
   {/if}
   {#if areDimensionsSet}
     <svg width="100%" height="100%">
