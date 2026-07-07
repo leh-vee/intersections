@@ -4,13 +4,14 @@
   import VectorTileLayer from 'ol/layer/VectorTile.js';
   import VectorTileSource from 'ol/source/VectorTile.js';
   import MVT from 'ol/format/MVT.js';
+  import { isTheButtonDepressed, isPoemRevealed, poemMetadata } from '$lib/store.js';
   import { createEventDispatcher } from 'svelte';
-  import { isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
-
-
   const dispatch = createEventDispatcher();
 
-  let { centreCoordsGcs, zoom = 16, centreOnPx, rotationFactor = 0 } = $props();
+  let { zoom = 16, centreOnPx } = $props();
+
+  const rotationFactor = $poemMetadata.sefirahId;
+  const centreCoordsGcs = $poemMetadata.coordinates;
   let isMapVisible = $state(false);
 
   $effect(() => {

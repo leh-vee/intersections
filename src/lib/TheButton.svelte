@@ -2,12 +2,13 @@
   import { goto } from '$app/navigation';
   import { tweened } from 'svelte/motion';
   import { circOut, elasticOut, elasticIn, elasticInOut, quartIn } from 'svelte/easing';
-  import { isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
+  import { isTheButtonDepressed, isPoemRevealed, poemMetadata } from '$lib/store.js';
 
-  let { x, y, r, id, animateIn } = $props();
+  let { x, y, r, animateIn } = $props();
 
   const circumference = r * Math.PI;
-  const maxDiagonal = Math.hypot(x, y); 
+  const maxDiagonal = Math.hypot(x, y);
+  const id = $poemMetadata.sefirahId;
 
   let isLabelVisible = $state(false);
 

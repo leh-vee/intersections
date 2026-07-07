@@ -4,12 +4,7 @@
   import Curtains from '$lib/Curtains.svelte';
   import Drop from '$lib/Drop.svelte';
   import Poem from '$lib/Poem.svelte';
-  import { poemIndex, isCursorMooning, isTheButtonDepressed, poemMetadata,
-    isPoemRevealed, currentPoemId } from '$lib/store.js';
-
-  let poemMetaData = $state($poemIndex[$currentPoemId]);
-  let sefirahId = $derived(poemMetaData.sefirahId);
-  let coords = $derived(poemMetaData.coordinates);
+  import { poemIndex, isCursorMooning, isTheButtonDepressed, isPoemRevealed } from '$lib/store.js';
 
   let browserHeight = $state(undefined);
   let browserWidth = $state(undefined);
@@ -54,8 +49,7 @@
 
 <svelte:window bind:innerHeight={ browserHeight } bind:innerWidth={ browserWidth } />
 
-<StreetLines centreCoordsGcs={ coords } centreOnPx= { btnPxCoords } 
-  rotationFactor={ sefirahId } on:loaded={ () => { areMapTilesLoaded = true } } />
+<StreetLines centreOnPx= { btnPxCoords } on:loaded={ () => { areMapTilesLoaded = true } } />
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->  
@@ -69,11 +63,11 @@
       <Curtains w={ innerWidth } h={ innerHeight } animateIn={ openSesame } 
         on:drawn={ () => { areCurtainsDrawn = true } } />
       {#if !hasDropped}
-        <Drop xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight } yEndPx={ btnPxCoords[1] }
-          on:splat={ () => { hasDropped = true }} />
+        <Drop xCentrePx={ btnPxCoords[0] } screenHeight={ innerHeight }
+          yEndPx={ btnPxCoords[1] } on:splat={ () => { hasDropped = true }} />
       {/if}
-      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] } r={ btnRadius } 
-        id={ sefirahId } animateIn={ openSesame } />
+      <TheButton x={ btnPxCoords[0] } y={ btnPxCoords[1] }
+        r={ btnRadius } animateIn={ openSesame } />
     </svg>
   {/if}
 </div>
