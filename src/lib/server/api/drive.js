@@ -11,6 +11,6 @@ export async function fetchPoemMetadata(docId) {
 
   const data = await response.json();
   const description = data.description ? JSON.parse(data.description) : undefined; 
-  const metadata = { title: data.name, description };
+  const metadata = { title: data.name, ...description };
   return metadata;
 }
