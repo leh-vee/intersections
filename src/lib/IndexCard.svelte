@@ -1,15 +1,16 @@
 <script>
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
-  import { isEmForMatrix, currentPoemId } from '$lib/store.js';
+  import { selectionWindow, selectionWindowHydrated, isEmForMatrix, 
+    currentPoemId } from '$lib/store.js';
 
   let indexCardEl = $state(undefined);
   let isSideFlip = $state(false);
 
   async function showPoem(e) {
     if (e.propertyName === 'transform' && $currentPoemId !== undefined) {
+      selectionWindow.increment();
       window.location.assign(`/${$currentPoemId}`);
-      $isEmForMatrix = !$isEmForMatrix;
     } 
   }
 
@@ -21,14 +22,16 @@
 </script>
 
 <div id="index-container">
-  <div id="index-card" bind:this={ indexCardEl } class:flipped={ $isEmForMatrix } ontransitionend={ showPoem }>
-    <div id="map-index" class="card-side">
-      <Map on:markerSelected={ e => poemTransition(270) } />
+  {#if $selectionWindowHydrated}
+    <div id="index-card" bind:this={ indexCardEl } class:flipped={ $isEmForMatrix } ontransitionend={ showPoem }>
+      <div id="map-index" class="card-side">
+        <Map on:markerSelected={ e => poemTransition(270) } />
+      </div>
+      <div id="matrix-index" class="card-side">
+        <Matrix on:piSliceSelected={ e => poemTransition(-90) } />
+      </div>
     </div>
-    <div id="matrix-index" class="card-side">
-      <Matrix on:piSliceSelected={ e => poemTransition(-90) } />
-    </div>
-  </div>
+  {/if}
 </div>
 
 
