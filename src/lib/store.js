@@ -23,10 +23,15 @@ export const isPoemSelected = derived(currentPoemId, ($currentPoemId) => {
 });
 
 export const poemsRead = localStorageWritable('poemsRead', []);
+
 export const lastPoemReadId = derived(poemsRead, ($poemsRead) => {
   let id = undefined;
   if ($poemsRead.length > 0) id = $poemsRead[0].id;
   return id;
+});
+
+export const readPoemIds = derived(poemsRead, ($poemsRead) => {
+  return [...new Set($poemsRead.map(p => p.id))];
 });
 
 export const selectionWindow = (() => {
