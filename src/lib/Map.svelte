@@ -9,7 +9,8 @@
   import MVT from 'ol/format/MVT.js';
   import { defaults as defaultInteractions } from 'ol/interaction.js';
   import { Style, Circle, Fill } from 'ol/style.js';
-  import { poemIndex, currentPoemId, lastPoemReadId, isPoemSelected, isEmForMatrix } from '$lib/store.js';
+  import { poemIndex, currentPoemId, lastPoemReadId, readPoemIds,
+    isPoemSelected, isEmForMatrix } from '$lib/store.js';
   import { createEventDispatcher, tick } from 'svelte';
   import { Circle as CircleGeom } from 'ol/geom.js';
   import { tweened } from 'svelte/motion';
@@ -63,7 +64,8 @@
       return new Feature({ 
         geometry: new Point(fromLonLat(p.coordinates)),
         id,
-        visible: false
+        visible: false,
+        read: $readPoemIds.includes(id)
       });  
     }); 
 
@@ -75,7 +77,10 @@
         });
         return source;
       })(),
-      style: (feature) => feature.get('visible') ? newMarkerStyle(3) : null
+      style: (feature) => {
+        const color = getMarkerColour(feature.get('read'));
+        return feature.get('visible') ? newMarkerStyle(3, color) : null;
+      }
     });
 
     const initialCenterCoords = $poemIndex[poemIdsRandomlyOrdered[0]].coordinates;
@@ -102,7 +107,8 @@
       const currentZoom = map.getView().getZoom();
       const radius = setMarkerRadius(currentZoom);
       markerLayer.setStyle((feature) => {
-        return feature.get('visible') ? newMarkerStyle(radius) : null;
+        const color = getMarkerColour(feature.get('read'));
+        return feature.get('visible') ? newMarkerStyle(radius, color) : null;
       });
     });
 
@@ -248,11 +254,15 @@
     return radius;
   }
 
-  function newMarkerStyle(radius) {
+  function getMarkerColour(isPoemRead) {
+    return isPoemRead ? '#BEEEFF' : 'gold';
+  }
+
+  function newMarkerStyle(radius, color = 'gold') {
     return new Style({
       image: new Circle({
         radius: radius,
-        fill: new Fill({ color: 'gold' })
+        fill: new Fill({ color })
       })
     })
   }
@@ -267,6 +277,7 @@
       if (!areInitialTilesLoaded) areInitialTilesLoaded = true;
     }
   });
+
 
 </script>
 
