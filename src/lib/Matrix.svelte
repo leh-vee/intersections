@@ -1,6 +1,6 @@
 <script>
-  import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId,
-    currentPoemId, isPoemSelected, isEmForMatrix, isSelectionLimitReached } from '$lib/store.js';
+  import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId, readPoemIds,
+    currentPoemId, isPoemSelected, isEmForMatrix, isSelectionLimitReached, } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick, untrack } from 'svelte';
@@ -122,6 +122,10 @@
     return $poemTailIndexMap[index];
   }
 
+  function poemReadById(id) {
+    return $readPoemIds.includes(id);
+  }
+
   function randomIntBetween(low, high) {
     return Math.floor(Math.random() * (high - low + 1)) + low;
   }
@@ -169,8 +173,10 @@
       {:else}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <span id={ id } class='marked x-drift' class:selected={ isPoemSelected && id === poemIdsRandomlyOrdered[0] } 
-          onclick={ () => clickedAtIndex(index) }  class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[id] } >
+        <span id={ id } class='marked x-drift' onclick={ () => clickedAtIndex(index) }
+          class:read={ poemReadById(id)}
+          class:selected={ isPoemSelected && id === poemIdsRandomlyOrdered[0] } 
+          class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[id] } >
           {digit}
         </span>
       {/if}
@@ -279,6 +285,10 @@
 
   span.digit .marked.visible {
     visibility: visible;
+  }
+
+  span.digit .marked.read {
+    color: gold;
   }
 
   span.digit .marked.selected {
