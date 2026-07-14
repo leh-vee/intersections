@@ -30,10 +30,25 @@ export const lastPoemReadId = derived(poemsRead, ($poemsRead) => {
 });
 
 export const selectionWindow = (() => {
-  const base = localStorageWritable(
-    'selectionWindow', 
-    { n: 0, dateTime: null}
-  );
+  const defaultValue = { n: 0, dateTime: null }
+  const base = localStorageWritable('selectionWindow', defaultValue);
+
+  function isExpired(dateTime) {
+    if (!dateTime) return false;
+    const threeHoursInMilliSecs = 3 * 60 * 60 * 1000;
+    const timestamp = new Date(dateTime).getTime();
+    return Date.now() - timestamp >= threeHoursInMilliSecs;
+  }
+
+  if (browser) {
+    const unsubscribeHyrated = base.hydratedStore.subscribe(hydrated => {
+      if (!hydrated) return;
+      base.update(val => isExpired(val.dateTime) ? defaultValue : val);
+    });
+    unsubscribeHyrated();
+  }
+
+
   return {
     subscribe: base.subscribe,
     hydrated: base.hydratedStore,
@@ -42,7 +57,7 @@ export const selectionWindow = (() => {
       const dateTime = (n === 1) ? new Date : val.dateTime;
       return { n, dateTime }
     }),
-    reset: () => base.set({ n: 0, dateTime: null })
+    reset: () => base.set(defaultValue)
   };
 })();
 
@@ -63,6 +78,7 @@ export function localStorageWritable(key, initialValue) {
       // keep initialValue if parse fails
       console.warn('unable to parse localStorage value at key:', key);
     } finally {
+      console.log('hydrating', key, 'Svelte store from localStorage');
       hydratedStore.set(true);
     }
   });
