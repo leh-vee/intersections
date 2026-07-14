@@ -53,7 +53,7 @@ export const isEmForMatrix = derived(selectionWindow,
 
 export function localStorageWritable(key, initialValue) {
   const hydratedStore = writable(false);
-  const base = writable(initialValue, (set) => {
+  const store = writable(initialValue, (set) => {
     if (!browser) return; // the following logic only runs in the browser
 
     try {
@@ -68,15 +68,15 @@ export function localStorageWritable(key, initialValue) {
   });
 
   if (browser) {
-    base.subscribe((value) => {
+    store.subscribe((value) => {
       localStorage.setItem(key, JSON.stringify(value));
     });
   }
 
   return {
-    subscribe: base.subscribe,
-    set: base.set,
-    update: base.update,
+    subscribe: store.subscribe,
+    set: store.set,
+    update: store.update,
     hydratedStore: { subscribe: hydratedStore.subscribe }
   }
 }
