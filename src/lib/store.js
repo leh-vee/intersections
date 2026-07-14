@@ -48,7 +48,6 @@ export const selectionWindow = (() => {
     unsubscribeHyrated();
   }
 
-
   return {
     subscribe: base.subscribe,
     hydrated: base.hydratedStore,
@@ -65,6 +64,9 @@ export const isEmForMatrix = derived(selectionWindow,
   ($selectionWindow) => $selectionWindow.n % 2 === 1
 );
 
+export const isSelectionLimitReached = derived(selectionWindow,
+  ($selectionWindow) => $selectionWindow.n >= 3
+);
 
 export function localStorageWritable(key, initialValue) {
   const hydratedStore = writable(false);

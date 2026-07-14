@@ -1,6 +1,6 @@
 <script>
   import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId,
-    currentPoemId, isPoemSelected, isEmForMatrix } from '$lib/store.js';
+    currentPoemId, isPoemSelected, isEmForMatrix, isSelectionLimitReached } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick, untrack } from 'svelte';
@@ -127,7 +127,7 @@
   }
 
   async function clickedAtIndex(i) {
-    if (areSefirahElsVisible) {
+    if (areSefirahElsVisible && !$isSelectionLimitReached) {
       const poemId = $poemTailIndexMap[i];
       $currentPoemId = poemId;
     }
