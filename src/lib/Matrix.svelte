@@ -175,7 +175,6 @@
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <span id={ id } class='marked x-drift' onclick={ () => clickedAtIndex(index) }
           class:read={ poemReadById(id)}
-          class:selected={ isPoemSelected && id === poemIdsRandomlyOrdered[0] } 
           class:visible={ areSefirahElsVisible } bind:this={ sefirahEls[id] } >
           {digit}
         </span>
@@ -289,10 +288,6 @@
 
   span.digit .marked.read {
     color: gold;
-  }
-
-  span.digit .marked.selected {
-   color: var(--moon-glow-stroke);
   }
 
   .x-drift {
