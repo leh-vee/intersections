@@ -29,15 +29,14 @@ export const lastPoemReadId = derived(poemsRead, ($poemsRead) => {
   return id;
 });
 
-export const selectionWindowHydrated = writable(false);
 export const selectionWindow = (() => {
   const base = localStorageWritable(
     'selectionWindow', 
-    { n: 0, dateTime: null},
-    () => selectionWindowHydrated.set(true)
+    { n: 0, dateTime: null}
   );
   return {
     subscribe: base.subscribe,
+    hydrated: base.hydratedStore,
     increment: () => base.update((val) => {
       const n = val.n + 1;
       const dateTime = (n === 1) ? new Date : val.dateTime;
@@ -52,9 +51,10 @@ export const isEmForMatrix = derived(selectionWindow,
 );
 
 
-export function localStorageWritable(key, initialValue, onHydrated) {
-  const store = writable(initialValue, (set) => {
-    if (!browser) return;
+export function localStorageWritable(key, initialValue) {
+  const hydratedStore = writable(false);
+  const base = writable(initialValue, (set) => {
+    if (!browser) return; // the following logic only runs in the browser
 
     try {
       const raw = localStorage.getItem(key);
@@ -63,15 +63,20 @@ export function localStorageWritable(key, initialValue, onHydrated) {
       // keep initialValue if parse fails
       console.warn('unable to parse localStorage value at key:', key);
     } finally {
-      if (onHydrated) onHydrated();
+      hydratedStore.set(true);
     }
   });
 
   if (browser) {
-    store.subscribe((value) => {
+    base.subscribe((value) => {
       localStorage.setItem(key, JSON.stringify(value));
     });
   }
 
-  return store;
+  return {
+    subscribe: base.subscribe,
+    set: base.set,
+    update: base.update,
+    hydratedStore: { subscribe: hydratedStore.subscribe }
+  }
 }

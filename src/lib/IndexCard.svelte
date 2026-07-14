@@ -1,9 +1,9 @@
 <script>
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
-  import { selectionWindow, selectionWindowHydrated, isEmForMatrix, 
-    currentPoemId } from '$lib/store.js';
+  import { selectionWindow, isEmForMatrix, currentPoemId } from '$lib/store.js';
 
+  const selectionWindowHydrated = selectionWindow.hydrated;
   let indexCardEl = $state(undefined);
   let isSideFlip = $state(false);
 
@@ -22,7 +22,7 @@
 </script>
 
 <div id="index-container">
-  {#if $selectionWindowHydrated}
+  {#if $selectionWindowHydrated }
     <div id="index-card" bind:this={ indexCardEl } class:flipped={ $isEmForMatrix } ontransitionend={ showPoem }>
       <div id="map-index" class="card-side">
         <Map on:markerSelected={ e => poemTransition(270) } />
