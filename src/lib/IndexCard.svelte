@@ -1,7 +1,7 @@
 <script>
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
-  import { selectionWindow, isEmForMatrix, currentPoemId } from '$lib/store.js';
+  import { selectionWindow, isEmForMatrix, currentPoemId, readPoemIds } from '$lib/store.js';
 
   const selectionWindowHydrated = selectionWindow.hydrated;
   let indexCardEl = $state(undefined);
@@ -9,7 +9,7 @@
 
   async function showPoem(e) {
     if (e.propertyName === 'transform' && $currentPoemId !== undefined) {
-      selectionWindow.increment();
+      if (!$readPoemIds.includes($currentPoemId)) selectionWindow.increment();
       window.location.assign(`/${$currentPoemId}`);
     } 
   }
