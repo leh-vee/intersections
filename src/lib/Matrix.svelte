@@ -131,10 +131,10 @@
   }
 
   async function clickedAtIndex(i) {
-    if (areSefirahElsVisible && !$isSelectionLimitReached) {
-      const poemId = $poemTailIndexMap[i];
-      $currentPoemId = poemId;
-    }
+    if (!areSefirahElsVisible) return;
+    
+    const poemId = $poemTailIndexMap[i];
+    if (!$isSelectionLimitReached || poemReadById(poemId)) $currentPoemId = poemId;
   }
 
   $effect(async () => {
