@@ -12,6 +12,7 @@ export const isCursorTyping = derived(cursorState, ($cursorState) => $cursorStat
 export const isCursor = derived(cursorState, ($cursorState) => $cursorState != false);
 
 export const isTheButtonDepressed = writable(true);
+export const isModalOpen = writable(false);
 export const isPoemRevealed = writable(false);
 
 export const currentPoemId = writable(undefined);

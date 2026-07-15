@@ -1,6 +1,7 @@
 <script>
   import { piTail, poemTailIndexMap, extraTailEnd, lastPoemReadId, readPoemIds,
-    currentPoemId, isPoemSelected, isEmForMatrix, isSelectionLimitReached, } from '$lib/store.js';
+    currentPoemId, isPoemSelected, isEmForMatrix, isSelectionLimitReached, 
+    isModalOpen } from '$lib/store.js';
   import { tweened } from 'svelte/motion';
   import { quartInOut, linear } from 'svelte/easing'
   import { createEventDispatcher, tick, untrack } from 'svelte';
@@ -134,7 +135,11 @@
     if (!areSefirahElsVisible) return;
     
     const poemId = $poemTailIndexMap[i];
-    if (!$isSelectionLimitReached || poemReadById(poemId)) $currentPoemId = poemId;
+    if (!$isSelectionLimitReached || poemReadById(poemId)) {
+      $currentPoemId = poemId;
+    } else {
+      $isModalOpen = true;
+    }
   }
 
   $effect(async () => {
