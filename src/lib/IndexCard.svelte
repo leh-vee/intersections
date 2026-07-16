@@ -1,7 +1,7 @@
 <script>
   import Map from '$lib/Map.svelte';
   import Matrix from '$lib/Matrix.svelte';
-  import AboutModal from '$lib/AboutModal.svelte';
+  import Modal from '$lib/Modal.svelte';
   import { selectionWindow, isEmForMatrix, currentPoemId, 
     readPoemIds, isModalOpen } from '$lib/store.js';
 
@@ -25,7 +25,7 @@
 
 <div id="index-container">
   {#if $isModalOpen}
-    <AboutModal />
+    <Modal />
   {/if}
   {#if $selectionWindowHydrated }
     <div id="index-card" bind:this={ indexCardEl } class:flipped={ $isEmForMatrix } ontransitionend={ showPoem }>
