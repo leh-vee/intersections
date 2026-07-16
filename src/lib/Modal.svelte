@@ -11,21 +11,14 @@
 <style>
   #modal {
     position: absolute;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 3;
-    color: var(--moon-glow-fill);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 2px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    text-align: center;
-    overflow-y: auto;
+    -webkit-backdrop-filter: blur(10px);
   }
 
   #close-btn {
@@ -34,8 +27,6 @@
     right: 1rem;
     background: none;
     border: none;
-    font-size: 1.5rem;
-    line-height: 1;
     cursor: pointer;
     color: #333;
     padding: 0.25rem 0.5rem;
@@ -48,7 +39,12 @@
   }
 
   h1 {
-    margin-top: 0;
-    font-weight: 500;
+    text-align: center;
+    margin: 10px;
+    padding: 0;
+    font-family: "Bitcount Prop Single", system-ui;
+    color: gold;
+    font-weight: 300;
+    font-size: 13dvw;
   }
 </style>
