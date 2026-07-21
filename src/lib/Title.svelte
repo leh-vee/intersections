@@ -6,7 +6,7 @@
 
   const dispatch = createEventDispatcher();
   let title = $derived($poemMetadata.title);
-  let epigraph = $derived($poemMetadata.description ? $poemMetadata.description.epigraph : undefined);
+  let epigraph = $derived($poemMetadata.epigraph);
   let isEpigraph = $derived(epigraph !== undefined);
 
   const finalCharIndex = tweened(0, {
@@ -31,7 +31,7 @@
 
 <div id='title'>
   <h3 style="width: {$widthPercent}%">{ typedTitle }</h3>
-  <!-- {#if isEpigraph}<h5 id='epigraph'>{ epigraph }</h5>{/if} -->
+  {#if isEpigraph}<h5 id='epigraph'>{ epigraph }</h5>{/if}
 </div>
 
 <style>
@@ -54,7 +54,7 @@
     animation: cool 3.14s ease-out forwards;
   }
 
-  /* #epigraph {
+  #epigraph {
     color: lightgrey;
     margin: 0;
     margin-top: 4px;
@@ -62,7 +62,7 @@
     font-size: 14px;
     text-align: right;
     padding: 0;
-  } */
+  }
 
   @keyframes cool {
     0%   { 
