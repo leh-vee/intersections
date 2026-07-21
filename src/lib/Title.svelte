@@ -29,39 +29,40 @@
 
 </script>
 
-<div id='title'>
-  <h3 style="width: {$widthPercent}%">{ typedTitle }</h3>
-  {#if isEpigraph}<h5 id='epigraph'>{ epigraph }</h5>{/if}
+<div id='wrapper' style="width: {$widthPercent}%">
+  <div id='title'>{ typedTitle }</div>
+  {#if isEpigraph}<div id='epigraph'>{ epigraph }</div>{/if}
 </div>
 
 <style>
 
-  #title {
-    flex: 1;
+  #wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  
-  #title h3 {
-    height: 5dvw;
-    font-size: 5dvw;
-    font-weight: 400;
-    color: var(--moon-glow-fill);
-    margin: 0 auto;
-    padding: 5px 0;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 5px auto 0;
     border-bottom: 2px solid gold;
     animation: cool 3.14s ease-out forwards;
   }
 
-  #epigraph {
-    color: lightgrey;
+  #wrapper div {
     margin: 0;
-    margin-top: 4px;
-    font-weight: lighter;
-    font-size: 14px;
-    text-align: right;
     padding: 0;
+    line-height: 1;
+    font-weight: 400;
+  }
+  
+  #title {
+    font-size: 5dvw;
+    text-align: left;
+    color: var(--moon-glow-fill);
+  }
+  
+  #epigraph {
+    font-size: 3dvw;
+    vertical-align: baseline;
+    text-align: right;
+    color: ghostwhite;
   }
 
   @keyframes cool {
