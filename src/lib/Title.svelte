@@ -8,7 +8,7 @@
   let title = $derived($poemMetadata.title);
   let isTitled = $state(false);
   let epigraph = $derived($poemMetadata.epigraph);
-  let showEpigraph = $derived(epigraph !== undefined && isTitled);
+  let showEpigraph = $derived(epigraph !== null && isTitled);
 
   const finalCharIndex = tweened(0, {
     duration: Math.PI * 1000,
