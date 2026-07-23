@@ -20,8 +20,6 @@
     return hasEpigraph ? md.renderInline(epigraphText) : '';
   });
 
-  let showEpigraph = $derived(hasEpigraph && isTitled);
-
   const finalCharIndex = tweened(0, {
     duration: Math.PI * 1000,
     easing: quadInOut
@@ -45,7 +43,7 @@
 
 <div id='wrapper'>
   <div id='title' style="width: {$widthPercent}%">{ typedTitle }</div>
-  {#if showEpigraph }<div id='epigraph'>{@html renderedEpigraph }</div>{/if}
+  {#if hasEpigraph }<div id='epigraph' class:visible={ isTitled }>{@html renderedEpigraph }</div>{/if}
 </div>
 
 <style>
@@ -82,6 +80,9 @@
     height: 3dvw;
     font-family: Arial;
     width: 100%;
+  }
+  
+  #epigraph.visible {
     animation: concretize 1s ease-out forwards;
   }
 
