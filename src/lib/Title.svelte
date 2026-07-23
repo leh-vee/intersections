@@ -8,7 +8,8 @@
   let title = $derived($poemMetadata.title);
   let isTitled = $state(false);
   let epigraph = $derived($poemMetadata.epigraph);
-  let showEpigraph = $derived(epigraph !== null && isTitled);
+  let isEpigraph = $derived(epigraph !== undefined && epigraph !== null && epigraph.trim() !== "");
+  let showEpigraph = $derived(isEpigraph && isTitled);
 
   const finalCharIndex = tweened(0, {
     duration: Math.PI * 1000,
@@ -33,7 +34,7 @@
 
 <div id='wrapper'>
   <div id='title' style="width: {$widthPercent}%">{ typedTitle }</div>
-  {#if showEpigraph }<div id='epigraph'>{ epigraph }</div>{/if}
+  {#if showEpigraph }<div id='epigraph'>{ epigraph.trim() }</div>{/if}
 </div>
 
 <style>
