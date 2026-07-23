@@ -31,11 +31,6 @@
   let mapEl, map, tileLayer;
   let markerFeatures = [];
   let areInitialTilesLoaded = $state(false);
-  const cityExtentCoords = [-79.6993, 43.56, -79.04, 43.87];
-  const viewExtent = [
-    ...fromLonLat([cityExtentCoords[0], cityExtentCoords[1]]),
-    ...fromLonLat([cityExtentCoords[2], cityExtentCoords[3]])
-  ];
 
   let poemIdsRandomlyOrdered = $derived.by(() => {
     let ids = Object.keys($poemIndex).sort(() => Math.random() - 0.5);
@@ -98,8 +93,7 @@
         zoom: 12,
         minZoom: 12,
         maxZoom: 16,
-        rotation: 0.3,
-        extent: viewExtent
+        rotation: 0.3
       })
     });
 
