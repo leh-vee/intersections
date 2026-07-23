@@ -105,8 +105,12 @@
     const poemBtmPx = poemRect.bottom; 
     const windowHeight = window.innerHeight;
     if (poemBtmPx > overflowY) {
-      poemOverflowPx = Math.ceil(windowHeight - overflowY) + 5; // 5px margin
-    } 
+      // text overflows a) button only b) full screen 
+      poemOverflowPx = Math.ceil(
+        Math.min(((poemBtmPx - overflowY) * 2), windowHeight - overflowY)
+      );
+      poemOverflowPx += 5; // add 5px margin
+    }
   }
 
   function randomInt(min, max) {
