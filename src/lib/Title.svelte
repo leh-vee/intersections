@@ -3,7 +3,9 @@
   import { tweened } from 'svelte/motion';
   import { onMount, createEventDispatcher } from 'svelte';
   import { poemMetadata } from '$lib/store.js';
+  import markdownit from 'markdown-it';
 
+  const md = markdownit();
   const dispatch = createEventDispatcher();
   let title = $derived($poemMetadata.title);
   let isTitled = $state(false);
@@ -34,7 +36,7 @@
 
 <div id='wrapper'>
   <div id='title' style="width: {$widthPercent}%">{ typedTitle }</div>
-  {#if showEpigraph }<div id='epigraph'>{ epigraph.trim() }</div>{/if}
+  {#if showEpigraph }<div id='epigraph'>{@html md.renderInline(epigraph.trim()) }</div>{/if}
 </div>
 
 <style>
