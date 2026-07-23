@@ -7,11 +7,20 @@
 
   const md = markdownit();
   const dispatch = createEventDispatcher();
+
   let title = $derived($poemMetadata.title);
   let isTitled = $state(false);
-  let epigraph = $derived($poemMetadata.epigraph);
-  let isEpigraph = $derived(epigraph !== undefined && epigraph !== null && epigraph.trim() !== "");
-  let showEpigraph = $derived(isEpigraph && isTitled);
+
+  let epigraphRaw = $derived($poemMetadata.epigraph);
+  let epigraphText = $derived.by(() => {
+    return typeof epigraphRaw === 'string' ? epigraphRaw.trim() : '';
+  });
+  let hasEpigraph = $derived(epigraphText.length > 0);
+  let renderedEpigraph = $derived.by(() => {
+    return hasEpigraph ? md.renderInline(epigraphText) : '';
+  });
+
+  let showEpigraph = $derived(hasEpigraph && isTitled);
 
   const finalCharIndex = tweened(0, {
     duration: Math.PI * 1000,
@@ -36,7 +45,7 @@
 
 <div id='wrapper'>
   <div id='title' style="width: {$widthPercent}%">{ typedTitle }</div>
-  {#if showEpigraph }<div id='epigraph'>{@html md.renderInline(epigraph.trim()) }</div>{/if}
+  {#if showEpigraph }<div id='epigraph'>{@html renderedEpigraph }</div>{/if}
 </div>
 
 <style>
