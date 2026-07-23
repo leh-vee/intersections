@@ -51,9 +51,11 @@
 <style>
 
   #wrapper {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
     margin: 5px auto 0;
     width: 80%;
   }
